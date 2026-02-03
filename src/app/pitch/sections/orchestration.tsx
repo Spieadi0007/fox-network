@@ -48,7 +48,8 @@ export function Orchestration() {
       <div className="mx-auto w-full max-w-6xl px-6 sm:px-8">
         {/* Title */}
         <motion.div variants={fadeInUp} initial="hidden" whileInView="visible" viewport={viewportConfig}>
-          <h2 className="font-[family-name:var(--font-heading)] text-[clamp(1.75rem,3.5vw,2.75rem)] font-bold leading-[1.08] tracking-[-0.03em]">
+          <span className="inline-block rounded-full border border-blue-500/20 bg-blue-500/10 px-3 py-1 text-xs font-semibold uppercase tracking-widest text-blue-400">The Solution</span>
+          <h2 className="mt-3 font-[family-name:var(--font-heading)] text-[clamp(1.75rem,3.5vw,2.75rem)] font-bold leading-[1.08] tracking-[-0.03em]">
             Hardware Operations at Scale.
           </h2>
           <p className="mt-2 max-w-2xl text-sm leading-[1.6] text-[var(--p-text-subtle)]">

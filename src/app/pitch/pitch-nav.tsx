@@ -7,7 +7,7 @@ const sections = [
   { id: "cover", label: "Cover" },
   { id: "macro-shift", label: "Macro Shift" },
   { id: "pain-points", label: "Pain Points" },
-  { id: "consulting", label: "Consulting" },
+
   { id: "orchestration", label: "Orchestration" },
   { id: "interfaces", label: "Interfaces" },
   { id: "ai-validation", label: "AI Validation" },
@@ -16,7 +16,7 @@ const sections = [
   { id: "engagement", label: "Engagement" },
   { id: "roadmap", label: "Roadmap" },
   { id: "improvement", label: "Improvement" },
-  { id: "team", label: "Team" },
+
   { id: "pitch-cta", label: "Let's Talk" },
 ];
 

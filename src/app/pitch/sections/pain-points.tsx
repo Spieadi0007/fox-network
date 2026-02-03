@@ -66,7 +66,8 @@ export function PainPoints() {
     <section className="relative flex min-h-full items-center py-12 lg:py-16">
       <div className="mx-auto w-full max-w-6xl px-6 sm:px-8">
         <motion.div variants={fadeInUp} initial="hidden" whileInView="visible" viewport={viewportConfig}>
-          <h2 className="font-[family-name:var(--font-heading)] text-[clamp(2rem,4.5vw,3.5rem)] font-bold leading-[1.08] tracking-[-0.03em]">
+          <span className="inline-block rounded-full border border-red-500/20 bg-red-500/10 px-3 py-1 text-xs font-semibold uppercase tracking-widest text-red-400">The Problem</span>
+          <h2 className="mt-3 font-[family-name:var(--font-heading)] text-[clamp(2rem,4.5vw,3.5rem)] font-bold leading-[1.08] tracking-[-0.03em]">
             Operating in the Dark.
           </h2>
           <p className="mt-3 max-w-2xl text-lg text-[var(--p-text-muted)]">
