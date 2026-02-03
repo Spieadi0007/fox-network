@@ -209,3 +209,36 @@ body {
   background: rgba(59, 130, 246, 0.15);
   color: #1c1917;
 }
+
+/* ── Print / PDF export ── */
+@media print {
+  @page {
+    size: landscape;
+    margin: 0;
+  }
+
+  body {
+    background: #111110 !important;
+    color: #ffffff !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Hide controls */
+  .pitch-no-print {
+    display: none !important;
+  }
+
+  .pitch-print-slides > * {
+    width: 100vw;
+    height: 100vh;
+    page-break-after: always;
+    break-after: page;
+    overflow: hidden;
+  }
+
+  .pitch-print-slides > *:last-child {
+    page-break-after: avoid;
+    break-after: avoid;
+  }
+}

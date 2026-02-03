@@ -8,24 +8,21 @@ import { PitchThemeContext, type PitchTheme } from "./pitch-theme";
 const labels = [
   "Cover",
   "Macro Shift",
-  "Linear Trap",
   "Pain Points",
-  "Consulting",
   "Orchestration",
   "Interfaces",
   "AI Validation",
-  "Global Grid",
-  "Value Equation",
+  "Linear Trap",
   "Engagement",
   "Roadmap",
   "Improvement",
-  "Team",
   "Let's Talk",
 ];
 
 export function PitchShell({ children }: { children: React.ReactNode[] }) {
   const [current, setCurrent] = useState(0);
   const [theme, setTheme] = useState<PitchTheme>("dark");
+  const [printing, setPrinting] = useState(false);
   const transitioning = useRef(false);
   const total = children.length;
 
@@ -48,8 +45,25 @@ export function PitchShell({ children }: { children: React.ReactNode[] }) {
   const next = useCallback(() => goTo(current + 1), [current, goTo]);
   const prev = useCallback(() => goTo(current - 1), [current, goTo]);
 
+  // Print / PDF export
+  const handlePrint = useCallback(() => {
+    setPrinting(true);
+    // Wait for all slides to render, then trigger print
+    setTimeout(() => {
+      window.print();
+    }, 500);
+  }, []);
+
+  // Restore normal view after printing
+  useEffect(() => {
+    const restore = () => setPrinting(false);
+    window.addEventListener("afterprint", restore);
+    return () => window.removeEventListener("afterprint", restore);
+  }, []);
+
   // Mouse wheel
   useEffect(() => {
+    if (printing) return;
     const onWheel = (e: WheelEvent) => {
       e.preventDefault();
       if (Math.abs(e.deltaY) < 20) return;
@@ -58,10 +72,11 @@ export function PitchShell({ children }: { children: React.ReactNode[] }) {
     };
     window.addEventListener("wheel", onWheel, { passive: false });
     return () => window.removeEventListener("wheel", onWheel);
-  }, [next, prev]);
+  }, [next, prev, printing]);
 
   // Arrow keys + Page Up/Down
   useEffect(() => {
+    if (printing) return;
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "ArrowDown" || e.key === "ArrowRight" || e.key === "PageDown" || e.key === " ") {
         e.preventDefault();
@@ -82,10 +97,11 @@ export function PitchShell({ children }: { children: React.ReactNode[] }) {
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [next, prev, goTo, total]);
+  }, [next, prev, goTo, total, printing]);
 
   // Touch swipe
   useEffect(() => {
+    if (printing) return;
     let startY = 0;
     const onStart = (e: TouchEvent) => {
       startY = e.touches[0].clientY;
@@ -103,7 +119,25 @@ export function PitchShell({ children }: { children: React.ReactNode[] }) {
       window.removeEventListener("touchstart", onStart);
       window.removeEventListener("touchend", onEnd);
     };
-  }, [next, prev]);
+  }, [next, prev, printing]);
+
+  // Print mode — render all slides stacked
+  if (printing) {
+    return (
+      <PitchThemeContext.Provider value={{ theme, toggle }}>
+        <div
+          data-pitch-theme="dark"
+          className="pitch-print-slides bg-[var(--p-bg)] text-[var(--p-text)]"
+        >
+          {children.map((child, i) => (
+            <div key={i} className="flex h-screen w-screen items-center justify-center overflow-hidden">
+              {child}
+            </div>
+          ))}
+        </div>
+      </PitchThemeContext.Provider>
+    );
+  }
 
   return (
     <PitchThemeContext.Provider value={{ theme, toggle }}>
@@ -125,26 +159,43 @@ export function PitchShell({ children }: { children: React.ReactNode[] }) {
           </motion.div>
         </AnimatePresence>
 
-        {/* Theme toggle — top-left */}
-        <button
-          onClick={toggle}
-          className="fixed left-5 top-5 z-50 flex h-9 w-9 items-center justify-center rounded-full border border-[var(--p-border)] bg-[var(--p-surface)] backdrop-blur-sm transition-all hover:bg-[var(--p-surface-hover)]"
-          aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
-        >
-          {theme === "dark" ? (
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <circle cx="12" cy="12" r="5" />
-              <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" />
+        {/* Top-left controls */}
+        <div className="fixed left-5 top-5 z-50 flex items-center gap-2 pitch-no-print">
+          {/* Theme toggle */}
+          <button
+            onClick={toggle}
+            className="flex h-9 w-9 items-center justify-center rounded-full border border-[var(--p-border)] bg-[var(--p-surface)] backdrop-blur-sm transition-all hover:bg-[var(--p-surface-hover)]"
+            aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
+          >
+            {theme === "dark" ? (
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="5" />
+                <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" />
+              </svg>
+            ) : (
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+              </svg>
+            )}
+          </button>
+
+          {/* PDF download */}
+          <button
+            onClick={handlePrint}
+            className="flex h-9 items-center gap-1.5 rounded-full border border-[var(--p-border)] bg-[var(--p-surface)] px-3 backdrop-blur-sm transition-all hover:bg-[var(--p-surface-hover)]"
+            aria-label="Download as PDF"
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+              <polyline points="7 10 12 15 17 10" />
+              <line x1="12" y1="15" x2="12" y2="3" />
             </svg>
-          ) : (
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
-            </svg>
-          )}
-        </button>
+            <span className="text-[11px] font-medium">PDF</span>
+          </button>
+        </div>
 
         {/* Dot nav — right side */}
-        <nav className="fixed right-5 top-1/2 z-50 -translate-y-1/2 flex-col items-center gap-2.5 hidden lg:flex">
+        <nav className="fixed right-5 top-1/2 z-50 -translate-y-1/2 flex-col items-center gap-2.5 hidden lg:flex pitch-no-print">
           {labels.map((label, i) => (
             <button
               key={i}
@@ -172,14 +223,14 @@ export function PitchShell({ children }: { children: React.ReactNode[] }) {
         </nav>
 
         {/* Bottom bar — slide counter */}
-        <div className="fixed bottom-5 right-6 z-50 hidden lg:block">
+        <div className="fixed bottom-5 right-6 z-50 hidden lg:block pitch-no-print">
           <span className="font-mono text-[11px] text-[var(--p-text-faint)]">
             {String(current + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}
           </span>
         </div>
 
         {/* Mobile prev/next buttons */}
-        <div className="fixed bottom-5 right-5 z-50 flex gap-2 lg:hidden">
+        <div className="fixed bottom-5 right-5 z-50 flex gap-2 lg:hidden pitch-no-print">
           <button
             onClick={prev}
             disabled={current === 0}
