@@ -121,10 +121,25 @@ export function PitchShell({ children }: { children: React.ReactNode[] }) {
     };
   }, [next, prev, printing]);
 
-  // Print mode — render all slides stacked
+  // Print mode — render all slides stacked with animations forced visible
   if (printing) {
     return (
       <PitchThemeContext.Provider value={{ theme, toggle }}>
+        <style>{`
+          .pitch-print-slides * {
+            opacity: 1 !important;
+            transform: none !important;
+            animation: none !important;
+            transition: none !important;
+          }
+          .pitch-print-slides path,
+          .pitch-print-slides circle,
+          .pitch-print-slides line,
+          .pitch-print-slides rect {
+            stroke-dasharray: none !important;
+            stroke-dashoffset: 0 !important;
+          }
+        `}</style>
         <div
           data-pitch-theme="dark"
           className="pitch-print-slides bg-[var(--p-bg)] text-[var(--p-text)]"
