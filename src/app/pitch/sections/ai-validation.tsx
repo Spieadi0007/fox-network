@@ -23,17 +23,17 @@ export function AIValidation() {
           className="mt-14 grid gap-6 md:grid-cols-3">
           {features.map((f) => (
             <motion.div key={f.title} variants={fadeInUp}
-              className="rounded-2xl border border-stone-800 bg-stone-900/40 p-7">
+              className="rounded-2xl border border-[var(--p-border)] bg-[var(--p-surface)] p-7">
               <f.icon className="h-8 w-8 text-fox-orange" strokeWidth={1.5} />
               <h3 className="mt-4 font-[family-name:var(--font-heading)] text-lg font-bold">{f.title}</h3>
-              <p className="mt-2 text-[14px] leading-[1.7] text-stone-400">{f.desc}</p>
+              <p className="mt-2 text-[14px] leading-[1.7] text-[var(--p-text-muted)]">{f.desc}</p>
             </motion.div>
           ))}
         </motion.div>
 
         <motion.div variants={fadeInUp} initial="hidden" whileInView="visible" viewport={viewportConfig} className="mt-10">
           <div className="rounded-xl border border-fox-orange/30 bg-fox-orange/5 px-8 py-5">
-            <p className="text-[15px] font-semibold text-stone-200">
+            <p className="text-[15px] font-semibold text-[var(--p-text-strong)]">
               Impact: <span className="text-fox-orange">Removes 80-90%</span> of manual operational validation work.
             </p>
           </div>

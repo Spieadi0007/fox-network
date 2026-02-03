@@ -15,8 +15,8 @@ const features = [
     stat: "100%",
     statLabel: "Job visibility",
     span: "sm:col-span-2 lg:col-span-1 lg:row-span-2",
-    accent: "from-orange-500/10 to-amber-500/5",
-    iconBg: "bg-orange-50",
+    accent: "from-blue-500/10 to-sky-500/5",
+    iconBg: "bg-blue-50",
     iconColor: "text-fox-orange",
   },
   {

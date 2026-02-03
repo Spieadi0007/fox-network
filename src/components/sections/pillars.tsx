@@ -31,12 +31,12 @@ function StrategyAnimation() {
           transition={{ duration: 0.5, delay: 0.2 }}
         >
           <rect x="30" y="10" width="180" height="120" rx="8"
-            fill="rgba(232,89,12,0.04)" stroke="rgba(232,89,12,0.2)" strokeWidth="1" />
+            fill="rgba(59,130,246,0.04)" stroke="rgba(59,130,246,0.2)" strokeWidth="1" />
           {/* Top bar */}
           <rect x="30" y="10" width="180" height="20" rx="8"
-            fill="rgba(232,89,12,0.08)" />
+            fill="rgba(59,130,246,0.08)" />
           <text x="120" y="24" textAnchor="middle"
-            fill="rgba(232,89,12,0.5)" fontSize="8" fontWeight="600"
+            fill="rgba(59,130,246,0.5)" fontSize="8" fontWeight="600"
             fontFamily="var(--font-body)">
             Your Strategy Plan
           </text>
@@ -51,11 +51,11 @@ function StrategyAnimation() {
           >
             {/* Checkbox */}
             <rect x="46" y={42 + i * 22} width="12" height="12" rx="3"
-              fill="rgba(232,89,12,0.06)" stroke="rgba(232,89,12,0.25)" strokeWidth="0.8" />
+              fill="rgba(59,130,246,0.06)" stroke="rgba(59,130,246,0.25)" strokeWidth="0.8" />
             {/* Checkmark animates in after the row */}
             <motion.path
               d={`M${49} ${49 + i * 22} L${51} ${51 + i * 22} L${55} ${46 + i * 22}`}
-              stroke="#e8590c" strokeWidth="1.5" fill="none" strokeLinecap="round"
+              stroke="#3B82F6" strokeWidth="1.5" fill="none" strokeLinecap="round"
               initial={{ pathLength: 0 }}
               animate={inView ? { pathLength: 1 } : {}}
               transition={{ duration: 0.3, delay: step.delay + 0.3 }}
@@ -76,9 +76,9 @@ function StrategyAnimation() {
           transition={{ delay: 2.4, type: "spring" as const, stiffness: 200, damping: 15 }}
         >
           <rect x="140" y="100" width="56" height="20" rx="10"
-            fill="rgba(232,89,12,0.15)" stroke="rgba(232,89,12,0.3)" strokeWidth="0.8" />
+            fill="rgba(59,130,246,0.15)" stroke="rgba(59,130,246,0.3)" strokeWidth="0.8" />
           <text x="168" y="113" textAnchor="middle"
-            fill="#e8590c" fontSize="8" fontWeight="600"
+            fill="#3B82F6" fontSize="8" fontWeight="600"
             fontFamily="var(--font-body)">
             Ready
           </text>

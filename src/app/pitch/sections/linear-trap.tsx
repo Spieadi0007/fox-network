@@ -3,10 +3,13 @@
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
 import { fadeInUp, viewportConfig } from "@/lib/animations";
+import { Users, AlertTriangle, TrendingDown } from "lucide-react";
+import { usePitchColors } from "@/app/pitch/pitch-theme";
 
 export function LinearTrap() {
   const chartRef = useRef(null);
   const inView = useInView(chartRef, { once: true, margin: "-80px" });
+  const c = usePitchColors();
 
   return (
     <section className="relative flex min-h-full items-center py-12 lg:py-16">
@@ -14,74 +17,209 @@ export function LinearTrap() {
         <motion.h2 variants={fadeInUp} initial="hidden" whileInView="visible" viewport={viewportConfig}
           className="font-[family-name:var(--font-heading)] text-[clamp(2rem,4.5vw,3.5rem)] font-bold leading-[1.08] tracking-[-0.03em]">
           The Linear Trap:{" "}
-          <span className="text-stone-400">Why Operations Break at Scale</span>
+          <span className="text-[var(--p-text-muted)]">Why Operations Break at Scale</span>
         </motion.h2>
 
-        <div className="mt-16 grid gap-10 lg:grid-cols-3">
-          {/* Chart */}
-          <motion.div variants={fadeInUp} initial="hidden" whileInView="visible" viewport={viewportConfig}
-            className="rounded-2xl border border-stone-800 bg-stone-900/40 p-6 lg:col-span-2" ref={chartRef}>
-            <svg viewBox="0 0 500 300" className="w-full">
-              {/* Axes */}
-              <line x1="60" y1="260" x2="480" y2="260" stroke="rgba(255,255,255,0.1)" strokeWidth="1" />
-              <line x1="60" y1="40" x2="60" y2="260" stroke="rgba(255,255,255,0.1)" strokeWidth="1" />
+        <motion.p variants={fadeInUp} initial="hidden" whileInView="visible" viewport={viewportConfig}
+          className="mt-4 max-w-2xl text-base leading-[1.7] text-[var(--p-text-subtle)]">
+          As you add more assets, the traditional model forces you to add more people. FoxNetwork breaks the curve.
+        </motion.p>
 
-              {/* Y label */}
-              <text x="20" y="150" fill="rgba(255,255,255,0.3)" fontSize="10" textAnchor="middle" transform="rotate(-90,20,150)" fontFamily="var(--font-body)">
-                Operational Headcount / Complexity
+        {/* ── Full-width chart ── */}
+        <motion.div variants={fadeInUp} initial="hidden" whileInView="visible" viewport={viewportConfig}
+          className="mt-10 rounded-2xl border border-[var(--p-border)] bg-[var(--p-surface)] p-6 lg:p-10" ref={chartRef}>
+          <svg viewBox="0 0 700 380" className="w-full">
+            <defs>
+              {/* Gradient fill for the gap area */}
+              <linearGradient id="gap-fill" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="rgba(239,68,68,0.12)" />
+                <stop offset="100%" stopColor="rgba(239,68,68,0.02)" />
+              </linearGradient>
+            </defs>
+
+            {/* Grid lines */}
+            {[0, 1, 2, 3, 4].map((i) => (
+              <line key={`hgrid-${i}`} x1="80" y1={70 + i * 60} x2="660" y2={70 + i * 60}
+                stroke={c.gridLine} strokeWidth="1" />
+            ))}
+            {[0, 1, 2, 3].map((i) => (
+              <line key={`vgrid-${i}`} x1={210 + i * 150} y1="50" x2={210 + i * 150} y2="320"
+                stroke={c.gridLine} strokeWidth="1" />
+            ))}
+
+            {/* Axes */}
+            <line x1="80" y1="320" x2="660" y2="320" stroke={c.stroke} strokeWidth="1.5" />
+            <line x1="80" y1="50" x2="80" y2="320" stroke={c.stroke} strokeWidth="1.5" />
+
+            {/* Y-axis label */}
+            <text x="28" y="190" fill={c.textDimmer} fontSize="13" textAnchor="middle" transform="rotate(-90,28,190)" fontFamily="var(--font-body)">
+              Operational Cost / Complexity
+            </text>
+
+            {/* X-axis label */}
+            <text x="370" y="360" fill={c.textDimmer} fontSize="13" textAnchor="middle" fontFamily="var(--font-body)">
+              Asset Scale
+            </text>
+
+            {/* X-axis scale markers */}
+            {[
+              { x: 130, label: "1K" },
+              { x: 280, label: "10K" },
+              { x: 430, label: "50K" },
+              { x: 580, label: "100K" },
+            ].map((m, i) => (
+              <g key={`xmark-${i}`}>
+                <line x1={m.x} y1="320" x2={m.x} y2="326" stroke="rgba(255,255,255,0.2)" strokeWidth="1" />
+                <text x={m.x} y="340" fill={c.textDimmer} fontSize="12" textAnchor="middle" fontFamily="var(--font-mono), monospace">
+                  {m.label}
+                </text>
+              </g>
+            ))}
+
+            {/* ── Gap area between curves (shaded red) ── */}
+            <motion.path
+              d="M100 305 Q250 298 370 240 Q480 170 630 65 L630 285 Q480 290 370 293 Q250 298 100 302 Z"
+              fill="url(#gap-fill)"
+              initial={{ opacity: 0 }}
+              animate={inView ? { opacity: 1 } : {}}
+              transition={{ delay: 2, duration: 1 }}
+            />
+
+            {/* Gap annotation arrow + label */}
+            <motion.g
+              initial={{ opacity: 0 }}
+              animate={inView ? { opacity: 1 } : {}}
+              transition={{ delay: 2.5, duration: 0.6 }}
+            >
+              {/* Vertical double arrow showing the gap */}
+              <line x1="540" y1="120" x2="540" y2="288" stroke="rgba(239,68,68,0.5)" strokeWidth="1.5" strokeDasharray="4 3" />
+              <path d="M535 125 L540 115 L545 125" fill="none" stroke="rgba(239,68,68,0.5)" strokeWidth="1.5" />
+              <path d="M535 283 L540 293 L545 283" fill="none" stroke="rgba(239,68,68,0.5)" strokeWidth="1.5" />
+              {/* Gap label */}
+              <rect x="550" y="185" width="100" height="36" rx="8" fill="rgba(239,68,68,0.1)" stroke="rgba(239,68,68,0.25)" strokeWidth="1" />
+              <text x="600" y="200" fill="#ef4444" fontSize="11" fontWeight="700" textAnchor="middle" fontFamily="var(--font-mono), monospace">
+                WASTED COST
               </text>
-              {/* X label */}
-              <text x="270" y="290" fill="rgba(255,255,255,0.3)" fontSize="10" textAnchor="middle" fontFamily="var(--font-body)">
-                Asset Scale (1k → 10k → 100k)
+              <text x="600" y="214" fill="rgba(239,68,68,0.6)" fontSize="10" textAnchor="middle" fontFamily="var(--font-mono), monospace">
+                grows 5-10x
               </text>
+            </motion.g>
 
-              {/* Traditional Model — exponential red curve */}
-              <motion.path
-                d="M80 250 Q200 240 300 180 Q380 120 460 50"
-                fill="none" stroke="#ef4444" strokeWidth="2.5"
-                initial={{ pathLength: 0 }}
-                animate={inView ? { pathLength: 1 } : {}}
-                transition={{ duration: 1.5, delay: 0.5 }}
-              />
-              <text x="420" y="45" fill="#ef4444" fontSize="11" fontWeight="600" fontFamily="var(--font-body)">Traditional Model</text>
+            {/* ── Traditional Model — exponential red curve ── */}
+            <motion.path
+              d="M100 305 Q250 295 370 240 Q480 170 630 65"
+              fill="none" stroke="#ef4444" strokeWidth="3"
+              initial={{ pathLength: 0 }}
+              animate={inView ? { pathLength: 1 } : {}}
+              transition={{ duration: 1.5, delay: 0.5 }}
+            />
 
-              {/* Labels on red curve */}
-              {[
-                { x: 140, y: 230, label: "Manual Processes\n(Excel/WhatsApp)" },
-                { x: 270, y: 175, label: "Fragmented 3PLs" },
-                { x: 380, y: 105, label: "Blind Validation" },
-              ].map((item, i) => (
-                <motion.g key={i} initial={{ opacity: 0 }} animate={inView ? { opacity: 1 } : {}} transition={{ delay: 1.2 + i * 0.3 }}>
-                  <rect x={item.x - 50} y={item.y - 22} width="100" height="24" rx="12" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.1)" strokeWidth="0.5" />
-                  <text x={item.x} y={item.y - 7} fill="rgba(255,255,255,0.5)" fontSize="8" textAnchor="middle" fontFamily="var(--font-body)">{item.label}</text>
-                </motion.g>
-              ))}
+            {/* Red curve label */}
+            <motion.g initial={{ opacity: 0 }} animate={inView ? { opacity: 1 } : {}} transition={{ delay: 1.2 }}>
+              <text x="630" y="55" fill="#ef4444" fontSize="14" fontWeight="700" textAnchor="end" fontFamily="var(--font-body)">
+                Traditional Model
+              </text>
+            </motion.g>
 
-              {/* FoxNetwork — flat orange line */}
-              <motion.path
-                d="M80 245 Q200 240 300 235 Q400 230 460 225"
-                fill="none" stroke="#e8590c" strokeWidth="2.5"
-                initial={{ pathLength: 0 }}
-                animate={inView ? { pathLength: 1 } : {}}
-                transition={{ duration: 1.5, delay: 0.8 }}
-              />
-              <text x="420" y="220" fill="#e8590c" fontSize="11" fontWeight="600" fontFamily="var(--font-body)">FoxNetwork</text>
-
-              <motion.g initial={{ opacity: 0 }} animate={inView ? { opacity: 1 } : {}} transition={{ delay: 2 }}>
-                <rect x="250" y="223" width="120" height="24" rx="12" fill="rgba(232,89,12,0.1)" stroke="rgba(232,89,12,0.2)" strokeWidth="0.5" />
-                <text x="310" y="238" fill="rgba(232,89,12,0.7)" fontSize="9" textAnchor="middle" fontFamily="var(--font-body)">Automated Orchestration</text>
+            {/* Pain point labels along red curve */}
+            {[
+              { x: 180, y: 285, label: "Manual Processes", sub: "Excel / WhatsApp" },
+              { x: 340, y: 225, label: "Fragmented 3PLs", sub: "No unified view" },
+              { x: 500, y: 135, label: "Blind Validation", sub: "Can't verify work" },
+            ].map((item, i) => (
+              <motion.g key={i} initial={{ opacity: 0, y: 5 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ delay: 1.4 + i * 0.3 }}>
+                {/* Dot on curve */}
+                <circle cx={item.x} cy={item.y} r="5" fill="#ef4444" opacity="0.8" />
+                <circle cx={item.x} cy={item.y} r="8" fill="none" stroke="rgba(239,68,68,0.3)" strokeWidth="1" />
+                {/* Label */}
+                <text x={item.x} y={item.y - 20} fill={c.textMuted} fontSize="12" fontWeight="600" textAnchor="middle" fontFamily="var(--font-body)">
+                  {item.label}
+                </text>
+                <text x={item.x} y={item.y - 8} fill={c.textDimmer} fontSize="10" textAnchor="middle" fontFamily="var(--font-body)">
+                  {item.sub}
+                </text>
               </motion.g>
-            </svg>
-          </motion.div>
+            ))}
 
-          {/* Side card */}
-          <motion.div variants={fadeInUp} initial="hidden" whileInView="visible" viewport={viewportConfig}
-            className="rounded-2xl border border-stone-800 bg-stone-900/40 p-7">
-            <h3 className="font-[family-name:var(--font-heading)] text-xl font-bold text-white">The Core Economic Flaw:</h3>
-            <p className="mt-4 text-[15px] leading-[1.75] text-stone-400">
-              The traditional model relies on manual coordination. As you scale, you are forced to hire linear headcount to manage fragmented partners. This is an unsustainable economic model.
-            </p>
-          </motion.div>
+            {/* ── FoxNetwork — flat blue line ── */}
+            <motion.path
+              d="M100 302 Q250 298 370 293 Q480 290 630 285"
+              fill="none" stroke="#3B82F6" strokeWidth="3"
+              initial={{ pathLength: 0 }}
+              animate={inView ? { pathLength: 1 } : {}}
+              transition={{ duration: 1.5, delay: 0.8 }}
+            />
+
+            {/* Blue line label */}
+            <motion.g initial={{ opacity: 0 }} animate={inView ? { opacity: 1 } : {}} transition={{ delay: 1.5 }}>
+              <text x="630" y="278" fill="#3B82F6" fontSize="14" fontWeight="700" textAnchor="end" fontFamily="var(--font-body)">
+                FoxNetwork
+              </text>
+            </motion.g>
+
+            {/* FoxNetwork advantage label */}
+            <motion.g initial={{ opacity: 0 }} animate={inView ? { opacity: 1 } : {}} transition={{ delay: 2.2 }}>
+              <rect x="300" y="296" width="180" height="22" rx="11" fill="rgba(59,130,246,0.1)" stroke="rgba(59,130,246,0.25)" strokeWidth="1" />
+              <text x="390" y="311" fill="rgba(59,130,246,0.8)" fontSize="11" fontWeight="600" textAnchor="middle" fontFamily="var(--font-body)">
+                Automated Orchestration
+              </text>
+            </motion.g>
+          </svg>
+        </motion.div>
+
+        {/* ── Three key callouts below the chart ── */}
+        <div className="mt-8 grid gap-5 md:grid-cols-3">
+          {[
+            {
+              icon: Users,
+              stat: "5-10x",
+              label: "more headcount needed",
+              desc: "The traditional model requires linear hiring as you scale. Double assets = double staff.",
+              color: "text-red-400",
+              bg: "bg-red-500/10",
+              border: "border-red-500/20",
+            },
+            {
+              icon: AlertTriangle,
+              stat: "60%",
+              label: "of costs are coordination",
+              desc: "Most operational spend isn't on the work itself — it's managing who does it, when, and verifying it was done.",
+              color: "text-amber-400",
+              bg: "bg-amber-500/10",
+              border: "border-amber-500/20",
+            },
+            {
+              icon: TrendingDown,
+              stat: "Near-flat",
+              label: "cost curve with Fox",
+              desc: "Automated dispatch, AI validation, and unified data mean you scale assets without scaling headcount.",
+              color: "text-blue-400",
+              bg: "bg-blue-500/10",
+              border: "border-blue-500/20",
+            },
+          ].map((card, i) => (
+            <motion.div
+              key={i}
+              variants={fadeInUp}
+              initial="hidden"
+              whileInView="visible"
+              viewport={viewportConfig}
+              className={`rounded-2xl border ${card.border} bg-[var(--p-surface)] p-6`}
+            >
+              <div className={`inline-flex h-10 w-10 items-center justify-center rounded-xl ${card.bg}`}>
+                <card.icon className={`h-5 w-5 ${card.color}`} />
+              </div>
+              <div className="mt-4">
+                <span className={`font-[family-name:var(--font-heading)] text-3xl font-bold ${card.color}`}>
+                  {card.stat}
+                </span>
+                <span className="ml-2 text-sm text-[var(--p-text-muted)]">{card.label}</span>
+              </div>
+              <p className="mt-2 text-[14px] leading-[1.7] text-[var(--p-text-subtle)]">
+                {card.desc}
+              </p>
+            </motion.div>
+          ))}
         </div>
       </div>
     </section>

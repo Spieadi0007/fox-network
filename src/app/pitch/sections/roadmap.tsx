@@ -22,7 +22,7 @@ export function Roadmap() {
         <motion.div variants={staggerContainer} initial="hidden" whileInView="visible" viewport={viewportConfig}
           className="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {phases.map((p) => (
-            <motion.div key={p.title} variants={fadeInUp} className={`rounded-2xl border ${p.border} bg-stone-900/60 overflow-hidden`}>
+            <motion.div key={p.title} variants={fadeInUp} className={`rounded-2xl border ${p.border} bg-[var(--p-surface-2)] overflow-hidden`}>
               <div className={`${p.color} px-5 py-3`}>
                 <p className="text-xs font-medium text-white/80">{p.weeks}:</p>
                 <p className="text-lg font-bold text-white">{p.title}</p>
@@ -30,8 +30,8 @@ export function Roadmap() {
               <ul className="p-5 space-y-2">
                 {p.items.map((it) => (
                   <li key={it} className="flex items-center gap-2">
-                    <span className="h-1 w-1 shrink-0 rounded-full bg-stone-600" />
-                    <span className="text-[13px] text-stone-400">{it}</span>
+                    <span className="h-1 w-1 shrink-0 rounded-full bg-[var(--p-text-faint)]" />
+                    <span className="text-[13px] text-[var(--p-text-muted)]">{it}</span>
                   </li>
                 ))}
               </ul>

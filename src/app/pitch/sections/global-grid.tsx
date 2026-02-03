@@ -20,7 +20,7 @@ export function GlobalGrid() {
           <h2 className="font-[family-name:var(--font-heading)] text-[clamp(2rem,4.5vw,3.5rem)] font-bold leading-[1.08] tracking-[-0.03em]">
             The Global Infrastructure Grid.
           </h2>
-          <p className="mt-3 text-lg text-stone-400">
+          <p className="mt-3 text-lg text-[var(--p-text-muted)]">
             One API, infinite scale. A shared marketplace for elastic capacity.
           </p>
         </motion.div>
@@ -28,17 +28,17 @@ export function GlobalGrid() {
         <div className="mt-14 grid gap-10 lg:grid-cols-2">
           {/* Verticals ring */}
           <motion.div variants={fadeInUp} initial="hidden" whileInView="visible" viewport={viewportConfig}
-            className="flex flex-col items-center justify-center rounded-2xl border border-stone-800 bg-stone-900/40 p-10">
+            className="flex flex-col items-center justify-center rounded-2xl border border-[var(--p-border)] bg-[var(--p-surface)] p-10">
             <div className="grid grid-cols-2 gap-4">
               {verticals.map((v) => (
-                <div key={v} className="flex h-20 w-28 items-center justify-center rounded-xl border border-stone-700 bg-stone-800/60 text-center">
-                  <span className="text-sm font-semibold text-stone-300">{v}</span>
+                <div key={v} className="flex h-20 w-28 items-center justify-center rounded-xl border border-[var(--p-border-2)] bg-[var(--p-surface-2)] text-center">
+                  <span className="text-sm font-semibold text-[var(--p-text-medium)]">{v}</span>
                 </div>
               ))}
             </div>
             <div className="mt-6 rounded-full border-2 border-blue-500/30 bg-blue-500/5 px-6 py-3 text-center">
               <p className="text-xs font-semibold text-blue-400">Shared Resource Pool</p>
-              <p className="text-[11px] text-stone-500">Cross-skilled workforce, elastic deployment</p>
+              <p className="text-[11px] text-[var(--p-text-subtle)]">Cross-skilled workforce, elastic deployment</p>
             </div>
           </motion.div>
 
@@ -48,12 +48,12 @@ export function GlobalGrid() {
             <h3 className="font-[family-name:var(--font-heading)] text-xl font-bold">The Network Effect:</h3>
             {effects.map((e) => (
               <motion.div key={e.title} variants={fadeInUp}
-                className="rounded-xl border border-stone-800 bg-stone-900/40 p-5">
+                className="rounded-xl border border-[var(--p-border)] bg-[var(--p-surface)] p-5">
                 <div className="flex items-center gap-3">
                   <e.icon className="h-5 w-5 shrink-0 text-fox-orange" />
                   <h4 className="text-[15px] font-bold">{e.title}</h4>
                 </div>
-                <p className="mt-2 text-[13px] leading-[1.7] text-stone-400">{e.desc}</p>
+                <p className="mt-2 text-[13px] leading-[1.7] text-[var(--p-text-muted)]">{e.desc}</p>
               </motion.div>
             ))}
           </motion.div>

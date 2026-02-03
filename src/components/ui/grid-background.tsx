@@ -141,12 +141,12 @@ export function GridBackground({ className }: { className?: string }) {
           const alpha = (1 - s / p.length) * 0.5;
 
           // Glow
-          ctx.shadowColor = `rgba(232, 89, 12, ${alpha * 0.8})`;
+          ctx.shadowColor = `rgba(59, 130, 246, ${alpha * 0.8})`;
           ctx.shadowBlur = 8;
 
           // Segment line
           const segEnd = gridSize * 0.8;
-          ctx.strokeStyle = `rgba(232, 89, 12, ${alpha})`;
+          ctx.strokeStyle = `rgba(59, 130, 246, ${alpha})`;
           ctx.lineWidth = 1.5;
           ctx.beginPath();
           ctx.moveTo(sx, sy);
@@ -155,16 +155,16 @@ export function GridBackground({ className }: { className?: string }) {
 
           // Bright node at segment start
           ctx.shadowBlur = 12;
-          ctx.fillStyle = `rgba(232, 89, 12, ${alpha * 1.2})`;
+          ctx.fillStyle = `rgba(59, 130, 246, ${alpha * 1.2})`;
           ctx.beginPath();
           ctx.arc(sx, sy, 2, 0, Math.PI * 2);
           ctx.fill();
         }
 
         // Bright head node
-        ctx.shadowColor = "rgba(232, 89, 12, 0.9)";
+        ctx.shadowColor = "rgba(59, 130, 246, 0.9)";
         ctx.shadowBlur = 16;
-        ctx.fillStyle = "rgba(232, 89, 12, 0.7)";
+        ctx.fillStyle = "rgba(59, 130, 246, 0.7)";
         ctx.beginPath();
         ctx.arc(headX, headY, 2.5, 0, Math.PI * 2);
         ctx.fill();

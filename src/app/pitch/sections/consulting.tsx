@@ -44,7 +44,7 @@ export function Consulting() {
           <h2 className="font-[family-name:var(--font-heading)] text-[clamp(2rem,4.5vw,3.5rem)] font-bold leading-[1.08] tracking-[-0.03em]">
             End-to-End Field Operations Consulting.
           </h2>
-          <p className="mt-3 text-lg text-stone-400">
+          <p className="mt-3 text-lg text-[var(--p-text-muted)]">
             Transformation, not just transaction. We implement, connect, and scale with you.
           </p>
         </motion.div>
@@ -53,17 +53,17 @@ export function Consulting() {
           className="mt-14 grid gap-5 md:grid-cols-3">
           {pillars.map((p) => (
             <motion.div key={p.title} variants={fadeInUp}
-              className={`relative overflow-hidden rounded-2xl border ${p.border} bg-stone-900/60 p-7`}>
+              className={`relative overflow-hidden rounded-2xl border ${p.border} bg-[var(--p-surface-2)] p-7`}>
               <div className={`pointer-events-none absolute inset-0 bg-gradient-to-b ${p.bg} to-transparent`} />
               <div className="relative">
                 <h3 className="font-[family-name:var(--font-heading)] text-xl font-bold">{p.title}</h3>
                 <span className={`text-sm font-medium ${p.accent}`}>({p.subtitle})</span>
-                <p className="mt-2 text-[13px] text-stone-400">{p.desc}</p>
+                <p className="mt-2 text-[13px] text-[var(--p-text-muted)]">{p.desc}</p>
                 <ul className="mt-5 space-y-2">
                   {p.points.map((pt) => (
                     <li key={pt} className="flex items-center gap-2.5">
                       <span className={`h-1.5 w-1.5 shrink-0 rounded-full ${p.dot}`} />
-                      <span className="text-[13px] text-stone-300">{pt}</span>
+                      <span className="text-[13px] text-[var(--p-text-medium)]">{pt}</span>
                     </li>
                   ))}
                 </ul>
@@ -73,8 +73,8 @@ export function Consulting() {
         </motion.div>
 
         <motion.div variants={fadeInUp} initial="hidden" whileInView="visible" viewport={viewportConfig} className="mt-10">
-          <div className="rounded-xl border border-stone-800 bg-stone-900/40 px-8 py-5 text-center">
-            <p className="text-[15px] font-medium text-stone-300">
+          <div className="rounded-xl border border-[var(--p-border)] bg-[var(--p-surface)] px-8 py-5 text-center">
+            <p className="text-[15px] font-medium text-[var(--p-text-medium)]">
               We don&apos;t just advise. We provide the{" "}
               <span className="text-fox-orange">Strategy</span>, the{" "}
               <span className="text-blue-400">Tools</span>, and the{" "}

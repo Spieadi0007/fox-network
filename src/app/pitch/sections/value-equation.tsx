@@ -23,9 +23,9 @@ export function ValueEquation() {
           className="mt-14 grid gap-5 sm:grid-cols-2">
           {stats.map((s) => (
             <motion.div key={s.value} variants={fadeInUp}
-              className="rounded-2xl border border-fox-orange/30 bg-stone-900/60 p-8">
+              className="rounded-2xl border border-fox-orange/30 bg-[var(--p-surface-2)] p-8">
               <span className="font-[family-name:var(--font-heading)] text-4xl font-bold text-fox-orange sm:text-5xl">{s.value}</span>
-              <p className="mt-3 text-[15px] leading-[1.7] text-stone-400">{s.desc}</p>
+              <p className="mt-3 text-[15px] leading-[1.7] text-[var(--p-text-muted)]">{s.desc}</p>
             </motion.div>
           ))}
         </motion.div>

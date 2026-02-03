@@ -35,18 +35,18 @@ export function Engagement() {
           <h2 className="font-[family-name:var(--font-heading)] text-[clamp(2rem,4.5vw,3.5rem)] font-bold leading-[1.08] tracking-[-0.03em]">
             How We Engage: A Consulting-First Model
           </h2>
-          <p className="mt-3 text-lg text-stone-400">A simple, risk-free way to get started.</p>
+          <p className="mt-3 text-lg text-[var(--p-text-muted)]">A simple, risk-free way to get started.</p>
         </motion.div>
 
         <motion.div variants={staggerContainer} initial="hidden" whileInView="visible" viewport={viewportConfig}
           className="mt-14 grid gap-6 md:grid-cols-3">
           {steps.map((s) => (
             <motion.div key={s.num} variants={fadeInUp}
-              className={`rounded-2xl border ${s.border} bg-stone-900/60 p-7`}>
+              className={`rounded-2xl border ${s.border} bg-[var(--p-surface-2)] p-7`}>
               <span className="font-[family-name:var(--font-heading)] text-3xl font-bold text-fox-orange">{s.num}</span>
               <h3 className="mt-3 font-[family-name:var(--font-heading)] text-lg font-bold">{s.title}</h3>
-              <p className="mt-3 text-[14px] leading-[1.7] text-stone-400">{s.desc}</p>
-              {s.output && <p className="mt-4 text-[13px] font-medium text-stone-500">{s.output}</p>}
+              <p className="mt-3 text-[14px] leading-[1.7] text-[var(--p-text-muted)]">{s.desc}</p>
+              {s.output && <p className="mt-4 text-[13px] font-medium text-[var(--p-text-subtle)]">{s.output}</p>}
             </motion.div>
           ))}
         </motion.div>

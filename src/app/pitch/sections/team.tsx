@@ -30,23 +30,23 @@ export function Team() {
           className="mt-14 mx-auto grid max-w-3xl gap-6 sm:grid-cols-2">
           {members.map((m) => (
             <motion.div key={m.name} variants={fadeInUp}
-              className="rounded-2xl border border-stone-800 bg-stone-900/60 overflow-hidden">
+              className="rounded-2xl border border-[var(--p-border)] bg-[var(--p-surface-2)] overflow-hidden">
               {/* Avatar placeholder */}
               <div className="flex h-40 items-center justify-center bg-fox-orange">
-                <div className="flex h-20 w-20 items-center justify-center rounded-full bg-stone-700/60">
-                  <span className="font-[family-name:var(--font-heading)] text-2xl font-bold text-stone-300">
+                <div className="flex h-20 w-20 items-center justify-center rounded-full bg-[var(--p-surface-2)]">
+                  <span className="font-[family-name:var(--font-heading)] text-2xl font-bold text-[var(--p-text-medium)]">
                     {m.name.split(" ").map(n => n[0]).join("")}
                   </span>
                 </div>
               </div>
               <div className="p-6">
                 <h3 className="font-[family-name:var(--font-heading)] text-xl font-bold">{m.name}</h3>
-                <p className="text-sm text-stone-400">{m.role}</p>
+                <p className="text-sm text-[var(--p-text-muted)]">{m.role}</p>
                 <ul className="mt-4 space-y-2">
                   {m.points.map((pt) => (
                     <li key={pt} className="flex items-center gap-2">
                       <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-fox-orange" />
-                      <span className="text-[13px] text-stone-300">{pt}</span>
+                      <span className="text-[13px] text-[var(--p-text-medium)]">{pt}</span>
                     </li>
                   ))}
                 </ul>
@@ -56,7 +56,7 @@ export function Team() {
         </motion.div>
 
         <motion.div variants={fadeInUp} initial="hidden" whileInView="visible" viewport={viewportConfig} className="mt-10 text-center">
-          <p className="text-[15px] font-medium text-stone-400">
+          <p className="text-[15px] font-medium text-[var(--p-text-muted)]">
             A team that has built and scaled field operations firsthand. We have lived your pain.
           </p>
         </motion.div>
