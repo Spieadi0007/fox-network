@@ -12,23 +12,23 @@ export function LinearTrap() {
   const c = usePitchColors();
 
   return (
-    <section className="relative flex min-h-full items-center py-12 lg:py-16">
+    <section className="relative flex min-h-full items-center py-4 lg:py-6">
       <div className="mx-auto w-full max-w-6xl px-6 sm:px-8">
         <motion.h2 variants={fadeInUp} initial="hidden" whileInView="visible" viewport={viewportConfig}
-          className="font-[family-name:var(--font-heading)] text-[clamp(2rem,4.5vw,3.5rem)] font-bold leading-[1.08] tracking-[-0.03em]">
+          className="font-[family-name:var(--font-heading)] text-[clamp(1.75rem,3.5vw,2.75rem)] font-bold leading-[1.08] tracking-[-0.03em]">
           The Linear Trap:{" "}
           <span className="text-[var(--p-text-muted)]">Why Operations Break at Scale</span>
         </motion.h2>
 
         <motion.p variants={fadeInUp} initial="hidden" whileInView="visible" viewport={viewportConfig}
-          className="mt-4 max-w-2xl text-base leading-[1.7] text-[var(--p-text-subtle)]">
+          className="mt-2 max-w-2xl text-sm leading-[1.6] text-[var(--p-text-subtle)]">
           As you add more assets, the traditional model forces you to add more people. FoxNetwork breaks the curve.
         </motion.p>
 
         {/* ── Full-width chart ── */}
         <motion.div variants={fadeInUp} initial="hidden" whileInView="visible" viewport={viewportConfig}
-          className="mt-10 rounded-2xl border border-[var(--p-border)] bg-[var(--p-surface)] p-6 lg:p-10" ref={chartRef}>
-          <svg viewBox="0 0 700 380" className="w-full">
+          className="mt-4 rounded-2xl border border-[var(--p-border)] bg-[var(--p-surface)] p-4 lg:p-6" ref={chartRef}>
+          <svg viewBox="0 0 700 380" className="w-full max-h-[320px]">
             <defs>
               {/* Gradient fill for the gap area */}
               <linearGradient id="gap-fill" x1="0" y1="0" x2="0" y2="1">
@@ -98,7 +98,7 @@ export function LinearTrap() {
               {/* Gap label */}
               <rect x="550" y="185" width="100" height="36" rx="8" fill="rgba(239,68,68,0.1)" stroke="rgba(239,68,68,0.25)" strokeWidth="1" />
               <text x="600" y="200" fill="#ef4444" fontSize="11" fontWeight="700" textAnchor="middle" fontFamily="var(--font-mono), monospace">
-                WASTED COST
+                COST
               </text>
               <text x="600" y="214" fill="rgba(239,68,68,0.6)" fontSize="10" textAnchor="middle" fontFamily="var(--font-mono), monospace">
                 grows 5-10x
@@ -168,7 +168,7 @@ export function LinearTrap() {
         </motion.div>
 
         {/* ── Three key callouts below the chart ── */}
-        <div className="mt-8 grid gap-5 md:grid-cols-3">
+        <div className="mt-4 grid gap-3 md:grid-cols-3">
           {[
             {
               icon: Users,
@@ -204,18 +204,20 @@ export function LinearTrap() {
               initial="hidden"
               whileInView="visible"
               viewport={viewportConfig}
-              className={`rounded-2xl border ${card.border} bg-[var(--p-surface)] p-6`}
+              className={`rounded-2xl border ${card.border} bg-[var(--p-surface)] p-4`}
             >
-              <div className={`inline-flex h-10 w-10 items-center justify-center rounded-xl ${card.bg}`}>
-                <card.icon className={`h-5 w-5 ${card.color}`} />
+              <div className="flex items-center gap-3">
+                <div className={`inline-flex h-8 w-8 items-center justify-center rounded-lg ${card.bg}`}>
+                  <card.icon className={`h-4 w-4 ${card.color}`} />
+                </div>
+                <div>
+                  <span className={`font-[family-name:var(--font-heading)] text-2xl font-bold ${card.color}`}>
+                    {card.stat}
+                  </span>
+                  <span className="ml-1.5 text-xs text-[var(--p-text-muted)]">{card.label}</span>
+                </div>
               </div>
-              <div className="mt-4">
-                <span className={`font-[family-name:var(--font-heading)] text-3xl font-bold ${card.color}`}>
-                  {card.stat}
-                </span>
-                <span className="ml-2 text-sm text-[var(--p-text-muted)]">{card.label}</span>
-              </div>
-              <p className="mt-2 text-[14px] leading-[1.7] text-[var(--p-text-subtle)]">
+              <p className="mt-2 text-[13px] leading-[1.6] text-[var(--p-text-subtle)]">
                 {card.desc}
               </p>
             </motion.div>

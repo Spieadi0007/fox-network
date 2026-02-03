@@ -12,8 +12,8 @@ function HardwareIllustration() {
   const c = usePitchColors();
 
   return (
-    <div ref={ref} className="mt-6 flex items-center justify-center">
-      <svg viewBox="0 0 420 400" className="w-full">
+    <div ref={ref} className="mt-3 flex items-center justify-center">
+      <svg viewBox="0 0 420 400" className="w-full max-h-[200px]">
         {/* Blueprint grid */}
         <defs>
           <pattern id="bp-grid" width="30" height="30" patternUnits="userSpaceOnUse">
@@ -169,8 +169,8 @@ function OperationalIllustration() {
   };
 
   return (
-    <div ref={ref} className="mt-6 flex items-center justify-center">
-      <svg viewBox="0 0 420 400" className="w-full">
+    <div ref={ref} className="mt-3 flex items-center justify-center">
+      <svg viewBox="0 0 420 400" className="w-full max-h-[200px]">
         <defs>
           <pattern id="bp-grid2" width="30" height="30" patternUnits="userSpaceOnUse">
             <path d="M 30 0 L 0 0 0 30" fill="none" stroke="rgba(59,130,246,0.06)" strokeWidth="0.5" />
@@ -305,7 +305,7 @@ function OperationalIllustration() {
 export function MacroShift() {
   const c = usePitchColors();
   return (
-    <section className="relative flex min-h-full items-center py-12 lg:py-16">
+    <section className="relative flex min-h-full items-center py-4 lg:py-6">
       <div className="pointer-events-none absolute inset-0 opacity-[0.03]" style={{
         backgroundImage: `linear-gradient(${c.gridLineBold} 1px, transparent 1px), linear-gradient(90deg, ${c.gridLineBold} 1px, transparent 1px)`,
         backgroundSize: "48px 48px",
@@ -313,18 +313,18 @@ export function MacroShift() {
 
       <div className="mx-auto w-full max-w-6xl px-6 sm:px-8">
         <motion.h2 variants={fadeInUp} initial="hidden" whileInView="visible" viewport={viewportConfig}
-          className="font-[family-name:var(--font-heading)] text-[clamp(2rem,4.5vw,3.5rem)] font-bold leading-[1.08] tracking-[-0.03em]">
+          className="font-[family-name:var(--font-heading)] text-[clamp(1.75rem,3.5vw,2.75rem)] font-bold leading-[1.08] tracking-[-0.03em]">
           The Macro Shift:{" "}
           <span className="text-[var(--p-text-muted)]">Digital World, Physical Assets.</span>
         </motion.h2>
 
         {/* Two-column visual comparison */}
-        <div className="mt-10 grid gap-6 lg:grid-cols-2">
+        <div className="mt-4 grid gap-4 lg:grid-cols-2">
           {/* Left — The Future Hardware */}
           <motion.div variants={fadeInLeft} initial="hidden" whileInView="visible" viewport={viewportConfig}
-            className="rounded-2xl border border-[var(--p-border)] bg-[var(--p-surface)] p-6 lg:p-8">
-            <h3 className="text-xl font-semibold text-[var(--p-text-strong)]">The Future Hardware</h3>
-            <p className="mt-2 text-[15px] leading-[1.7] text-[var(--p-text-subtle)]">
+            className="rounded-2xl border border-[var(--p-border)] bg-[var(--p-surface)] p-4 lg:p-5">
+            <h3 className="text-lg font-semibold text-[var(--p-text-strong)]">The Future Hardware</h3>
+            <p className="mt-1.5 text-[14px] leading-[1.6] text-[var(--p-text-subtle)]">
               Industries are deploying distributed physical networks at unprecedented scale — EV chargers, telecom 5G towers, smart lockers, industrial IoT sensors.
             </p>
             <HardwareIllustration />
@@ -332,32 +332,15 @@ export function MacroShift() {
 
           {/* Right — The Operational Reality */}
           <motion.div variants={fadeInRight} initial="hidden" whileInView="visible" viewport={viewportConfig}
-            className="rounded-2xl border border-[var(--p-border)] bg-[var(--p-surface)] p-6 lg:p-8">
-            <h3 className="text-xl font-semibold text-[var(--p-text-strong)]">The Operational Reality</h3>
-            <p className="mt-2 text-[15px] leading-[1.7] text-[var(--p-text-subtle)]">
+            className="rounded-2xl border border-[var(--p-border)] bg-[var(--p-surface)] p-4 lg:p-5">
+            <h3 className="text-lg font-semibold text-[var(--p-text-strong)]">The Operational Reality</h3>
+            <p className="mt-1.5 text-[14px] leading-[1.6] text-[var(--p-text-subtle)]">
               Every device needs trucks, technicians, parts, schedules, compliance — coordinated across cities and countries.
             </p>
             <OperationalIllustration />
           </motion.div>
         </div>
 
-        {/* Bottom insight bar */}
-        <motion.div variants={fadeInUp} initial="hidden" whileInView="visible" viewport={viewportConfig}
-          className="mt-8 rounded-2xl border border-[var(--p-border)] bg-[var(--p-surface)] p-8 lg:p-10">
-          <div className="grid gap-8 md:grid-cols-2 md:items-center">
-            <div>
-              <p className="text-sm font-semibold text-fox-orange">Key Insight</p>
-              <p className="mt-3 text-base leading-[1.7] text-[var(--p-text-muted)]">
-                As industries transition to distributed networks — EV charging, telecom 5G, smart lockers, and industrial IoT — the bottleneck is no longer the hardware. It is the operation.
-              </p>
-            </div>
-            <div className="flex flex-col items-start justify-center">
-              <span className="font-[family-name:var(--font-heading)] text-5xl font-bold text-fox-orange sm:text-6xl">$8 Billion</span>
-              <p className="mt-3 text-sm font-medium text-[var(--p-text-muted)]">Total Global Serviceable Field Operations Market</p>
-              <p className="mt-1 text-xs text-[var(--p-text-faint)]">EV Charging | Telecom Infrastructure | Industrial IoT | Smart Cities</p>
-            </div>
-          </div>
-        </motion.div>
       </div>
     </section>
   );

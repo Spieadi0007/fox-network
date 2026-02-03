@@ -430,16 +430,6 @@ export function Cover() {
               a globally orchestrated digital grid.
             </motion.p>
 
-            <motion.div
-              variants={fadeInUp}
-              className="mt-10 inline-flex rounded border border-[var(--p-border-2)] bg-[var(--p-surface)] px-5 py-3"
-            >
-              <span className="font-mono text-[11px] uppercase tracking-[0.15em] text-[var(--p-text-subtle)]">
-                Prepared for:
-                <br />
-                Forward-thinking operators
-              </span>
-            </motion.div>
           </motion.div>
 
           {/* ── RIGHT: Globe ── */}
