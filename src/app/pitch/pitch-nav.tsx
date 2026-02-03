@@ -12,7 +12,7 @@ const sections = [
   { id: "interfaces", label: "Interfaces" },
   { id: "ai-validation", label: "AI Validation" },
   { id: "linear-trap", label: "Linear Trap" },
-  { id: "value-equation", label: "Value Equation" },
+
   { id: "engagement", label: "Engagement" },
   { id: "roadmap", label: "Roadmap" },
   { id: "improvement", label: "Improvement" },

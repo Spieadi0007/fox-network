@@ -6,7 +6,7 @@ import { PainPoints } from "./sections/pain-points";
 import { Orchestration } from "./sections/orchestration";
 import { Interfaces } from "./sections/interfaces";
 import { AIValidation } from "./sections/ai-validation";
-import { ValueEquation } from "./sections/value-equation";
+
 import { Engagement } from "./sections/engagement";
 import { Roadmap } from "./sections/roadmap";
 import { ImprovementCycle } from "./sections/improvement-cycle";
@@ -30,7 +30,7 @@ export default function PitchPage() {
       <Interfaces />
       <AIValidation />
       <LinearTrap />
-      <ValueEquation />
+
       <Engagement />
       <Roadmap />
       <ImprovementCycle />
