@@ -16,8 +16,8 @@ export function LinearTrap() {
       <div className="mx-auto w-full max-w-6xl px-6 sm:px-8">
         <motion.h2 variants={fadeInUp} initial="hidden" whileInView="visible" viewport={viewportConfig}
           className="font-[family-name:var(--font-heading)] text-[clamp(1.75rem,3.5vw,2.75rem)] font-bold leading-[1.08] tracking-[-0.03em]">
-          The Linear Trap:{" "}
-          <span className="text-[var(--p-text-muted)]">Why Operations Break at Scale</span>
+          Traditional Ops vs.{" "}
+          <span className="text-blue-400">FoxNetwork</span>
         </motion.h2>
 
         <motion.p variants={fadeInUp} initial="hidden" whileInView="visible" viewport={viewportConfig}
@@ -84,26 +84,6 @@ export function LinearTrap() {
               animate={inView ? { opacity: 1 } : {}}
               transition={{ delay: 2, duration: 1 }}
             />
-
-            {/* Gap annotation arrow + label */}
-            <motion.g
-              initial={{ opacity: 0 }}
-              animate={inView ? { opacity: 1 } : {}}
-              transition={{ delay: 2.5, duration: 0.6 }}
-            >
-              {/* Vertical double arrow showing the gap */}
-              <line x1="540" y1="120" x2="540" y2="288" stroke="rgba(239,68,68,0.5)" strokeWidth="1.5" strokeDasharray="4 3" />
-              <path d="M535 125 L540 115 L545 125" fill="none" stroke="rgba(239,68,68,0.5)" strokeWidth="1.5" />
-              <path d="M535 283 L540 293 L545 283" fill="none" stroke="rgba(239,68,68,0.5)" strokeWidth="1.5" />
-              {/* Gap label */}
-              <rect x="550" y="185" width="100" height="36" rx="8" fill="rgba(239,68,68,0.1)" stroke="rgba(239,68,68,0.25)" strokeWidth="1" />
-              <text x="600" y="200" fill="#ef4444" fontSize="11" fontWeight="700" textAnchor="middle" fontFamily="var(--font-mono), monospace">
-                COST
-              </text>
-              <text x="600" y="214" fill="rgba(239,68,68,0.6)" fontSize="10" textAnchor="middle" fontFamily="var(--font-mono), monospace">
-                grows 5-10x
-              </text>
-            </motion.g>
 
             {/* ── Traditional Model — exponential red curve ── */}
             <motion.path

@@ -11,17 +11,32 @@ const pillars = [
   {
     label: "Deployment",
     color: "#3B82F6",
-    steps: ["Capacity & routes", "Site prep & permits", "Install & commission", "Live support"],
+    steps: [
+      "Truck capacity & automated planning",
+      "Installation, site surveys, permits & works",
+      "Approval & escalation management",
+      "Live support",
+    ],
   },
   {
     label: "Maintenance",
     color: "#8B5CF6",
-    steps: ["Classify issue", "Dispatch & route", "Field intervention", "Close event"],
+    steps: [
+      "Manual & automatic routing",
+      "Reactive, preventive & predictive interventions",
+      "Client-specific SLA tracking & KPI reporting",
+      "Escalation management & live support",
+    ],
   },
   {
     label: "Supply Chain",
     color: "#06B6D4",
-    steps: ["Forecast demand", "Allocate parts", "Ship to site", "Update stock"],
+    steps: [
+      "Parts inventory & min/max stock management",
+      "Demand & forecast planning",
+      "Logistics, shipments & warehouse management",
+      "Technician material provisioning",
+    ],
   },
 ];
 

@@ -6,7 +6,6 @@ import { Consulting } from "./sections/consulting";
 import { Orchestration } from "./sections/orchestration";
 import { Interfaces } from "./sections/interfaces";
 import { AIValidation } from "./sections/ai-validation";
-import { GlobalGrid } from "./sections/global-grid";
 import { ValueEquation } from "./sections/value-equation";
 import { Engagement } from "./sections/engagement";
 import { Roadmap } from "./sections/roadmap";
@@ -25,13 +24,12 @@ export default function PitchPage() {
     <PitchShell>
       <Cover />
       <MacroShift />
-      <LinearTrap />
       <PainPoints />
       <Consulting />
       <Orchestration />
       <Interfaces />
       <AIValidation />
-      <GlobalGrid />
+      <LinearTrap />
       <ValueEquation />
       <Engagement />
       <Roadmap />

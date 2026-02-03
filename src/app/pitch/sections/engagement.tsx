@@ -6,23 +6,23 @@ import { fadeInUp, staggerContainer, viewportConfig } from "@/lib/animations";
 const steps = [
   {
     num: "1.",
-    title: "Two Free Discovery Sessions",
-    desc: "We start with two 1.5hr complimentary workshops to understand your business assets, pain points, and goals. No commitment required.",
-    output: "Output: Macro-process analysis and high-level execution plan.",
+    title: "Free Discovery Workshops",
+    desc: "We invest in understanding your operations first — your assets, workflows, pain points, and goals. No cost, no commitment.",
+    output: "You receive: Full operational assessment and a tailored execution roadmap.",
     border: "border-fox-orange/40",
   },
   {
     num: "2.",
     title: "Milestone-Based Implementation",
-    desc: "Based on discovery, we propose a tailored plan. You only pay as we deliver value.",
-    output: "",
+    desc: "We build and deploy in phases. You only pay when we deliver measurable results at each milestone.",
+    output: "You receive: Working platform configured to your operations from day one.",
     border: "border-blue-500/30",
   },
   {
     num: "3.",
-    title: "Ongoing Partnership",
-    desc: "After the first milestone, we discuss long-term pricing based on scale and needs.",
-    output: "",
+    title: "Long-Term Partnership",
+    desc: "As your operations scale, we grow with you. Pricing adapts to your volume, regions, and evolving needs.",
+    output: "You receive: Dedicated support, continuous optimization, and priority roadmap input.",
     border: "border-violet-500/30",
   },
 ];
