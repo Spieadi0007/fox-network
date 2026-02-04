@@ -80,7 +80,7 @@ export function PainPoints() {
           initial="hidden"
           whileInView="visible"
           viewport={viewportConfig}
-          className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
+          className="mt-12 grid grid-cols-3 gap-4"
         >
           {pains.map((p) => (
             <motion.div
@@ -98,7 +98,7 @@ export function PainPoints() {
                   <p.icon className={`h-5 w-5 ${p.color}`} />
                 </div>
 
-                <h3 className="mt-4 font-[family-name:var(--font-heading)] text-[15px] font-bold leading-snug text-white">
+                <h3 className="mt-4 font-[family-name:var(--font-heading)] text-[15px] font-bold leading-snug text-[var(--p-text)]">
                   {p.title}
                 </h3>
                 <p className="mt-2 text-[13px] leading-[1.7] text-[var(--p-text-muted)]">

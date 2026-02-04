@@ -25,7 +25,7 @@ export function PitchCTA() {
             Your Operations.
           </motion.h2>
 
-          <motion.a variants={fadeInUp} href="mailto:contact@foxnetwork.com"
+          <motion.a variants={fadeInUp} href="mailto:contact@foxnetwork.io"
             className="shimmer-btn mt-12 inline-flex items-center gap-2 rounded-xl bg-fox-orange px-10 py-5 text-lg font-bold text-white shadow-2xl shadow-fox-orange/25 transition-all hover:shadow-fox-orange/40 hover:brightness-110">
             Book the Free Discovery Session
             <ArrowRight className="h-5 w-5" />
@@ -36,9 +36,9 @@ export function PitchCTA() {
           </motion.p>
 
           <motion.div variants={fadeInUp} className="mt-16 flex flex-wrap items-center justify-center gap-6">
-            <span className="font-mono text-xs uppercase tracking-widest text-[var(--p-text-faint)]">foxnetwork.com</span>
+            <span className="font-mono text-xs lowercase tracking-widest text-[var(--p-text-faint)]">foxnetwork.io</span>
             <span className="text-[var(--p-text-ghost)]">|</span>
-            <span className="font-mono text-xs uppercase tracking-widest text-[var(--p-text-faint)]">contact@foxnetwork.com</span>
+            <span className="font-mono text-xs lowercase tracking-widest text-[var(--p-text-faint)]">contact@foxnetwork.io</span>
           </motion.div>
         </motion.div>
       </div>

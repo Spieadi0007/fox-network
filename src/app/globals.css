@@ -213,15 +213,18 @@ body {
 /* ── Print / PDF export ── */
 @media print {
   @page {
-    size: landscape;
+    size: 1280px 720px;
     margin: 0;
   }
 
-  body {
+  html, body {
+    margin: 0 !important;
+    padding: 0 !important;
     background: #111110 !important;
     color: #ffffff !important;
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
+    overflow: visible !important;
   }
 
   /* Hide controls */
@@ -231,11 +234,17 @@ body {
 
   /* Force all framer-motion elements visible */
   .pitch-print-slides * {
-    opacity: 1 !important;
-    transform: none !important;
     animation: none !important;
     transition: none !important;
     animation-delay: 0s !important;
+  }
+
+  .pitch-print-slides [style*="opacity"] {
+    opacity: 1 !important;
+  }
+
+  .pitch-print-slides [style*="transform"] {
+    transform: none !important;
   }
 
   /* Force SVG paths to render fully */
@@ -247,16 +256,39 @@ body {
     stroke-dashoffset: 0 !important;
   }
 
-  .pitch-print-slides > * {
-    width: 100vw;
-    height: 100vh;
-    page-break-after: always;
-    break-after: page;
-    overflow: hidden;
+  /* Hide decorative background grids, glows, noise */
+  .pitch-print-slides .pointer-events-none[style*="backgroundImage"],
+  .pitch-print-slides .grain::before,
+  .pitch-print-slides .pointer-events-none[class*="blur"] {
+    display: none !important;
   }
 
-  .pitch-print-slides > *:last-child {
-    page-break-after: avoid;
-    break-after: avoid;
+  /* Each slide = one page */
+  .pitch-print-slides {
+    width: 1280px !important;
+  }
+
+  .pitch-print-slides > .pitch-slide {
+    width: 1280px !important;
+    height: 720px !important;
+    max-height: 720px !important;
+    overflow: hidden !important;
+    page-break-after: always !important;
+    break-after: page !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    position: relative !important;
+  }
+
+  .pitch-print-slides > .pitch-slide:last-child {
+    page-break-after: avoid !important;
+    break-after: avoid !important;
+  }
+
+  /* Ensure sections fill the slide */
+  .pitch-print-slides > .pitch-slide > section {
+    min-height: 100% !important;
+    height: 100% !important;
+    overflow: hidden !important;
   }
 }

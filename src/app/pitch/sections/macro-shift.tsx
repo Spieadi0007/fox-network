@@ -13,7 +13,7 @@ function HardwareIllustration() {
 
   return (
     <div ref={ref} className="mt-3 flex items-center justify-center">
-      <svg viewBox="0 0 420 400" className="w-full max-h-[200px]">
+      <svg viewBox="0 0 420 400" className="mx-auto w-full max-h-[300px]">
         {/* Blueprint grid */}
         <defs>
           <pattern id="bp-grid" width="30" height="30" patternUnits="userSpaceOnUse">
@@ -170,7 +170,7 @@ function OperationalIllustration() {
 
   return (
     <div ref={ref} className="mt-3 flex items-center justify-center">
-      <svg viewBox="0 0 420 400" className="w-full max-h-[200px]">
+      <svg viewBox="0 0 420 400" className="mx-auto w-full max-h-[300px]">
         <defs>
           <pattern id="bp-grid2" width="30" height="30" patternUnits="userSpaceOnUse">
             <path d="M 30 0 L 0 0 0 30" fill="none" stroke="rgba(59,130,246,0.06)" strokeWidth="0.5" />
@@ -319,7 +319,7 @@ export function MacroShift() {
         </motion.h2>
 
         {/* Two-column visual comparison */}
-        <div className="mt-4 grid gap-4 lg:grid-cols-2">
+        <div className="mt-4 grid grid-cols-2 gap-4">
           {/* Left — The Future Hardware */}
           <motion.div variants={fadeInLeft} initial="hidden" whileInView="visible" viewport={viewportConfig}
             className="rounded-2xl border border-[var(--p-border)] bg-[var(--p-surface)] p-4 lg:p-5">

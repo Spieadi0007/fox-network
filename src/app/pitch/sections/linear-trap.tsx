@@ -148,7 +148,7 @@ export function LinearTrap() {
         </motion.div>
 
         {/* ── Three key callouts below the chart ── */}
-        <div className="mt-4 grid gap-3 md:grid-cols-3">
+        <div className="mt-4 grid grid-cols-3 gap-3">
           {[
             {
               icon: Users,

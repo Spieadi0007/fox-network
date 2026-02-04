@@ -390,7 +390,7 @@ export function Cover() {
       <div className="pointer-events-none absolute right-[-5%] top-1/2 h-[600px] w-[600px] -translate-y-1/2 rounded-full bg-fox-orange/[0.04] blur-[100px]" />
 
       <div className="mx-auto w-full max-w-6xl px-6 sm:px-8">
-        <div className="grid min-h-[70vh] items-center gap-4 lg:grid-cols-[1fr_1.1fr]">
+        <div className="grid min-h-[70vh] grid-cols-[1fr_1.1fr] items-center gap-4">
           {/* ── LEFT: Text content ── */}
           <motion.div
             variants={staggerContainer}
@@ -437,7 +437,7 @@ export function Cover() {
             initial={{ opacity: 0, scale: 0.92 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 1.2, delay: 0.3, ease: "easeOut" }}
-            className="relative hidden lg:block"
+            className="relative block"
           >
             <Globe />
           </motion.div>

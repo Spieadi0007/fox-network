@@ -20,12 +20,12 @@ export function Roadmap() {
         </motion.h2>
 
         <motion.div variants={staggerContainer} initial="hidden" whileInView="visible" viewport={viewportConfig}
-          className="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          className="mt-14 grid grid-cols-4 gap-4">
           {phases.map((p) => (
             <motion.div key={p.title} variants={fadeInUp} className={`rounded-2xl border ${p.border} bg-[var(--p-surface-2)] overflow-hidden`}>
               <div className={`${p.color} px-5 py-3`}>
-                <p className="text-xs font-medium text-white/80">{p.weeks}:</p>
-                <p className="text-lg font-bold text-white">{p.title}</p>
+                <p className="text-xs font-medium text-[var(--p-text-muted)]">{p.weeks}:</p>
+                <p className="text-lg font-bold text-[var(--p-text)]">{p.title}</p>
               </div>
               <ul className="p-5 space-y-2">
                 {p.items.map((it) => (

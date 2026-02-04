@@ -124,7 +124,7 @@ export function PitchShell({ children }: { children: React.ReactNode[] }) {
   // Print mode — render all slides stacked with animations forced visible
   if (printing) {
     return (
-      <PitchThemeContext.Provider value={{ theme, toggle }}>
+      <PitchThemeContext.Provider value={{ theme: "dark", toggle }}>
         <style>{`
           .pitch-print-slides * {
             opacity: 1 !important;
@@ -139,13 +139,34 @@ export function PitchShell({ children }: { children: React.ReactNode[] }) {
             stroke-dasharray: none !important;
             stroke-dashoffset: 0 !important;
           }
+          /* Hide decorative bg elements */
+          .pitch-print-slides .pointer-events-none {
+            display: none !important;
+          }
+          /* But keep non-decorative pointer-events-none like SVG containers */
+          .pitch-print-slides svg.pointer-events-none {
+            display: block !important;
+          }
         `}</style>
         <div
           data-pitch-theme="dark"
-          className="pitch-print-slides bg-[var(--p-bg)] text-[var(--p-text)]"
+          className="pitch-print-slides"
+          style={{ background: "#111110", color: "#fff" }}
         >
           {children.map((child, i) => (
-            <div key={i} className="flex h-screen w-screen items-center justify-center overflow-hidden">
+            <div
+              key={i}
+              className="pitch-slide"
+              style={{
+                width: "1280px",
+                height: "720px",
+                overflow: "hidden",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                background: "#111110",
+              }}
+            >
               {child}
             </div>
           ))}

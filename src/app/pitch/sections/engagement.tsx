@@ -33,13 +33,13 @@ export function Engagement() {
       <div className="mx-auto w-full max-w-6xl px-6 sm:px-8">
         <motion.div variants={fadeInUp} initial="hidden" whileInView="visible" viewport={viewportConfig} className="text-center">
           <h2 className="font-[family-name:var(--font-heading)] text-[clamp(2rem,4.5vw,3.5rem)] font-bold leading-[1.08] tracking-[-0.03em]">
-            How We Engage: A Consulting-First Model
+            How We Engage: Consulting-First Model
           </h2>
           <p className="mt-3 text-lg text-[var(--p-text-muted)]">A simple, risk-free way to get started.</p>
         </motion.div>
 
         <motion.div variants={staggerContainer} initial="hidden" whileInView="visible" viewport={viewportConfig}
-          className="mt-14 grid gap-6 md:grid-cols-3">
+          className="mt-14 grid grid-cols-3 gap-6">
           {steps.map((s) => (
             <motion.div key={s.num} variants={fadeInUp}
               className={`rounded-2xl border ${s.border} bg-[var(--p-surface-2)] p-7`}>
