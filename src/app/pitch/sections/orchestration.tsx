@@ -82,7 +82,7 @@ export function Orchestration() {
           initial="hidden"
           whileInView="visible"
           viewport={viewportConfig}
-          className="mt-3 grid grid-cols-3 gap-3"
+          className="mt-3 grid gap-3 md:grid-cols-3"
         >
           {pillars.map((pillar) => (
             <motion.div
@@ -121,7 +121,7 @@ export function Orchestration() {
           variants={fadeInUp} initial="hidden" whileInView="visible" viewport={viewportConfig}
           className="mt-3 rounded-xl border-2 border-dashed border-blue-500/25 bg-blue-500/[0.03] p-4"
         >
-          <div className="flex flex-row items-center justify-between gap-3">
+          <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
             <div className="flex items-center gap-2.5">
               <div className="h-2.5 w-2.5 rounded-full bg-fox-orange" />
               <h3 className="font-[family-name:var(--font-heading)] text-base font-bold">

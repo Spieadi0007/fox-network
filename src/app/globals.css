@@ -291,4 +291,23 @@ body {
     height: 100% !important;
     overflow: hidden !important;
   }
+
+  /* Force responsive grids to horizontal in print */
+  .pitch-print-slides .grid {
+    grid-template-columns: repeat(auto-fit, minmax(0, 1fr)) !important;
+  }
+
+  /* Force flex-col to flex-row */
+  .pitch-print-slides .flex-col {
+    flex-direction: row !important;
+  }
+
+  /* Show elements hidden behind lg breakpoint */
+  .pitch-print-slides .hidden {
+    display: block !important;
+  }
+
+  .pitch-print-slides .lg\:block {
+    display: block !important;
+  }
 }

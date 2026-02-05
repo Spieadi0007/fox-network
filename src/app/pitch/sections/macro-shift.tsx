@@ -319,7 +319,7 @@ export function MacroShift() {
         </motion.h2>
 
         {/* Two-column visual comparison */}
-        <div className="mt-4 grid grid-cols-2 gap-4">
+        <div className="mt-4 grid gap-4 lg:grid-cols-2">
           {/* Left — The Future Hardware */}
           <motion.div variants={fadeInLeft} initial="hidden" whileInView="visible" viewport={viewportConfig}
             className="rounded-2xl border border-[var(--p-border)] bg-[var(--p-surface)] p-4 lg:p-5">

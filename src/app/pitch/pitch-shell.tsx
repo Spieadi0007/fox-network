@@ -61,9 +61,11 @@ export function PitchShell({ children }: { children: React.ReactNode[] }) {
     return () => window.removeEventListener("afterprint", restore);
   }, []);
 
-  // Mouse wheel
+  // Mouse wheel (desktop only — let mobile scroll within slides)
   useEffect(() => {
     if (printing) return;
+    const isDesktop = window.matchMedia("(min-width: 1024px)").matches;
+    if (!isDesktop) return;
     const onWheel = (e: WheelEvent) => {
       e.preventDefault();
       if (Math.abs(e.deltaY) < 20) return;
@@ -99,27 +101,7 @@ export function PitchShell({ children }: { children: React.ReactNode[] }) {
     return () => window.removeEventListener("keydown", onKey);
   }, [next, prev, goTo, total, printing]);
 
-  // Touch swipe
-  useEffect(() => {
-    if (printing) return;
-    let startY = 0;
-    const onStart = (e: TouchEvent) => {
-      startY = e.touches[0].clientY;
-    };
-    const onEnd = (e: TouchEvent) => {
-      const diff = startY - e.changedTouches[0].clientY;
-      if (Math.abs(diff) > 50) {
-        if (diff > 0) next();
-        else prev();
-      }
-    };
-    window.addEventListener("touchstart", onStart, { passive: true });
-    window.addEventListener("touchend", onEnd, { passive: true });
-    return () => {
-      window.removeEventListener("touchstart", onStart);
-      window.removeEventListener("touchend", onEnd);
-    };
-  }, [next, prev, printing]);
+  // Touch swipe disabled — mobile users scroll within slides and use buttons to navigate
 
   // Print mode — render all slides stacked with animations forced visible
   if (printing) {
@@ -143,8 +125,19 @@ export function PitchShell({ children }: { children: React.ReactNode[] }) {
           .pitch-print-slides .pointer-events-none {
             display: none !important;
           }
-          /* But keep non-decorative pointer-events-none like SVG containers */
           .pitch-print-slides svg.pointer-events-none {
+            display: block !important;
+          }
+          /* Force grids horizontal */
+          .pitch-print-slides .grid {
+            grid-template-columns: repeat(auto-fit, minmax(0, 1fr)) !important;
+          }
+          /* Force flex-col to row */
+          .pitch-print-slides .flex-col {
+            flex-direction: row !important;
+          }
+          /* Show hidden-at-breakpoint elements */
+          .pitch-print-slides .hidden {
             display: block !important;
           }
         `}</style>
@@ -189,14 +182,14 @@ export function PitchShell({ children }: { children: React.ReactNode[] }) {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -40 }}
             transition={{ duration: 0.5, ease: [0.25, 0.4, 0.25, 1] }}
-            className="h-full w-full overflow-y-auto"
+            className="h-full w-full overflow-y-auto pb-20 lg:pb-0"
           >
             {children[current]}
           </motion.div>
         </AnimatePresence>
 
-        {/* Top-left controls */}
-        <div className="fixed left-5 top-5 z-50 flex items-center gap-2 pitch-no-print">
+        {/* Desktop: Top-left controls */}
+        <div className="fixed left-5 top-5 z-50 hidden items-center gap-2 lg:flex pitch-no-print">
           {/* Theme toggle */}
           <button
             onClick={toggle}
@@ -265,24 +258,50 @@ export function PitchShell({ children }: { children: React.ReactNode[] }) {
           </span>
         </div>
 
-        {/* Mobile prev/next buttons */}
-        <div className="fixed bottom-5 right-5 z-50 flex gap-2 lg:hidden pitch-no-print">
-          <button
-            onClick={prev}
-            disabled={current === 0}
-            className="flex h-10 w-10 items-center justify-center rounded-full border border-[var(--p-border-2)] bg-[var(--p-surface-2)] text-[var(--p-text-muted)] backdrop-blur-sm transition-colors disabled:opacity-30"
-            aria-label="Previous slide"
-          >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M18 15l-6-6-6 6" /></svg>
-          </button>
-          <button
-            onClick={next}
-            disabled={current === total - 1}
-            className="flex h-10 w-10 items-center justify-center rounded-full border border-[var(--p-border-2)] bg-[var(--p-surface-2)] text-[var(--p-text-muted)] backdrop-blur-sm transition-colors disabled:opacity-30"
-            aria-label="Next slide"
-          >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M6 9l6 6 6-6" /></svg>
-          </button>
+        {/* Mobile bottom bar */}
+        <div className="fixed bottom-5 left-5 right-5 z-50 flex items-center justify-between lg:hidden pitch-no-print">
+          {/* Left: theme toggle + slide counter */}
+          <div className="flex items-center gap-2">
+            <button
+              onClick={toggle}
+              className="flex h-10 w-10 items-center justify-center rounded-full border border-[var(--p-border-2)] bg-[var(--p-surface-2)] text-[var(--p-text-muted)] backdrop-blur-sm"
+              aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
+            >
+              {theme === "dark" ? (
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="12" cy="12" r="5" />
+                  <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" />
+                </svg>
+              ) : (
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+                </svg>
+              )}
+            </button>
+            <span className="font-mono text-[11px] text-[var(--p-text-faint)]">
+              {String(current + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}
+            </span>
+          </div>
+
+          {/* Right: prev/next */}
+          <div className="flex gap-2">
+            <button
+              onClick={prev}
+              disabled={current === 0}
+              className="flex h-10 w-10 items-center justify-center rounded-full border border-[var(--p-border-2)] bg-[var(--p-surface-2)] text-[var(--p-text-muted)] backdrop-blur-sm transition-colors disabled:opacity-30"
+              aria-label="Previous slide"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M18 15l-6-6-6 6" /></svg>
+            </button>
+            <button
+              onClick={next}
+              disabled={current === total - 1}
+              className="flex h-10 w-10 items-center justify-center rounded-full border border-[var(--p-border-2)] bg-[var(--p-surface-2)] text-[var(--p-text-muted)] backdrop-blur-sm transition-colors disabled:opacity-30"
+              aria-label="Next slide"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M6 9l6 6 6-6" /></svg>
+            </button>
+          </div>
         </div>
       </div>
     </PitchThemeContext.Provider>

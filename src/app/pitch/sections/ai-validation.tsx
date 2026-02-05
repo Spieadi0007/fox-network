@@ -168,7 +168,7 @@ export function AIValidation() {
 
         {/* ── Three capability cards ── */}
         <motion.div variants={staggerContainer} initial="hidden" whileInView="visible" viewport={viewportConfig}
-          className="mt-4 grid grid-cols-3 gap-3">
+          className="mt-4 grid gap-3 md:grid-cols-3">
           {features.map((f) => (
             <motion.div key={f.title} variants={fadeInUp}
               className="flex items-start gap-3 rounded-xl border border-[var(--p-border)] bg-[var(--p-surface)] p-3.5">

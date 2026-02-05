@@ -39,7 +39,7 @@ export function Engagement() {
         </motion.div>
 
         <motion.div variants={staggerContainer} initial="hidden" whileInView="visible" viewport={viewportConfig}
-          className="mt-14 grid grid-cols-3 gap-6">
+          className="mt-14 grid gap-6 md:grid-cols-3">
           {steps.map((s) => (
             <motion.div key={s.num} variants={fadeInUp}
               className={`rounded-2xl border ${s.border} bg-[var(--p-surface-2)] p-7`}>

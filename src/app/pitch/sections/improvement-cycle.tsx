@@ -46,7 +46,7 @@ export function ImprovementCycle() {
           </p>
         </motion.div>
 
-        <div className="mt-8 flex flex-row items-start justify-center gap-12">
+        <div className="mt-8 flex flex-col items-center gap-8 lg:flex-row lg:items-start lg:justify-center lg:gap-12">
 
           {/* ── Cycle diagram ── */}
           <motion.div
