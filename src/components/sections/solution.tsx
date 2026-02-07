@@ -3,57 +3,57 @@
 import { motion } from "framer-motion";
 import { Container } from "@/components/ui/container";
 import { fadeInUp, staggerContainer, viewportConfig } from "@/lib/animations";
-import { LayoutDashboard, Brain, Route, FileCheck, ArrowUpRight } from "lucide-react";
+import { Truck, Wrench, Package, FileCheck, ArrowUpRight } from "lucide-react";
 import { cn } from "@/lib/cn";
 
 const features = [
   {
-    icon: LayoutDashboard,
-    title: "Job Management",
+    icon: Truck,
+    title: "Deployment",
     description:
-      "Create, assign, and track every work order from a single dashboard. Full visibility into your team's workload, SLAs, and job status in real time.",
+      "Plan and execute field deployments end-to-end. Truck capacity planning, site surveys, permits, installation — all managed from one dashboard with full visibility.",
     stat: "100%",
     statLabel: "Job visibility",
-    span: "sm:col-span-2 lg:col-span-1 lg:row-span-2",
+    span: "lg:col-span-1",
     accent: "from-blue-500/10 to-sky-500/5",
     iconBg: "bg-blue-50",
-    iconColor: "text-fox-orange",
+    iconColor: "text-blue-600",
   },
   {
-    icon: Brain,
-    title: "AI Validation",
+    icon: Wrench,
+    title: "Maintenance",
     description:
-      "Computer vision verifies photo evidence in real time. Catch issues before the truck leaves.",
-    stat: "98%",
-    statLabel: "Accuracy",
-    span: "sm:col-span-1",
+      "Reactive, preventive, and predictive — all in one place. Intelligent routing assigns the right technician automatically. AI validates every job before sign-off.",
+    stat: "37%",
+    statLabel: "Faster dispatch",
+    span: "lg:col-span-1",
+    accent: "from-violet-500/10 to-purple-500/5",
+    iconBg: "bg-violet-50",
+    iconColor: "text-violet-600",
+  },
+  {
+    icon: Package,
+    title: "Supply Chain",
+    description:
+      "Parts inventory, demand forecasting, warehouse logistics, and technician material provisioning — from warehouse to van to site.",
+    stat: "0",
+    statLabel: "Stockouts",
+    span: "lg:col-span-1",
     accent: "from-emerald-500/10 to-green-500/5",
     iconBg: "bg-emerald-50",
     iconColor: "text-emerald-600",
   },
   {
-    icon: Route,
-    title: "Intelligent Routing",
-    description:
-      "Assign the right technician to the right job automatically. Skills, proximity, workload, and SLA deadlines — all factored in.",
-    stat: "37%",
-    statLabel: "Faster dispatch",
-    span: "sm:col-span-1",
-    accent: "from-blue-500/10 to-indigo-500/5",
-    iconBg: "bg-blue-50",
-    iconColor: "text-blue-600",
-  },
-  {
     icon: FileCheck,
-    title: "Compliance & Invoicing",
+    title: "Invoicing",
     description:
-      "Auto-generate compliant documentation and invoices at job close. No more chasing paperwork across three systems.",
+      "Auto-generate compliant documentation and invoices at job close. Works across deployment, maintenance, and supply chain — no more chasing paperwork across three systems.",
     stat: "5 min",
     statLabel: "To close a job",
-    span: "sm:col-span-2 lg:col-span-1",
-    accent: "from-violet-500/10 to-purple-500/5",
-    iconBg: "bg-violet-50",
-    iconColor: "text-violet-600",
+    span: "sm:col-span-2 lg:col-span-3",
+    accent: "from-amber-500/10 to-orange-500/5",
+    iconBg: "bg-amber-50",
+    iconColor: "text-fox-orange",
   },
 ];
 
