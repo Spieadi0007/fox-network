@@ -1,7 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  transpilePackages: ["@fox/shared", "@fox/supabase"],
 };
 
 export default nextConfig;

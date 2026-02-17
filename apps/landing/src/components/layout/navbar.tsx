@@ -32,10 +32,8 @@ export function Navbar() {
       )}
     >
       <Container className="flex h-16 items-center justify-between">
-        <a href="#" className="flex items-center gap-2.5 group">
-          <div className="relative flex h-8 w-8 items-center justify-center rounded-lg bg-stone-900 transition-transform duration-300 group-hover:rotate-[-4deg]">
-            <span className="text-sm font-black text-fox-orange">F</span>
-          </div>
+        <a href="#" className="flex items-center gap-1.5 group">
+          <img src="/fox-logo.png" alt="Fox" className="h-8 w-8 transition-transform duration-300 group-hover:rotate-[-4deg]" />
           <span className="font-[family-name:var(--font-heading)] text-[17px] font-bold tracking-[-0.03em] text-stone-900">
             Fox<span className="text-fox-orange">Network</span>
           </span>
@@ -52,7 +50,13 @@ export function Navbar() {
             </a>
           ))}
           <div className="ml-4 h-5 w-px bg-stone-200" />
-          <Button href="#cta" size="md" className="ml-4">
+          <a
+            href="/signin"
+            className="ml-4 rounded-lg px-4 py-2 text-[13px] font-medium text-stone-500 transition-all hover:text-stone-900 hover:bg-stone-100/60"
+          >
+            Sign in
+          </a>
+          <Button href="/signup" size="md">
             Get Started
           </Button>
         </div>
@@ -79,8 +83,15 @@ export function Navbar() {
                 {link.label}
               </a>
             ))}
+            <a
+              href="/signin"
+              className="rounded-lg px-3 py-2.5 text-sm font-medium text-stone-500 hover:bg-stone-50 hover:text-stone-900"
+              onClick={() => setMobileOpen(false)}
+            >
+              Sign in
+            </a>
             <div className="mt-2">
-              <Button href="#cta" size="md" className="w-full">
+              <Button href="/signup" size="md" className="w-full">
                 Get Started
               </Button>
             </div>
