@@ -1,6 +1,0 @@
-{
-  "buildCommand": "pnpm turbo build --filter=@fox/landing",
-  "outputDirectory": "apps/landing/.next",
-  "installCommand": "pnpm install",
-  "framework": "nextjs"
-}
