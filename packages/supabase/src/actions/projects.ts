@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { createServerClient } from "../client/server";
+import { projectPrefix, actionPrefix, nextCode } from "../utils/code-gen";
 
 async function getProfile() {
   const supabase = await createServerClient();
@@ -64,16 +65,26 @@ export async function createProject(values: Record<string, any>) {
     .single();
 
   if (!error && data) {
-    // Fetch location client + country for workflow scoping
+    // Fetch location code + client + country for workflow scoping and code generation
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const { data: loc } = await (supabase as any)
       .from("locations")
-      .select("client, country")
+      .select("code, client, country")
       .eq("id", data.location_id)
       .single();
 
     const clientCode = loc?.client ?? "";
     const countryCode = loc?.country ?? "";
+
+    // Auto-generate project code if parent location has a code
+    let projCode: string | null = null;
+    if (loc?.code && data.project_type) {
+      const prefix = projectPrefix(loc.code, data.project_type);
+      projCode = await nextCode(supabase, "projects", auth.organizationId, prefix);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      await (supabase as any).from("projects").update({ code: projCode }).eq("id", data.id);
+      data.code = projCode;
+    }
 
     // Auto-create actions from workflow steps
     // 4-level fallback: exact → all countries → all clients → all clients + all countries
@@ -103,19 +114,30 @@ export async function createProject(values: Record<string, any>) {
     if (!steps && (clientCode !== "" || countryCode !== "")) steps = await querySteps("", "");
 
     if (steps && steps.length > 0) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const actionRows = steps.map((step: any) => ({
-        name: step.default_name,
-        action_type: step.action_type_code,
-        status: "pending",
-        priority: data.priority ?? "medium",
-        project_id: data.id,
-        organization_id: auth.organizationId,
-        created_by: auth.userId,
-      }));
+      for (const step of steps) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const { data: actionData } = await (supabase as any)
+          .from("actions")
+          .insert({
+            name: step.default_name,
+            action_type: step.action_type_code,
+            status: "pending",
+            priority: data.priority ?? "medium",
+            project_id: data.id,
+            organization_id: auth.organizationId,
+            created_by: auth.userId,
+          })
+          .select("id")
+          .single();
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      await (supabase as any).from("actions").insert(actionRows);
+        // Auto-generate action code if project has a code
+        if (actionData && projCode) {
+          const prefix = actionPrefix(projCode, step.action_type_code);
+          const code = await nextCode(supabase, "actions", auth.organizationId, prefix);
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          await (supabase as any).from("actions").update({ code }).eq("id", actionData.id);
+        }
+      }
       revalidatePath("/actions");
     }
 

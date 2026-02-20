@@ -19,6 +19,13 @@ type ActionWithJoins = ActionItem & {
 const columns: Column<ActionWithJoins>[] = [
   { key: "name", label: "Name" },
   {
+    key: "code",
+    label: "Code",
+    render: (row) => row.code ? (
+      <span className="font-[family-name:var(--font-mono)] text-xs text-stone-500">{row.code}</span>
+    ) : "\u2014",
+  },
+  {
     key: "project_id",
     label: "Project",
     filterValue: (row) => row.projects?.name ?? "",

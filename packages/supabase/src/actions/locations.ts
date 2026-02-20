@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { createServerClient } from "../client/server";
+import { locationPrefix, nextCode } from "../utils/code-gen";
 
 async function getProfile() {
   const supabase = await createServerClient();
@@ -51,12 +52,24 @@ export async function createLocation(values: Record<string, any>) {
     .insert({ ...values, organization_id: auth.organizationId, created_by: auth.userId })
     .select()
     .single();
-  if (!error) revalidatePath("/locations");
+
+  if (!error && data) {
+    // Auto-generate code if client, country, and city are provided
+    if (values.client && values.country && values.city) {
+      const prefix = locationPrefix(values.client, values.country, values.city);
+      const code = await nextCode(supabase, "locations", auth.organizationId, prefix);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      await (supabase as any).from("locations").update({ code }).eq("id", data.id);
+      data.code = code;
+    }
+    revalidatePath("/locations");
+  }
   return { data, error };
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function updateLocation(id: string, values: Record<string, any>) {
+  const auth = await getProfile();
   const supabase = await createServerClient();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { data, error } = await (supabase as any)
@@ -65,7 +78,16 @@ export async function updateLocation(id: string, values: Record<string, any>) {
     .eq("id", id)
     .select()
     .single();
-  if (!error) {
+
+  if (!error && data && auth?.organizationId) {
+    // Auto-generate code if currently null and client + country + city are set
+    if (!data.code && data.client && data.country && data.city) {
+      const prefix = locationPrefix(data.client, data.country, data.city);
+      const code = await nextCode(supabase, "locations", auth.organizationId, prefix);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      await (supabase as any).from("locations").update({ code }).eq("id", id);
+      data.code = code;
+    }
     revalidatePath("/locations");
     revalidatePath(`/locations/${id}`);
   }

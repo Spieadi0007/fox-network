@@ -6,7 +6,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { createBrowserClient } from "@fox/supabase/client/browser";
 import { updateOrganization } from "@fox/supabase/actions/organizations";
-import { Loader2, Check, Upload, X } from "lucide-react";
+import { backfillCodes } from "@fox/supabase/actions/backfill-codes";
+import { Loader2, Check, Upload, X, Hash } from "lucide-react";
 
 type Org = {
   id: string;
@@ -113,8 +114,26 @@ export function OrganizationSettings({ org }: { org: Org }) {
     });
   }
 
+  const [backfilling, setBackfilling] = useState(false);
+  const [backfillResult, setBackfillResult] = useState<string | null>(null);
+
+  async function handleBackfill() {
+    setBackfilling(true);
+    setBackfillResult(null);
+    try {
+      const result = await backfillCodes();
+      setBackfillResult(result.message);
+      if (result.success) router.refresh();
+    } catch {
+      setBackfillResult("Failed to run backfill.");
+    } finally {
+      setBackfilling(false);
+    }
+  }
+
   return (
-    <form onSubmit={handleSubmit} className="space-y-6 max-w-2xl">
+    <div className="space-y-8 max-w-2xl">
+    <form onSubmit={handleSubmit} className="space-y-6">
       <div className="rounded-2xl border border-stone-200 bg-white p-6 space-y-5">
         {/* Logo section */}
         <div>
@@ -264,5 +283,31 @@ export function OrganizationSettings({ org }: { org: Org }) {
         {saved ? "Saved" : "Save Changes"}
       </Button>
     </form>
+
+    {/* Backfill codes section */}
+    <div className="rounded-2xl border border-stone-200 bg-white p-6 space-y-3">
+      <div className="flex items-center gap-2">
+        <Hash className="h-4 w-4 text-stone-400" />
+        <h3 className="text-sm font-semibold text-stone-900">Generate Codes</h3>
+      </div>
+      <p className="text-sm text-stone-500">
+        Generate hierarchical codes for existing locations, projects, and actions that don&apos;t have one yet.
+      </p>
+      {backfillResult && (
+        <div className="rounded-xl border border-stone-200 bg-stone-50 px-4 py-3">
+          <p className="text-sm text-stone-700">{backfillResult}</p>
+        </div>
+      )}
+      <Button
+        type="button"
+        onClick={handleBackfill}
+        disabled={backfilling}
+        className="h-10 rounded-xl bg-stone-900 px-6 text-sm text-white hover:bg-stone-800"
+      >
+        {backfilling ? <Loader2 className="mr-1.5 h-4 w-4 animate-spin" /> : <Hash className="mr-1.5 h-4 w-4" />}
+        {backfilling ? "Generating..." : "Generate Missing Codes"}
+      </Button>
+    </div>
+    </div>
   );
 }

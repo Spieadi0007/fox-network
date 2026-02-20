@@ -222,6 +222,9 @@ export function ActionForm({
                 <h3 className="text-lg font-semibold text-stone-900 font-[family-name:var(--font-heading)] truncate">
                   {preview.name || "Untitled action"}
                 </h3>
+                {action?.code && (
+                  <p className="text-xs font-[family-name:var(--font-mono)] text-stone-400 mt-0.5">{action.code}</p>
+                )}
               </div>
             </div>
 
@@ -297,6 +300,7 @@ export function ActionForm({
         <div className="lg:col-span-3 rounded-2xl border border-stone-200 bg-white p-8">
           <div className="grid grid-cols-2 gap-5">
             <Input className={fi} placeholder={`Action name${isRequired("name") ? " *" : ""}`} name="name" required={isRequired("name")} defaultValue={action?.name} />
+            <Input className={`${fi} bg-stone-50 text-stone-500`} placeholder="Auto-generated on save" value={action?.code ?? ""} readOnly tabIndex={-1} />
             <Select name="project_id" defaultValue={action?.project_id} required={isRequired("project_id")} onValueChange={() => setTimeout(updatePreview, 0)}>
               <SelectTrigger className={ft}>
                 <SelectValue placeholder={`Project${isRequired("project_id") ? " *" : ""}`} />

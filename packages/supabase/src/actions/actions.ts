@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { createServerClient } from "../client/server";
+import { actionPrefix, nextCode } from "../utils/code-gen";
 
 async function getProfile() {
   const supabase = await createServerClient();
@@ -62,7 +63,25 @@ export async function createAction(values: Record<string, any>) {
     .insert({ ...values, organization_id: auth.organizationId, created_by: auth.userId })
     .select()
     .single();
-  if (!error) revalidatePath("/actions");
+
+  if (!error && data) {
+    // Look up parent project's code for action code generation
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { data: project } = await (supabase as any)
+      .from("projects")
+      .select("code")
+      .eq("id", data.project_id)
+      .single();
+
+    if (project?.code && data.action_type) {
+      const prefix = actionPrefix(project.code, data.action_type);
+      const code = await nextCode(supabase, "actions", auth.organizationId, prefix);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      await (supabase as any).from("actions").update({ code }).eq("id", data.id);
+      data.code = code;
+    }
+    revalidatePath("/actions");
+  }
   return { data, error };
 }
 

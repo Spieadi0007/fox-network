@@ -17,7 +17,8 @@
     "./actions/preferences": "./src/actions/preferences.ts",
     "./actions/field-options": "./src/actions/field-options.ts",
     "./actions/workflows": "./src/actions/workflows.ts",
-    "./actions/organizations": "./src/actions/organizations.ts"
+    "./actions/organizations": "./src/actions/organizations.ts",
+    "./actions/backfill-codes": "./src/actions/backfill-codes.ts"
   },
   "dependencies": {
     "@supabase/ssr": "^0.6.1",

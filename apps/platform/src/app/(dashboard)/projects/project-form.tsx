@@ -129,7 +129,6 @@ export function ProjectForm({
     startTransition(async () => {
       const values = {
         name: form.get("name") as string,
-        code: (form.get("code") as string) || null,
         description: (form.get("description") as string) || null,
         location_id: form.get("location_id") as string,
         project_type: form.get("project_type") as string,
@@ -266,7 +265,7 @@ export function ProjectForm({
         <div className="lg:col-span-3 rounded-2xl border border-stone-200 bg-white p-8">
           <div className="grid grid-cols-2 gap-5">
             <Input className={fi} placeholder={`Project name${isRequired("name") ? " *" : ""}`} name="name" required={isRequired("name")} defaultValue={project?.name} />
-            <Input className={fi} placeholder="Project code (e.g. TU-NE-Q1)" name="code" defaultValue={project?.code ?? ""} />
+            <Input className={`${fi} bg-stone-50 text-stone-500`} placeholder="Auto-generated on save" name="code" value={project?.code ?? ""} readOnly tabIndex={-1} />
 
             <Select name="location_id" defaultValue={project?.location_id} required={isRequired("location_id")} onValueChange={() => setTimeout(updatePreview, 0)}>
               <SelectTrigger className={ft}>

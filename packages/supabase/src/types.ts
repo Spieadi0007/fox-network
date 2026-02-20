@@ -378,6 +378,7 @@ export type Database = {
         Row: {
           id: string;
           name: string;
+          code: string | null;
           description: string | null;
           project_id: string;
           location_id: string | null;
@@ -407,6 +408,7 @@ export type Database = {
         Insert: {
           id?: string;
           name: string;
+          code?: string | null;
           description?: string | null;
           project_id: string;
           location_id?: string | null;
@@ -436,6 +438,7 @@ export type Database = {
         Update: {
           id?: string;
           name?: string;
+          code?: string | null;
           description?: string | null;
           project_id?: string;
           location_id?: string | null;
@@ -487,6 +490,57 @@ export type Database = {
           {
             foreignKeyName: "actions_created_by_fkey";
             columns: ["created_by"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      invitations: {
+        Row: {
+          id: string;
+          organization_id: string;
+          email: string;
+          name: string | null;
+          role: "admin" | "manager" | "technician" | "viewer";
+          invited_by: string | null;
+          status: "pending" | "accepted" | "revoked";
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          organization_id: string;
+          email: string;
+          name?: string | null;
+          role?: "admin" | "manager" | "technician" | "viewer";
+          invited_by?: string | null;
+          status?: "pending" | "accepted" | "revoked";
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          organization_id?: string;
+          email?: string;
+          name?: string | null;
+          role?: "admin" | "manager" | "technician" | "viewer";
+          invited_by?: string | null;
+          status?: "pending" | "accepted" | "revoked";
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "invitations_organization_id_fkey";
+            columns: ["organization_id"];
+            isOneToOne: false;
+            referencedRelation: "organizations";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "invitations_invited_by_fkey";
+            columns: ["invited_by"];
             isOneToOne: false;
             referencedRelation: "profiles";
             referencedColumns: ["id"];
@@ -660,3 +714,4 @@ export type Location = Database["public"]["Tables"]["locations"]["Row"];
 export type Project = Database["public"]["Tables"]["projects"]["Row"];
 export type ActionItem = Database["public"]["Tables"]["actions"]["Row"];
 export type Asset = Database["public"]["Tables"]["assets"]["Row"];
+export type Invitation = Database["public"]["Tables"]["invitations"]["Row"];

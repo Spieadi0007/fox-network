@@ -128,7 +128,6 @@ export function LocationForm({ location, customFieldDefinitions = [], fieldOverr
     startTransition(async () => {
       const values = {
         name: form.get("name") as string,
-        code: (form.get("code") as string) || null,
         address: form.get("address") as string,
         city: form.get("city") as string,
         state: form.get("state") as string,
@@ -250,7 +249,7 @@ export function LocationForm({ location, customFieldDefinitions = [], fieldOverr
         <div className="lg:col-span-3 rounded-2xl border border-stone-200 bg-white p-8">
           <div className="grid grid-cols-2 gap-5">
             <Input className={fi} placeholder={`Location name${isRequired("name") ? " *" : ""}`} name="name" required={isRequired("name")} defaultValue={location?.name} />
-            <Input className={fi} placeholder="Site code (e.g. TS-007)" name="code" defaultValue={location?.code ?? ""} />
+            <Input className={`${fi} bg-stone-50 text-stone-500`} placeholder="Auto-generated on save" name="code" value={location?.code ?? ""} readOnly tabIndex={-1} />
 
             {clients.length > 0 ? (
               <Select name="client" defaultValue={location?.client ?? ""} onValueChange={() => setTimeout(updatePreview, 0)}>
