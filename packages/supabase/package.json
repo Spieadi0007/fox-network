@@ -7,7 +7,17 @@
     "./client/browser": "./src/client/browser.ts",
     "./client/server": "./src/client/server.ts",
     "./client/middleware": "./src/client/middleware.ts",
-    "./auth/actions": "./src/auth/actions.ts"
+    "./auth/actions": "./src/auth/actions.ts",
+    "./actions/locations": "./src/actions/locations.ts",
+    "./actions/projects": "./src/actions/projects.ts",
+    "./actions/actions": "./src/actions/actions.ts",
+    "./actions/assets": "./src/actions/assets.ts",
+    "./actions/custom-fields": "./src/actions/custom-fields.ts",
+    "./actions/members": "./src/actions/members.ts",
+    "./actions/preferences": "./src/actions/preferences.ts",
+    "./actions/field-options": "./src/actions/field-options.ts",
+    "./actions/workflows": "./src/actions/workflows.ts",
+    "./actions/organizations": "./src/actions/organizations.ts"
   },
   "dependencies": {
     "@supabase/ssr": "^0.6.1",

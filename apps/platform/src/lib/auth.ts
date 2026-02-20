@@ -7,12 +7,13 @@ export async function getAuthUser() {
   const id = headerStore.get("x-user-id");
   const email = headerStore.get("x-user-email");
   const role = headerStore.get("x-user-role") as Role | null;
+  const organizationId = headerStore.get("x-organization-id") || null;
 
   if (!id || !email || !role) {
     return null;
   }
 
-  return { id, email, role };
+  return { id, email, role, organizationId };
 }
 
 export async function requirePermission(action: Action) {

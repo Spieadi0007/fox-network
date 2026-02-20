@@ -24,9 +24,9 @@ export async function middleware(request: NextRequest) {
   // Fetch profile for role
   const { data: profile } = await supabase
     .from("profiles")
-    .select("role")
+    .select("role, organization_id")
     .eq("id", user.id)
-    .single<{ role: string }>();
+    .single<{ role: string; organization_id: string | null }>();
 
   const role = profile?.role ?? "viewer";
 
@@ -35,6 +35,7 @@ export async function middleware(request: NextRequest) {
   requestHeaders.set("x-user-id", user.id);
   requestHeaders.set("x-user-email", user.email ?? "");
   requestHeaders.set("x-user-role", role);
+  requestHeaders.set("x-organization-id", profile?.organization_id ?? "");
 
   return NextResponse.next({
     request: { headers: requestHeaders },

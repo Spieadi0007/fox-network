@@ -24,6 +24,24 @@ export enum Action {
   // Settings
   SettingsRead = "settings:read",
   SettingsUpdate = "settings:update",
+
+  // Locations
+  LocationCreate = "location:create",
+  LocationRead = "location:read",
+  LocationUpdate = "location:update",
+  LocationDelete = "location:delete",
+
+  // Projects
+  ProjectCreate = "project:create",
+  ProjectRead = "project:read",
+  ProjectUpdate = "project:update",
+  ProjectDelete = "project:delete",
+
+  // Action Items
+  ActionItemCreate = "action_item:create",
+  ActionItemRead = "action_item:read",
+  ActionItemUpdate = "action_item:update",
+  ActionItemDelete = "action_item:delete",
 }
 
 const ALL_ACTIONS = new Set(Object.values(Action));
@@ -41,6 +59,18 @@ const MANAGER_ACTIONS = new Set([
   Action.UserInvite,
   Action.UserRead,
   Action.SettingsRead,
+  Action.LocationCreate,
+  Action.LocationRead,
+  Action.LocationUpdate,
+  Action.LocationDelete,
+  Action.ProjectCreate,
+  Action.ProjectRead,
+  Action.ProjectUpdate,
+  Action.ProjectDelete,
+  Action.ActionItemCreate,
+  Action.ActionItemRead,
+  Action.ActionItemUpdate,
+  Action.ActionItemDelete,
 ]);
 
 const TECHNICIAN_ACTIONS = new Set([
@@ -49,6 +79,10 @@ const TECHNICIAN_ACTIONS = new Set([
   Action.AssetRead,
   Action.UserRead,
   Action.SettingsRead,
+  Action.LocationRead,
+  Action.ProjectRead,
+  Action.ActionItemRead,
+  Action.ActionItemUpdate,
 ]);
 
 const VIEWER_ACTIONS = new Set([
@@ -56,6 +90,9 @@ const VIEWER_ACTIONS = new Set([
   Action.AssetRead,
   Action.UserRead,
   Action.SettingsRead,
+  Action.LocationRead,
+  Action.ProjectRead,
+  Action.ActionItemRead,
 ]);
 
 const ROLE_PERMISSIONS: Record<Role, Set<Action>> = {

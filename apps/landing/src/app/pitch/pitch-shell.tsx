@@ -189,7 +189,15 @@ export function PitchShell({ children }: { children: React.ReactNode[] }) {
         </AnimatePresence>
 
         {/* Desktop: Top-left controls */}
-        <div className="fixed left-5 top-5 z-50 hidden items-center gap-2 lg:flex pitch-no-print">
+        <div className="fixed left-5 top-5 z-50 hidden items-center gap-3 lg:flex pitch-no-print">
+          {/* Logo — links to landing page */}
+          <a href="/" className="flex items-center gap-1.5 mr-1">
+            <img src="/fox-logo.png" alt="Fox Network" className="h-7 w-7" />
+            <span className="font-[family-name:var(--font-heading)] text-[13px] font-bold tracking-[-0.03em] text-[var(--p-text)]">
+              Fox<span className="text-fox-orange">Network</span>
+            </span>
+          </a>
+
           {/* Theme toggle */}
           <button
             onClick={toggle}
@@ -257,6 +265,14 @@ export function PitchShell({ children }: { children: React.ReactNode[] }) {
             {String(current + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}
           </span>
         </div>
+
+        {/* Mobile: top-left logo */}
+        <a href="/" className="fixed left-4 top-4 z-50 flex items-center gap-1.5 lg:hidden pitch-no-print">
+          <img src="/fox-logo.png" alt="Fox Network" className="h-6 w-6" />
+          <span className="font-[family-name:var(--font-heading)] text-[12px] font-bold tracking-[-0.03em] text-[var(--p-text)]">
+            Fox<span className="text-fox-orange">Network</span>
+          </span>
+        </a>
 
         {/* Mobile bottom bar */}
         <div className="fixed bottom-5 left-5 right-5 z-50 flex items-center justify-between lg:hidden pitch-no-print">

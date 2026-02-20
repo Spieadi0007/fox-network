@@ -1,4 +1,30 @@
 export { createBrowserClient } from "./client/browser";
 export { createServerClient } from "./client/server";
 export { createMiddlewareClient } from "./client/middleware";
-export type { Database, Profile, Organization, PartnerRequest } from "./types";
+export type {
+  Database,
+  Profile,
+  Organization,
+  PartnerRequest,
+  Location,
+  Project,
+  ActionItem,
+  Asset,
+  LocationType,
+  LocationStatus,
+  ProjectType,
+  ProjectStatus,
+  Priority,
+  ActionType,
+  ActionStatus,
+  AssetType,
+  AssetStatus,
+  AssetCondition,
+  Criticality,
+  CustomFieldDefinition,
+  CustomFieldType,
+  CustomFieldModule,
+  FieldRequirementOverride,
+  ConfigurableFieldOption,
+  WorkflowStep,
+} from "./types";

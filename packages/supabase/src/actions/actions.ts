@@ -1,0 +1,126 @@
+"use server";
+
+import { revalidatePath } from "next/cache";
+import { createServerClient } from "../client/server";
+
+async function getProfile() {
+  const supabase = await createServerClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return null;
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("organization_id")
+    .eq("id", user.id)
+    .single<{ organization_id: string | null }>();
+  return { userId: user.id, organizationId: profile?.organization_id ?? null };
+}
+
+export async function getActions(orgId: string) {
+  const supabase = await createServerClient();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data, error } = await (supabase as any)
+    .from("actions")
+    .select("*, projects(name), locations(name), assigned_profile:profiles!assigned_to(name, email)")
+    .eq("organization_id", orgId)
+    .order("created_at", { ascending: false });
+  return { data, error };
+}
+
+export async function getAction(id: string) {
+  const supabase = await createServerClient();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data, error } = await (supabase as any)
+    .from("actions")
+    .select("*, projects(name)")
+    .eq("id", id)
+    .single();
+  return { data, error };
+}
+
+export async function getActionsByProject(projectId: string) {
+  const supabase = await createServerClient();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data, error } = await (supabase as any)
+    .from("actions")
+    .select("*")
+    .eq("project_id", projectId)
+    .order("created_at", { ascending: false });
+  return { data, error };
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export async function createAction(values: Record<string, any>) {
+  const auth = await getProfile();
+  if (!auth?.organizationId) return { data: null, error: { message: "Not authenticated" } };
+
+  const supabase = await createServerClient();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data, error } = await (supabase as any)
+    .from("actions")
+    .insert({ ...values, organization_id: auth.organizationId, created_by: auth.userId })
+    .select()
+    .single();
+  if (!error) revalidatePath("/actions");
+  return { data, error };
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export async function updateAction(id: string, values: Record<string, any>) {
+  const supabase = await createServerClient();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data, error } = await (supabase as any)
+    .from("actions")
+    .update(values)
+    .eq("id", id)
+    .select()
+    .single();
+  if (!error) {
+    revalidatePath("/actions");
+    revalidatePath(`/actions/${id}`);
+  }
+  return { data, error };
+}
+
+export async function deleteAction(id: string) {
+  const supabase = await createServerClient();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { error } = await (supabase as any)
+    .from("actions")
+    .delete()
+    .eq("id", id);
+  if (!error) revalidatePath("/actions");
+  return { error };
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export async function bulkUpdateActions(ids: string[], updates: Record<string, any>) {
+  const auth = await getProfile();
+  if (!auth?.organizationId) return { error: { message: "Not authenticated" } };
+
+  const supabase = await createServerClient();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { error } = await (supabase as any)
+    .from("actions")
+    .update(updates)
+    .in("id", ids)
+    .eq("organization_id", auth.organizationId);
+  if (!error) revalidatePath("/actions");
+  return { error };
+}
+
+export async function bulkDeleteActions(ids: string[]) {
+  const auth = await getProfile();
+  if (!auth?.organizationId) return { error: { message: "Not authenticated" } };
+
+  const supabase = await createServerClient();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { error } = await (supabase as any)
+    .from("actions")
+    .delete()
+    .in("id", ids)
+    .eq("organization_id", auth.organizationId);
+  if (!error) revalidatePath("/actions");
+  return { error };
+}
