@@ -1,8 +1,10 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { createMiddlewareClient } from "@fox/supabase/client/middleware";
 
+const LANDING_URL =
+  process.env.NEXT_PUBLIC_LANDING_URL ?? "http://localhost:3000";
 const PLATFORM_URL =
-  process.env.NEXT_PUBLIC_PLATFORM_URL ?? "http://localhost:3001";
+  process.env.NEXT_PUBLIC_PLATFORM_URL || LANDING_URL;
 
 export async function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;

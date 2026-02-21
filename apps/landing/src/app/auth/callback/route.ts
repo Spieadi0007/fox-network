@@ -1,10 +1,10 @@
 import { NextResponse } from "next/server";
 import { createServerClient } from "@fox/supabase/client/server";
 
-const PLATFORM_URL =
-  process.env.NEXT_PUBLIC_PLATFORM_URL ?? "http://localhost:3001";
 const LANDING_URL =
   process.env.NEXT_PUBLIC_LANDING_URL ?? "http://localhost:3000";
+const PLATFORM_URL =
+  process.env.NEXT_PUBLIC_PLATFORM_URL || LANDING_URL;
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -21,10 +21,8 @@ export async function GET(request: Request) {
         return NextResponse.redirect(`${LANDING_URL}${next}`);
       }
 
-      // Otherwise redirect to platform with the code so it can establish its own session
-      return NextResponse.redirect(
-        `${PLATFORM_URL}/auth/callback?code=${code}&next=${encodeURIComponent(next)}`,
-      );
+      // Redirect to platform — session cookies are shared across ports on localhost
+      return NextResponse.redirect(`${PLATFORM_URL}${next}`);
     }
   }
 

@@ -3,10 +3,10 @@
 import { redirect } from "next/navigation";
 import { createServerClient } from "../client/server";
 
-const PLATFORM_URL =
-  process.env.NEXT_PUBLIC_PLATFORM_URL ?? "http://localhost:3001";
 const LANDING_URL =
   process.env.NEXT_PUBLIC_LANDING_URL ?? "http://localhost:3000";
+const PLATFORM_URL =
+  process.env.NEXT_PUBLIC_PLATFORM_URL || LANDING_URL;
 
 export async function signInWithEmail(formData: FormData) {
   const email = formData.get("email") as string;
