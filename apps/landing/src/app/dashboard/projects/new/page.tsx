@@ -7,7 +7,7 @@ import { ProjectForm } from "../project-form";
 
 export default async function NewProjectPage() {
   const user = await getAuthUser();
-  if (!user || !user.organizationId) redirect("/dashboard");
+  if (!user || !user.organizationId) redirect("/signin");
   if (user.role !== "admin" && user.role !== "manager") redirect("/dashboard/projects");
 
   const [{ data: locations }, { data: fieldDefs }, { data: overrides }, { data: fieldOpts }] = await Promise.all([

@@ -5,7 +5,7 @@ import { FieldOptionsManager } from "./field-options-manager";
 
 export default async function FieldOptionsPage() {
   const user = await getAuthUser();
-  if (!user || !user.organizationId) redirect("/dashboard");
+  if (!user || !user.organizationId) redirect("/signin");
   if (user.role !== "admin" && user.role !== "manager") redirect("/dashboard");
 
   const { data: options } = await getFieldOptions(user.organizationId);

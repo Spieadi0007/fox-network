@@ -12,7 +12,7 @@ export default async function EditProjectPage({
   params: Promise<{ id: string }>;
 }) {
   const user = await getAuthUser();
-  if (!user || !user.organizationId) redirect("/dashboard");
+  if (!user || !user.organizationId) redirect("/signin");
   if (user.role !== "admin" && user.role !== "manager") redirect("/dashboard/projects");
 
   const { id } = await params;

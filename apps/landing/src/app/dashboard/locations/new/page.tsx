@@ -6,7 +6,7 @@ import { LocationForm } from "../location-form";
 
 export default async function NewLocationPage() {
   const user = await getAuthUser();
-  if (!user || !user.organizationId) redirect("/dashboard");
+  if (!user || !user.organizationId) redirect("/signin");
   if (user.role !== "admin" && user.role !== "manager") redirect("/dashboard/locations");
 
   const [{ data: fieldDefs }, { data: overrides }, { data: fieldOpts }] = await Promise.all([

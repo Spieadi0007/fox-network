@@ -13,7 +13,7 @@ export default async function EditAssetPage({
   params: Promise<{ id: string }>;
 }) {
   const user = await getAuthUser();
-  if (!user || !user.organizationId) redirect("/dashboard");
+  if (!user || !user.organizationId) redirect("/signin");
   if (user.role !== "admin" && user.role !== "manager") redirect("/dashboard/assets");
 
   const { id } = await params;

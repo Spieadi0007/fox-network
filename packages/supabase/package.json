@@ -18,7 +18,8 @@
     "./actions/field-options": "./src/actions/field-options.ts",
     "./actions/workflows": "./src/actions/workflows.ts",
     "./actions/organizations": "./src/actions/organizations.ts",
-    "./actions/backfill-codes": "./src/actions/backfill-codes.ts"
+    "./actions/backfill-codes": "./src/actions/backfill-codes.ts",
+    "./actions/field-app-config": "./src/actions/field-app-config.ts"
   },
   "dependencies": {
     "@supabase/ssr": "^0.6.1",

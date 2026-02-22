@@ -12,7 +12,7 @@ import { FeatureTips } from "@/components/feature-tips";
 
 export default async function ProjectsPage() {
   const user = await getAuthUser();
-  if (!user || !user.organizationId) redirect("/dashboard");
+  if (!user || !user.organizationId) redirect("/signin");
 
   const [{ data: projects }, { data: columnConfig }, { data: savedViews }] = await Promise.all([
     getProjects(user.organizationId),

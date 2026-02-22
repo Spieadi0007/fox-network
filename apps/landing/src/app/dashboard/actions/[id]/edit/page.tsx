@@ -15,7 +15,7 @@ export default async function EditActionPage({
   params: Promise<{ id: string }>;
 }) {
   const user = await getAuthUser();
-  if (!user || !user.organizationId) redirect("/dashboard");
+  if (!user || !user.organizationId) redirect("/signin");
 
   const { id } = await params;
   const [{ data: action }, { data: projects }, { data: locations }, { data: members }, { data: fieldDefs }, { data: overrides }, { data: fieldOpts }, { data: workflowSteps }] = await Promise.all([

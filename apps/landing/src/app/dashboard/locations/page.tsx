@@ -12,7 +12,7 @@ import { FeatureTips } from "@/components/feature-tips";
 
 export default async function LocationsPage() {
   const user = await getAuthUser();
-  if (!user || !user.organizationId) redirect("/dashboard");
+  if (!user || !user.organizationId) redirect("/signin");
 
   const [{ data: locations }, { data: columnConfig }, { data: savedViews }] = await Promise.all([
     getLocations(user.organizationId),

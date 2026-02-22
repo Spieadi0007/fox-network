@@ -9,7 +9,7 @@ import { MapPin, FolderKanban, Zap, Package } from "lucide-react";
 
 export default async function DashboardPage() {
   const user = await getAuthUser();
-  if (!user || !user.organizationId) redirect("/dashboard");
+  if (!user || !user.organizationId) redirect("/signin");
 
   const [
     { data: locations },

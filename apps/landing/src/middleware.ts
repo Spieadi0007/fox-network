@@ -1,6 +1,17 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { createMiddlewareClient } from "@fox/supabase/client/middleware";
 
+function redirectWithCookies(
+  url: URL,
+  client: ReturnType<typeof createMiddlewareClient>,
+) {
+  const response = NextResponse.redirect(url);
+  client.response.cookies.getAll().forEach((cookie) => {
+    response.cookies.set(cookie.name, cookie.value);
+  });
+  return response;
+}
+
 export async function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
 
@@ -24,18 +35,10 @@ export async function middleware(request: NextRequest) {
   if (!isDashboard) {
     if (user) {
       if (pathname === "/signin") {
-        const redirect = NextResponse.redirect(new URL("/dashboard", request.url));
-        client.response.cookies.getAll().forEach((cookie) => {
-          redirect.cookies.set(cookie.name, cookie.value);
-        });
-        return redirect;
+        return redirectWithCookies(new URL("/dashboard", request.url), client);
       }
       if (pathname === "/signup" && !request.nextUrl.searchParams.has("step")) {
-        const redirect = NextResponse.redirect(new URL("/dashboard", request.url));
-        client.response.cookies.getAll().forEach((cookie) => {
-          redirect.cookies.set(cookie.name, cookie.value);
-        });
-        return redirect;
+        return redirectWithCookies(new URL("/dashboard", request.url), client);
       }
     }
     return client.response;
@@ -45,11 +48,7 @@ export async function middleware(request: NextRequest) {
 
   // Redirect unauthenticated users to sign-in
   if (!user) {
-    const redirect = NextResponse.redirect(new URL("/signin", request.url));
-    client.response.cookies.getAll().forEach((cookie) => {
-      redirect.cookies.set(cookie.name, cookie.value);
-    });
-    return redirect;
+    return redirectWithCookies(new URL("/signin", request.url), client);
   }
 
   // Fetch profile for role
@@ -61,15 +60,12 @@ export async function middleware(request: NextRequest) {
 
   const role = profile?.role ?? "viewer";
 
-  // Redirect users without an organization to signup company step
+  // Redirect users without an organization to company setup
   if (!profile?.organization_id) {
-    const redirect = NextResponse.redirect(
-      new URL("/signup?step=company", request.url)
+    return redirectWithCookies(
+      new URL("/signup?step=company-2", request.url),
+      client,
     );
-    client.response.cookies.getAll().forEach((cookie) => {
-      redirect.cookies.set(cookie.name, cookie.value);
-    });
-    return redirect;
   }
 
   // Inject user info as headers for downstream use

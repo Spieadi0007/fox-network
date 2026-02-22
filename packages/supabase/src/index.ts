@@ -28,4 +28,7 @@ export type {
   FieldRequirementOverride,
   ConfigurableFieldOption,
   WorkflowStep,
+  EntryOutcome,
+  ActionEntry,
+  FieldAppConfig,
 } from "./types";

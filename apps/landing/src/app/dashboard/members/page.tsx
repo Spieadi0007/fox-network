@@ -5,7 +5,7 @@ import { MembersClient } from "./members-client";
 
 export default async function MembersPage() {
   const user = await getAuthUser();
-  if (!user || !user.organizationId) redirect("/dashboard");
+  if (!user || !user.organizationId) redirect("/signin");
 
   const [{ data: members }, { data: invitations }] = await Promise.all([
     getOrgMembers(user.organizationId),

@@ -11,7 +11,7 @@ export default async function EditLocationPage({
   params: Promise<{ id: string }>;
 }) {
   const user = await getAuthUser();
-  if (!user || !user.organizationId) redirect("/dashboard");
+  if (!user || !user.organizationId) redirect("/signin");
   if (user.role !== "admin" && user.role !== "manager") redirect("/dashboard/locations");
 
   const { id } = await params;

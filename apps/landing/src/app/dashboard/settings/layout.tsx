@@ -2,12 +2,13 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { SlidersHorizontal, ListChecks, LayoutTemplate } from "lucide-react";
+import { SlidersHorizontal, ListChecks, LayoutTemplate, Smartphone } from "lucide-react";
 
 const settingsNav = [
   { href: "/dashboard/settings/custom-fields", label: "Custom Fields", icon: SlidersHorizontal },
   { href: "/dashboard/settings/field-options", label: "Field Options", icon: ListChecks },
   { href: "/dashboard/settings/workflows", label: "Action Templates", icon: LayoutTemplate },
+  { href: "/dashboard/settings/field-app", label: "Field App", icon: Smartphone },
 ];
 
 export default function SettingsLayout({

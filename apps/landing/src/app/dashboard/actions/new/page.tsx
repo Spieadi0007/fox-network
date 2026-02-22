@@ -10,7 +10,7 @@ import { ActionForm } from "../action-form";
 
 export default async function NewActionPage() {
   const user = await getAuthUser();
-  if (!user || !user.organizationId) redirect("/dashboard");
+  if (!user || !user.organizationId) redirect("/signin");
   if (user.role !== "admin" && user.role !== "manager") redirect("/dashboard/actions");
 
   const [{ data: projects }, { data: locations }, { data: members }, { data: fieldDefs }, { data: overrides }, { data: fieldOpts }, { data: workflowSteps }] = await Promise.all([

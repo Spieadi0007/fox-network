@@ -5,7 +5,7 @@ import { OrganizationSettings } from "./organization-settings";
 
 export default async function OrganizationPage() {
   const user = await getAuthUser();
-  if (!user || !user.organizationId) redirect("/dashboard");
+  if (!user || !user.organizationId) redirect("/signin");
   if (user.role !== "admin") redirect("/dashboard");
 
   const { data: org } = await getOrganization(user.organizationId);

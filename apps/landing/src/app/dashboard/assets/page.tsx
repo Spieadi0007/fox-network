@@ -12,7 +12,7 @@ import { FeatureTips } from "@/components/feature-tips";
 
 export default async function AssetsPage() {
   const user = await getAuthUser();
-  if (!user || !user.organizationId) redirect("/dashboard");
+  if (!user || !user.organizationId) redirect("/signin");
 
   const [{ data: assets }, { data: columnConfig }, { data: savedViews }] = await Promise.all([
     getAssets(user.organizationId),

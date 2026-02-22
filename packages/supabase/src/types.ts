@@ -10,6 +10,7 @@ export type AssetType = "cable" | "antenna" | "power_supply" | "solar_panel" | "
 export type AssetStatus = "available" | "deployed" | "in_maintenance" | "retired";
 export type AssetCondition = "excellent" | "good" | "fair" | "poor";
 export type Criticality = "low" | "medium" | "high" | "critical";
+export type EntryOutcome = "successful" | "partial" | "unsuccessful" | "cancelled";
 
 export type CustomFieldType = "text" | "textarea" | "number" | "date" | "boolean" | "select" | "url" | "email";
 export type CustomFieldModule = "locations" | "projects" | "actions" | "assets";
@@ -547,6 +548,100 @@ export type Database = {
           },
         ];
       };
+      action_entries: {
+        Row: {
+          id: string;
+          action_id: string;
+          technician_id: string;
+          visit_number: number;
+          scheduled_date: string | null;
+          started_at: string | null;
+          ended_at: string | null;
+          duration_minutes: number | null;
+          outcome: EntryOutcome;
+          failure_reason: string | null;
+          notes: string | null;
+          custom_fields: Record<string, unknown>;
+          attachments: string[];
+          submission_location: Record<string, unknown> | null;
+          technician_signature: string | null;
+          submitted_at: string | null;
+          offline_id: string | null;
+          sync_status: "synced" | "pending" | "conflict";
+          organization_id: string;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          action_id: string;
+          technician_id: string;
+          visit_number?: number;
+          scheduled_date?: string | null;
+          started_at?: string | null;
+          ended_at?: string | null;
+          duration_minutes?: number | null;
+          outcome?: EntryOutcome;
+          failure_reason?: string | null;
+          notes?: string | null;
+          custom_fields?: Record<string, unknown>;
+          attachments?: string[];
+          submission_location?: Record<string, unknown> | null;
+          technician_signature?: string | null;
+          submitted_at?: string | null;
+          offline_id?: string | null;
+          sync_status?: "synced" | "pending" | "conflict";
+          organization_id: string;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          action_id?: string;
+          technician_id?: string;
+          visit_number?: number;
+          scheduled_date?: string | null;
+          started_at?: string | null;
+          ended_at?: string | null;
+          duration_minutes?: number | null;
+          outcome?: EntryOutcome;
+          failure_reason?: string | null;
+          notes?: string | null;
+          custom_fields?: Record<string, unknown>;
+          attachments?: string[];
+          submission_location?: Record<string, unknown> | null;
+          technician_signature?: string | null;
+          submitted_at?: string | null;
+          offline_id?: string | null;
+          sync_status?: "synced" | "pending" | "conflict";
+          organization_id?: string;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "action_entries_action_id_fkey";
+            columns: ["action_id"];
+            isOneToOne: false;
+            referencedRelation: "actions";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "action_entries_technician_id_fkey";
+            columns: ["technician_id"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "action_entries_organization_id_fkey";
+            columns: ["organization_id"];
+            isOneToOne: false;
+            referencedRelation: "organizations";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       assets: {
         Row: {
           id: string;
@@ -653,6 +748,50 @@ export type Database = {
           },
         ];
       };
+      field_app_config: {
+        Row: {
+          id: string;
+          organization_id: string;
+          action_type_code: string;
+          card_fields: { key: string; group: string }[];
+          detail_fields: { key: string; group: string }[];
+          enabled_modules: Record<string, boolean>;
+          display_mode: "cards" | "details";
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          organization_id: string;
+          action_type_code: string;
+          card_fields?: { key: string; group: string }[];
+          detail_fields?: { key: string; group: string }[];
+          enabled_modules?: Record<string, boolean>;
+          display_mode?: "cards" | "details";
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          organization_id?: string;
+          action_type_code?: string;
+          card_fields?: { key: string; group: string }[];
+          detail_fields?: { key: string; group: string }[];
+          enabled_modules?: Record<string, boolean>;
+          display_mode?: "cards" | "details";
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "field_app_config_organization_id_fkey";
+            columns: ["organization_id"];
+            isOneToOne: false;
+            referencedRelation: "organizations";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
     };
     Views: {
       [_ in never]: never;
@@ -675,6 +814,7 @@ export type Database = {
       asset_type: AssetType;
       asset_status: AssetStatus;
       asset_condition: AssetCondition;
+      entry_outcome: EntryOutcome;
     };
     CompositeTypes: {
       [_ in never]: never;
@@ -707,6 +847,18 @@ export type WorkflowStep = {
   updated_at: string;
 };
 
+export type FieldAppConfig = {
+  id: string;
+  organization_id: string;
+  action_type_code: string;
+  card_fields: { key: string; group: string }[];
+  detail_fields: { key: string; group: string }[];
+  enabled_modules: Record<string, boolean>;
+  display_mode: "cards" | "details";
+  created_at: string;
+  updated_at: string;
+};
+
 export type Profile = Database["public"]["Tables"]["profiles"]["Row"];
 export type Organization = Database["public"]["Tables"]["organizations"]["Row"];
 export type PartnerRequest = Database["public"]["Tables"]["partner_requests"]["Row"];
@@ -715,3 +867,4 @@ export type Project = Database["public"]["Tables"]["projects"]["Row"];
 export type ActionItem = Database["public"]["Tables"]["actions"]["Row"];
 export type Asset = Database["public"]["Tables"]["assets"]["Row"];
 export type Invitation = Database["public"]["Tables"]["invitations"]["Row"];
+export type ActionEntry = Database["public"]["Tables"]["action_entries"]["Row"];

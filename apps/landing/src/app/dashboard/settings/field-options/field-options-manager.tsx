@@ -305,11 +305,14 @@ const PRIORITY = [
 
 const PROJECT_TYPES = [
   { label: "Deployment", code: "deployment" },
-  { label: "Survey", code: "survey" },
-  { label: "Maintenance", code: "maintenance" },
-  { label: "Inspection", code: "inspection" },
+  { label: "Construction", code: "construction" },
   { label: "Upgrade", code: "upgrade" },
+  { label: "Rollout", code: "rollout" },
+  { label: "Decommissioning", code: "decommissioning" },
+  { label: "Migration", code: "migration" },
+  { label: "Expansion", code: "expansion" },
   { label: "Remediation", code: "remediation" },
+  { label: "Maintenance", code: "maintenance" },
 ];
 
 const PROJECT_STATUSES = [
@@ -322,12 +325,15 @@ const PROJECT_STATUSES = [
 ];
 
 const ACTION_TYPES = [
-  { label: "Survey", code: "survey" },
+  { label: "Site Survey", code: "site_survey" },
   { label: "Installation", code: "installation" },
   { label: "Inspection", code: "inspection" },
-  { label: "Maintenance", code: "maintenance" },
+  { label: "Preventive Maintenance", code: "preventive_maintenance" },
   { label: "Repair", code: "repair" },
   { label: "Testing", code: "testing" },
+  { label: "Cable Pull", code: "cable_pull" },
+  { label: "Equipment Swap", code: "equipment_swap" },
+  { label: "Commissioning", code: "commissioning" },
   { label: "Documentation", code: "documentation" },
   { label: "Other", code: "other" },
 ];

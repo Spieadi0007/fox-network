@@ -16,7 +16,7 @@ export default async function ProjectDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const user = await getAuthUser();
-  if (!user || !user.organizationId) redirect("/dashboard");
+  if (!user || !user.organizationId) redirect("/signin");
 
   const { id } = await params;
   const [{ data: project }, { data: actions }, { data: fieldDefs }] =
