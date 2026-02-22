@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Container } from "@/components/ui/container";
+import { Container } from "@/components/marketing/container";
 import { fadeInUp, staggerContainer, viewportConfig } from "@/lib/animations";
 import { Truck, Wrench, Package, FileCheck, ArrowUpRight } from "lucide-react";
 import { cn } from "@/lib/cn";

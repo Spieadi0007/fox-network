@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Container } from "@/components/ui/container";
-import { Button } from "@/components/ui/button";
+import { Container } from "@/components/marketing/container";
+import { Button } from "@/components/marketing/button";
 import { Menu, X } from "lucide-react";
 import { cn } from "@/lib/cn";
 

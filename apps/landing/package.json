@@ -12,6 +12,7 @@
     "@anthropic-ai/sdk": "^0.74.0",
     "@fox/shared": "workspace:*",
     "@fox/supabase": "workspace:*",
+    "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cobe": "^0.6.5",
     "framer-motion": "^12.29.2",
@@ -19,6 +20,7 @@
     "lucide-react": "^0.563.0",
     "next": "16.1.6",
     "react": "19.2.3",
+    "radix-ui": "^1.4.3",
     "react-dom": "19.2.3",
     "tailwind-merge": "^3.4.0"
   },

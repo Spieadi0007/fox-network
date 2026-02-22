@@ -10,6 +10,7 @@ export type {
   Project,
   ActionItem,
   Asset,
+  Invitation,
   LocationType,
   LocationStatus,
   ProjectType,

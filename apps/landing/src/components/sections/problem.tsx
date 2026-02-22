@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Container } from "@/components/ui/container";
+import { Container } from "@/components/marketing/container";
 import {
   fadeInUp,
   fadeInLeft,
@@ -9,7 +9,7 @@ import {
   staggerContainer,
   viewportConfig,
 } from "@/lib/animations";
-import { GridBackground } from "@/components/ui/grid-background";
+import { GridBackground } from "@/components/marketing/grid-background";
 
 const painPoints = [
   {

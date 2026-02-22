@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Container } from "@/components/ui/container";
+import { Container } from "@/components/marketing/container";
 import {
   fadeInUp,
   drawLine,
@@ -11,7 +11,7 @@ import {
 } from "@/lib/animations";
 import { Send, Radio, ScanEye, Receipt } from "lucide-react";
 import { cn } from "@/lib/cn";
-import { GridBackground } from "@/components/ui/grid-background";
+import { GridBackground } from "@/components/marketing/grid-background";
 
 const steps = [
   {

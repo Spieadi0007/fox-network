@@ -1,4 +1,4 @@
-import { Container } from "@/components/ui/container";
+import { Container } from "@/components/marketing/container";
 
 const footerLinks = {
   Product: [

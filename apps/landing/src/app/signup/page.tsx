@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { Suspense, useState, useEffect, useRef } from "react";
 import { Building2, Wrench, CheckCircle2, ArrowLeft, Search, Loader2 } from "lucide-react";
-import { GridBackground } from "@/components/ui/grid-background";
+import { GridBackground } from "@/components/marketing/grid-background";
 import {
   signUpCompany,
   submitPartnerRequest,

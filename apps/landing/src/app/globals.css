@@ -3,6 +3,7 @@
 @theme inline {
   --color-background: #fafafa;
   --color-foreground: #0a0a0a;
+  --color-destructive: #dc2626;
   --color-fox-orange: #3B82F6;
   --color-fox-amber: #2563EB;
   --color-fox-dark: #1c1917;
@@ -208,6 +209,26 @@ body {
 ::selection {
   background: rgba(59, 130, 246, 0.15);
   color: #1c1917;
+}
+
+/* ── Slim scrollbars (dashboard) ── */
+.scrollbar-thin {
+  scrollbar-width: thin;
+  scrollbar-color: #d6d3d1 transparent;
+}
+.scrollbar-thin::-webkit-scrollbar {
+  height: 6px;
+  width: 6px;
+}
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: transparent;
+}
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: #d6d3d1;
+  border-radius: 9999px;
+}
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  background: #a8a29e;
 }
 
 /* ── Print / PDF export ── */

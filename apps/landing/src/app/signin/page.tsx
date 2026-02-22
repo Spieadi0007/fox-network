@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
-import { GridBackground } from "@/components/ui/grid-background";
+import { GridBackground } from "@/components/marketing/grid-background";
 import { signInWithEmail, signInWithOAuth } from "@fox/supabase/auth/actions";
 
 function GoogleIcon({ className }: { className?: string }) {

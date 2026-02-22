@@ -1,11 +1,11 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Container } from "@/components/ui/container";
-import { Button } from "@/components/ui/button";
+import { Container } from "@/components/marketing/container";
+import { Button } from "@/components/marketing/button";
 import { fadeInUp, scaleIn, staggerContainer, ease } from "@/lib/animations";
 import { ArrowRight, CheckCircle2, Zap, Shield, Clock } from "lucide-react";
-import { GridBackground } from "@/components/ui/grid-background";
+import { GridBackground } from "@/components/marketing/grid-background";
 
 export function Hero() {
   return (

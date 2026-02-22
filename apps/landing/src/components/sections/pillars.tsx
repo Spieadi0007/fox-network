@@ -2,7 +2,7 @@
 
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
-import { Container } from "@/components/ui/container";
+import { Container } from "@/components/marketing/container";
 import { fadeInUp, staggerContainer, viewportConfig } from "@/lib/animations";
 
 /* ─────────────────────────────────────────────

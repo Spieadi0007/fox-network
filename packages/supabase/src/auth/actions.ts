@@ -3,10 +3,8 @@
 import { redirect } from "next/navigation";
 import { createServerClient } from "../client/server";
 
-const LANDING_URL =
-  process.env.NEXT_PUBLIC_LANDING_URL ?? "http://localhost:3000";
-const PLATFORM_URL =
-  process.env.NEXT_PUBLIC_PLATFORM_URL || LANDING_URL;
+const APP_URL =
+  process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
 
 export async function signInWithEmail(formData: FormData) {
   const email = formData.get("email") as string;
@@ -19,7 +17,7 @@ export async function signInWithEmail(formData: FormData) {
     redirect(`/signin?error=${encodeURIComponent(error.message)}`);
   }
 
-  redirect(PLATFORM_URL);
+  redirect("/dashboard");
 }
 
 export async function signUpWithEmail(formData: FormData) {
@@ -49,7 +47,7 @@ export async function signInWithOAuth(provider: "google") {
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider,
     options: {
-      redirectTo: `${LANDING_URL}/auth/callback`,
+      redirectTo: `${APP_URL}/auth/callback`,
     },
   });
 
@@ -65,7 +63,7 @@ export async function signInWithOAuth(provider: "google") {
 export async function signOut() {
   const supabase = await createServerClient();
   await supabase.auth.signOut();
-  redirect(LANDING_URL);
+  redirect("/");
 }
 
 // --- New signup flow actions ---
@@ -134,7 +132,7 @@ export async function signInWithOAuthCompany(provider: "google") {
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider,
     options: {
-      redirectTo: `${LANDING_URL}/auth/callback?next=${encodeURIComponent("/signup?step=company-2")}`,
+      redirectTo: `${APP_URL}/auth/callback?next=${encodeURIComponent("/signup?step=company-2")}`,
     },
   });
 
@@ -185,5 +183,5 @@ export async function completeCompanySetup(formData: FormData) {
     redirect(`/signup?step=company-2&error=${encodeURIComponent(setupError.message)}`);
   }
 
-  redirect(PLATFORM_URL);
+  redirect("/dashboard");
 }
