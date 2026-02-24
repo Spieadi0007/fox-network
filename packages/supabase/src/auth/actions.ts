@@ -4,14 +4,12 @@ import { redirect } from "next/navigation";
 import { createServerClient } from "../client/server";
 
 function getAppUrl() {
-  const url = process.env.NEXT_PUBLIC_APP_URL;
-  if (!url && process.env.NODE_ENV === "production") {
-    throw new Error("NEXT_PUBLIC_APP_URL is required in production");
-  }
-  return url ?? "http://localhost:3000";
+  return (
+    process.env.NEXT_PUBLIC_LANDING_URL ??
+    process.env.NEXT_PUBLIC_APP_URL ??
+    "http://localhost:3000"
+  );
 }
-
-const APP_URL = getAppUrl();
 
 export async function signInWithEmail(formData: FormData) {
   const email = formData.get("email") as string;
@@ -54,7 +52,7 @@ export async function signInWithOAuth(provider: "google") {
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider,
     options: {
-      redirectTo: `${APP_URL}/auth/callback`,
+      redirectTo: `${getAppUrl()}/auth/callback`,
     },
   });
 
@@ -139,7 +137,7 @@ export async function signInWithOAuthCompany(provider: "google") {
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider,
     options: {
-      redirectTo: `${APP_URL}/auth/callback?next=${encodeURIComponent("/signup?step=company-2")}`,
+      redirectTo: `${getAppUrl()}/auth/callback?next=${encodeURIComponent("/signup?step=company-2")}`,
     },
   });
 
