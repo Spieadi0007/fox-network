@@ -106,7 +106,7 @@ export function Sidebar({
 
       {/* Fox branding */}
       <div className="flex items-center justify-center gap-1.5 border-t border-stone-100 px-4 py-2.5">
-        <img src="/fox-logo.svg" alt="Fox" className="h-4 w-4" />
+        <img src="/fox-logo.png" alt="Fox" className="h-4 w-4" />
         <span className="font-[family-name:var(--font-heading)] text-[11px] font-semibold tracking-[-0.02em] text-stone-400">
           Fox<span className="text-fox-orange/60">Network</span>
         </span>

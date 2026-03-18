@@ -72,7 +72,7 @@ function SelectView({ onSelect }: { onSelect: (type: "company" | "partner") => v
   return (
     <div className="relative z-10 w-full max-w-2xl">
       <Link href="/" className="group mb-8 flex items-center justify-center gap-1.5">
-        <img src="/fox-logo.svg" alt="Fox" className="h-8 w-8 transition-transform duration-300 group-hover:rotate-[-4deg]" />
+        <img src="/fox-logo.png" alt="Fox" className="h-8 w-8 transition-transform duration-300 group-hover:rotate-[-4deg]" />
         <span className="font-[family-name:var(--font-heading)] text-[17px] font-bold tracking-[-0.03em] text-stone-900">
           Fox<span className="text-fox-orange">Network</span>
         </span>
@@ -148,7 +148,7 @@ function CompanyStep1({
   return (
     <div className="relative z-10 w-full max-w-md">
       <Link href="/" className="group mb-8 flex items-center justify-center gap-1.5">
-        <img src="/fox-logo.svg" alt="Fox" className="h-8 w-8 transition-transform duration-300 group-hover:rotate-[-4deg]" />
+        <img src="/fox-logo.png" alt="Fox" className="h-8 w-8 transition-transform duration-300 group-hover:rotate-[-4deg]" />
         <span className="font-[family-name:var(--font-heading)] text-[17px] font-bold tracking-[-0.03em] text-stone-900">
           Fox<span className="text-fox-orange">Network</span>
         </span>
@@ -321,7 +321,7 @@ function CompanyStep2({
   return (
     <div className="relative z-10 w-full max-w-md">
       <Link href="/" className="group mb-8 flex items-center justify-center gap-1.5">
-        <img src="/fox-logo.svg" alt="Fox" className="h-8 w-8 transition-transform duration-300 group-hover:rotate-[-4deg]" />
+        <img src="/fox-logo.png" alt="Fox" className="h-8 w-8 transition-transform duration-300 group-hover:rotate-[-4deg]" />
         <span className="font-[family-name:var(--font-heading)] text-[17px] font-bold tracking-[-0.03em] text-stone-900">
           Fox<span className="text-fox-orange">Network</span>
         </span>
@@ -517,7 +517,7 @@ function PartnerForm({
   return (
     <div className="relative z-10 w-full max-w-md">
       <Link href="/" className="group mb-8 flex items-center justify-center gap-1.5">
-        <img src="/fox-logo.svg" alt="Fox" className="h-8 w-8 transition-transform duration-300 group-hover:rotate-[-4deg]" />
+        <img src="/fox-logo.png" alt="Fox" className="h-8 w-8 transition-transform duration-300 group-hover:rotate-[-4deg]" />
         <span className="font-[family-name:var(--font-heading)] text-[17px] font-bold tracking-[-0.03em] text-stone-900">
           Fox<span className="text-fox-orange">Network</span>
         </span>
@@ -620,7 +620,7 @@ function PartnerSuccess() {
   return (
     <div className="relative z-10 w-full max-w-md">
       <Link href="/" className="group mb-8 flex items-center justify-center gap-1.5">
-        <img src="/fox-logo.svg" alt="Fox" className="h-8 w-8 transition-transform duration-300 group-hover:rotate-[-4deg]" />
+        <img src="/fox-logo.png" alt="Fox" className="h-8 w-8 transition-transform duration-300 group-hover:rotate-[-4deg]" />
         <span className="font-[family-name:var(--font-heading)] text-[17px] font-bold tracking-[-0.03em] text-stone-900">
           Fox<span className="text-fox-orange">Network</span>
         </span>
@@ -698,7 +698,7 @@ function SignUpFlow() {
     return (
       <div className="relative z-10 w-full max-w-md">
         <Link href="/" className="group mb-8 flex items-center justify-center gap-1.5">
-          <img src="/fox-logo.svg" alt="Fox" className="h-8 w-8 transition-transform duration-300 group-hover:rotate-[-4deg]" />
+          <img src="/fox-logo.png" alt="Fox" className="h-8 w-8 transition-transform duration-300 group-hover:rotate-[-4deg]" />
           <span className="font-[family-name:var(--font-heading)] text-[17px] font-bold tracking-[-0.03em] text-stone-900">
             Fox<span className="text-fox-orange">Network</span>
           </span>
