@@ -33,7 +33,7 @@ export function Navbar() {
     >
       <Container className="flex h-16 items-center justify-between">
         <a href="#" className="flex items-center gap-1.5 group">
-          <img src="/fox-logo.png" alt="Fox" className="h-8 w-8 transition-transform duration-300 group-hover:rotate-[-4deg]" />
+          <img src="/fox-logo.svg" alt="Fox" className="h-8 w-8 transition-transform duration-300 group-hover:rotate-[-4deg]" />
           <span className="font-[family-name:var(--font-heading)] text-[17px] font-bold tracking-[-0.03em] text-stone-900">
             Fox<span className="text-fox-orange">Network</span>
           </span>

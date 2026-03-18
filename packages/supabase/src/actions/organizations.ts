@@ -18,15 +18,14 @@ export async function getOrganization(orgId: string) {
 export async function updateOrganization(orgId: string, values: Record<string, any>) {
   const supabase = await createServerClient();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { data, error } = await (supabase as any)
+  const { data: rows, error } = await (supabase as any)
     .from("organizations")
     .update({ ...values, updated_at: new Date().toISOString() })
     .eq("id", orgId)
-    .select()
-    .single();
+    .select();
+  const data = rows?.[0] ?? null;
   if (!error) {
-    revalidatePath("/");
-    revalidatePath("/settings/organization");
+    revalidatePath("/", "layout");
   }
   return { data, error };
 }

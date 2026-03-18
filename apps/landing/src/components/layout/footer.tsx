@@ -28,7 +28,7 @@ export function Footer() {
         <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-5">
           <div className="lg:col-span-2">
             <a href="#" className="flex items-center gap-1.5">
-              <img src="/fox-logo.png" alt="Fox" className="h-8 w-8" />
+              <img src="/fox-logo.svg" alt="Fox" className="h-8 w-8" />
               <span className="font-[family-name:var(--font-heading)] text-[17px] font-bold tracking-[-0.03em] text-stone-900">
                 Fox<span className="text-fox-orange">Network</span>
               </span>
