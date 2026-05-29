@@ -187,17 +187,17 @@ const DEFAULT_ENABLED_MODULES: Record<string, boolean> = {
 const DEFAULT_DISPLAY_MODE = "cards" as const;
 
 // ─── Default action types (fallback when no field options configured) ─
+// MUST mirror the action_type enum values used on the action form
+// (action-form.tsx `defaults.action_type`) so the config saved here is
+// keyed by the same code the technician app reads off `actions.action_type`.
 
 const DEFAULT_ACTION_TYPES = [
-  { code: "site_survey", label: "Site Survey" },
+  { code: "survey", label: "Survey" },
   { code: "installation", label: "Installation" },
   { code: "inspection", label: "Inspection" },
-  { code: "preventive_maintenance", label: "Preventive Maintenance" },
+  { code: "maintenance", label: "Maintenance" },
   { code: "repair", label: "Repair" },
   { code: "testing", label: "Testing" },
-  { code: "cable_pull", label: "Cable Pull" },
-  { code: "equipment_swap", label: "Equipment Swap" },
-  { code: "commissioning", label: "Commissioning" },
   { code: "documentation", label: "Documentation" },
   { code: "other", label: "Other" },
 ];
@@ -283,7 +283,7 @@ export function FieldAppManager({
     return DEFAULT_ACTION_TYPES;
   }, [actionTypeOptions]);
 
-  const [activeType, setActiveType] = useState(actionTypes[0]?.code ?? "site_survey");
+  const [activeType, setActiveType] = useState(actionTypes[0]?.code ?? "survey");
 
   // Build initial drafts from saved configs
   const buildInitialDrafts = useCallback(() => {
