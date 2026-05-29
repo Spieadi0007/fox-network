@@ -50,7 +50,8 @@ export type Database = {
           role: "admin" | "manager" | "technician" | "viewer";
           avatar_url: string | null;
           organization_id: string | null;
-          account_type: "company" | "partner" | null;
+          account_type: "company" | "partner" | "client" | null;
+          fox_staff: boolean;
           created_at: string;
           updated_at: string;
         };
@@ -61,7 +62,8 @@ export type Database = {
           role?: "admin" | "manager" | "technician" | "viewer";
           avatar_url?: string | null;
           organization_id?: string | null;
-          account_type?: "company" | "partner" | null;
+          account_type?: "company" | "partner" | "client" | null;
+          fox_staff?: boolean;
           created_at?: string;
           updated_at?: string;
         };
@@ -72,7 +74,8 @@ export type Database = {
           role?: "admin" | "manager" | "technician" | "viewer";
           avatar_url?: string | null;
           organization_id?: string | null;
-          account_type?: "company" | "partner" | null;
+          account_type?: "company" | "partner" | "client" | null;
+          fox_staff?: boolean;
           created_at?: string;
           updated_at?: string;
         };
@@ -801,7 +804,7 @@ export type Database = {
     };
     Enums: {
       app_role: "admin" | "manager" | "technician" | "viewer";
-      account_type: "company" | "partner";
+      account_type: "company" | "partner" | "client";
       org_size: "1-10" | "11-50" | "51-200" | "201-500" | "500+";
       partner_request_status: "pending" | "approved" | "rejected";
       location_type: LocationType;

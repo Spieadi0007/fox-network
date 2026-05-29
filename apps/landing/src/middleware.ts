@@ -29,60 +29,165 @@ export async function middleware(request: NextRequest) {
     data: { user },
   } = await client.supabase.auth.getUser();
 
-  const isDashboard = pathname.startsWith("/dashboard");
+  const isStaffDashboard = pathname.startsWith("/dashboard");
+  const isClientArea = pathname.startsWith("/client");
+  const isTechnicianArea = pathname.startsWith("/technician");
+  const isClientPublic =
+    pathname === "/client/signin" || pathname === "/client/signup";
+  const isClientAuthed = isClientArea && !isClientPublic;
 
-  // ── Public routes: redirect authenticated users to /dashboard ──
-  if (!isDashboard) {
-    if (user) {
-      if (pathname === "/signin") {
+  type ProfileShape = {
+    role: string;
+    organization_id: string | null;
+    account_type: string | null;
+  };
+
+  async function fetchProfile(): Promise<ProfileShape | null> {
+    if (!user) return null;
+    const { data } = await client.supabase
+      .from("profiles")
+      .select("role, organization_id, account_type")
+      .eq("id", user.id)
+      .single<ProfileShape>();
+    return data;
+  }
+
+  // ── Client area ──
+  if (isClientArea) {
+    if (isClientAuthed) {
+      if (!user) {
+        return redirectWithCookies(
+          new URL("/client/signin", request.url),
+          client,
+        );
+      }
+      const profile = await fetchProfile();
+      if (profile?.account_type && profile.account_type !== "client") {
         return redirectWithCookies(new URL("/dashboard", request.url), client);
       }
-      if (pathname === "/signup" && !request.nextUrl.searchParams.has("step")) {
+      if (!profile?.organization_id) {
+        return redirectWithCookies(
+          new URL(
+            "/client/signin?error=No+organization+linked+to+your+account",
+            request.url,
+          ),
+          client,
+        );
+      }
+      return client.response;
+    }
+
+    // Public client pages: bounce authenticated users to the right home
+    if (user) {
+      const profile = await fetchProfile();
+      if (profile?.account_type === "client" && profile.organization_id) {
+        return redirectWithCookies(
+          new URL("/client/dashboard", request.url),
+          client,
+        );
+      }
+      if (profile?.organization_id) {
         return redirectWithCookies(new URL("/dashboard", request.url), client);
       }
     }
     return client.response;
   }
 
-  // ── Dashboard routes: require auth ──
+  // ── Technician area ──
+  if (isTechnicianArea) {
+    if (!user) {
+      return redirectWithCookies(new URL("/signin", request.url), client);
+    }
+    const profile = await fetchProfile();
+    if (profile?.role !== "technician") {
+      // Non-technicians go to their proper home
+      if (profile?.account_type === "client") {
+        return redirectWithCookies(
+          new URL("/client/dashboard", request.url),
+          client,
+        );
+      }
+      return redirectWithCookies(new URL("/dashboard", request.url), client);
+    }
+    if (!profile?.organization_id) {
+      return redirectWithCookies(new URL("/signin", request.url), client);
+    }
 
-  // Redirect unauthenticated users to sign-in
-  if (!user) {
-    return redirectWithCookies(new URL("/signin", request.url), client);
+    const requestHeaders = new Headers(request.headers);
+    requestHeaders.set("x-user-id", user.id);
+    requestHeaders.set("x-user-email", user.email ?? "");
+    requestHeaders.set("x-user-role", profile.role ?? "technician");
+    requestHeaders.set("x-organization-id", profile.organization_id ?? "");
+
+    const next = NextResponse.next({ request: { headers: requestHeaders } });
+    client.response.cookies.getAll().forEach((cookie) => {
+      next.cookies.set(cookie.name, cookie.value);
+    });
+    return next;
   }
 
-  // Fetch profile for role
-  const { data: profile } = await client.supabase
-    .from("profiles")
-    .select("role, organization_id")
-    .eq("id", user.id)
-    .single<{ role: string; organization_id: string | null }>();
+  // ── Staff dashboard area ──
+  if (isStaffDashboard) {
+    if (!user) {
+      return redirectWithCookies(new URL("/signin", request.url), client);
+    }
+    const profile = await fetchProfile();
+    if (profile?.account_type === "client") {
+      return redirectWithCookies(
+        new URL("/client/dashboard", request.url),
+        client,
+      );
+    }
+    if (profile?.role === "technician") {
+      return redirectWithCookies(new URL("/technician", request.url), client);
+    }
+    if (!profile?.organization_id) {
+      return redirectWithCookies(
+        new URL("/signup?step=company-2", request.url),
+        client,
+      );
+    }
 
-  const role = profile?.role ?? "viewer";
+    const requestHeaders = new Headers(request.headers);
+    requestHeaders.set("x-user-id", user.id);
+    requestHeaders.set("x-user-email", user.email ?? "");
+    requestHeaders.set("x-user-role", profile.role ?? "viewer");
+    requestHeaders.set("x-organization-id", profile.organization_id ?? "");
 
-  // Redirect users without an organization to company setup
-  if (!profile?.organization_id) {
-    return redirectWithCookies(
-      new URL("/signup?step=company-2", request.url),
-      client,
-    );
+    const next = NextResponse.next({ request: { headers: requestHeaders } });
+    client.response.cookies.getAll().forEach((cookie) => {
+      next.cookies.set(cookie.name, cookie.value);
+    });
+    return next;
   }
 
-  // Inject user info as headers for downstream use
-  const requestHeaders = new Headers(request.headers);
-  requestHeaders.set("x-user-id", user.id);
-  requestHeaders.set("x-user-email", user.email ?? "");
-  requestHeaders.set("x-user-role", role);
-  requestHeaders.set("x-organization-id", profile.organization_id ?? "");
-
-  const next = NextResponse.next({
-    request: { headers: requestHeaders },
-  });
-  // Preserve refreshed session cookies
-  client.response.cookies.getAll().forEach((cookie) => {
-    next.cookies.set(cookie.name, cookie.value);
-  });
-  return next;
+  // ── Public marketing routes ──
+  if (user) {
+    if (pathname === "/signin") {
+      const profile = await fetchProfile();
+      if (profile?.account_type === "client") {
+        return redirectWithCookies(
+          new URL("/client/dashboard", request.url),
+          client,
+        );
+      }
+      if (profile?.role === "technician") {
+        return redirectWithCookies(new URL("/technician", request.url), client);
+      }
+      return redirectWithCookies(new URL("/dashboard", request.url), client);
+    }
+    if (pathname === "/signup" && !request.nextUrl.searchParams.has("step")) {
+      const profile = await fetchProfile();
+      if (profile?.account_type === "client") {
+        return redirectWithCookies(
+          new URL("/client/dashboard", request.url),
+          client,
+        );
+      }
+      return redirectWithCookies(new URL("/dashboard", request.url), client);
+    }
+  }
+  return client.response;
 }
 
 export const config = {
@@ -91,5 +196,7 @@ export const config = {
     "/signin",
     "/signup",
     "/dashboard/:path*",
+    "/client/:path*",
+    "/technician/:path*",
   ],
 };

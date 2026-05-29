@@ -150,6 +150,49 @@ export async function signInWithOAuthCompany(provider: "google") {
   }
 }
 
+// --- Client signup / signin ---
+
+export async function signUpClient(formData: FormData) {
+  const name = formData.get("name") as string;
+  const email = formData.get("email") as string;
+  const password = formData.get("password") as string;
+  const companyName = formData.get("companyName") as string;
+
+  const supabase = await createServerClient();
+  const { error } = await supabase.auth.signUp({
+    email,
+    password,
+    options: {
+      data: {
+        name,
+        account_type: "client",
+        company_name: companyName,
+        company_size: "1-10",
+      },
+    },
+  });
+
+  if (error) {
+    redirect(`/client/signup?error=${encodeURIComponent(error.message)}`);
+  }
+
+  redirect("/client/signup?success=Check your email to confirm your account");
+}
+
+export async function signInClient(formData: FormData) {
+  const email = formData.get("email") as string;
+  const password = formData.get("password") as string;
+
+  const supabase = await createServerClient();
+  const { error } = await supabase.auth.signInWithPassword({ email, password });
+
+  if (error) {
+    redirect(`/client/signin?error=${encodeURIComponent(error.message)}`);
+  }
+
+  redirect("/client/dashboard");
+}
+
 export async function completeCompanySetup(formData: FormData) {
   const companyName = formData.get("companyName") as string;
   const companySize = formData.get("companySize") as string;
