@@ -13,7 +13,7 @@ import { cn } from "@/lib/cn";
 const tiers = [
   {
     name: "Lazy",
-    price: 100,
+    price: 120,
     response: "Within 5 business days",
     description: "Planned work and non-blocking fixes you can schedule.",
     features: [
@@ -25,7 +25,7 @@ const tiers = [
   },
   {
     name: "Standard",
-    price: 150,
+    price: 200,
     response: "Within 48 hours",
     description: "The default for normal field service requests.",
     features: [
@@ -37,7 +37,7 @@ const tiers = [
   },
   {
     name: "Urgent",
-    price: 200,
+    price: 300,
     response: "Within 24 hours",
     description: "Service is degraded and customers are affected.",
     features: [
@@ -49,7 +49,7 @@ const tiers = [
   },
   {
     name: "Emergency",
-    price: 250,
+    price: 420,
     response: "Within 4 hours, 24/7",
     description: "Asset is down. You need someone on site, now.",
     features: [
@@ -82,8 +82,8 @@ export function SlaPricing() {
             You pick the response time.
           </h2>
           <p className="mt-5 text-base leading-[1.7] text-stone-500">
-            Per-intervention pricing, all-inclusive. Pick the SLA that matches
-            the urgency — we hit it or we eat the cost.
+            One flat price per intervention.* Pick the SLA that matches the
+            urgency — we hit it or we eat the cost.
           </p>
         </motion.div>
 
@@ -165,8 +165,8 @@ export function SlaPricing() {
         </motion.div>
 
         <p className="mt-8 text-center text-xs text-stone-400">
-          Prices excl. VAT. Volume contracts available — talk to us about your
-          fleet.
+          *Travel time not included — billed at ~€1/km. Prices excl. VAT.
+          Volume contracts available — talk to us about your fleet.
         </p>
       </Container>
     </section>

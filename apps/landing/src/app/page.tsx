@@ -2,6 +2,7 @@ import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
 import { ServicesHero } from "@/components/sections/services-hero";
 import { Networks } from "@/components/sections/networks";
+import { Coverage } from "@/components/sections/coverage";
 import { SlaPricing } from "@/components/sections/sla-pricing";
 import { BookingFlow } from "@/components/sections/booking-flow";
 import { WhatYouGet } from "@/components/sections/what-you-get";
@@ -14,6 +15,7 @@ export default function Home() {
       <main>
         <ServicesHero />
         <Networks />
+        <Coverage />
         <SlaPricing />
         <BookingFlow />
         <WhatYouGet />
