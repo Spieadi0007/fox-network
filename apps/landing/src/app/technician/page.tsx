@@ -42,12 +42,25 @@ export default async function TechnicianHome({
   const orgId = profile?.organization_id;
   const firstName = (profile?.name as string)?.split(" ")[0] ?? "there";
 
-  // Actions assigned to this technician
+  // Actions assigned to this technician. Resolve the location directly off the
+  // action, falling back to its project's location when the action's own
+  // location_id is blank.
   const { data: actionsRaw } = await db
     .from("actions")
-    .select("*, location:locations(*)")
+    .select(
+      "*, location:locations(*), project:projects(name, location:locations(*))",
+    )
     .eq("assigned_to", user.id)
     .order("due_date", { ascending: true, nullsFirst: false });
+
+  // Attach a single resolved location object per action.
+  for (const a of actionsRaw ?? []) {
+    const direct = (a as Record<string, unknown>).location as Record<string, unknown> | null;
+    const viaProject = (
+      (a as Record<string, unknown>).project as { location?: Record<string, unknown> } | null
+    )?.location;
+    (a as Record<string, unknown>).resolved_location = direct ?? viaProject ?? null;
+  }
 
   const actions: Record<string, unknown>[] = (actionsRaw ?? []).filter(
     (a: Record<string, unknown>) =>
@@ -57,7 +70,9 @@ export default async function TechnicianHome({
   // Assets by location (one query)
   const locationIds = [
     ...new Set(
-      actions.map((a) => (a.location as { id?: string } | null)?.id).filter(Boolean),
+      actions
+        .map((a) => (a.resolved_location as { id?: string } | null)?.id)
+        .filter(Boolean),
     ),
   ];
   let assetsByLocation: Record<string, Record<string, unknown>> = {};
@@ -107,9 +122,17 @@ export default async function TechnicianHome({
       actions_assigned_to_me_readable: assignedCount ?? 0,
       actions_in_my_org_readable: orgCount ?? 0,
       assigned_open_after_filter: actions.length,
-      statuses_seen: (actionsRaw ?? []).map(
-        (a: Record<string, unknown>) => a.status,
-      ),
+      per_action: actions.map((a) => {
+        const rl = a.resolved_location as Record<string, unknown> | null;
+        return {
+          name: a.name,
+          action_location_id: a.location_id ?? null,
+          resolved_location_id: rl?.id ?? null,
+          location_name: rl?.name ?? null,
+          address: rl?.address ?? null,
+          asset: rl?.id ? (assetsByLocation[rl.id as string]?.name ?? null) : null,
+        };
+      }),
     };
   }
 
@@ -148,7 +171,7 @@ export default async function TechnicianHome({
       ) : (
         <div className="mt-5 space-y-3">
           {actions.map((action) => {
-            const location = action.location as Record<string, unknown> | null;
+            const location = action.resolved_location as Record<string, unknown> | null;
             const asset = location?.id
               ? (assetsByLocation[location.id as string] ?? null)
               : null;

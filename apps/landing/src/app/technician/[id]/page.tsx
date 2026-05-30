@@ -52,12 +52,17 @@ export default async function WorkOrderDetail({
 
   const { data: action } = await db
     .from("actions")
-    .select("*, location:locations(*)")
+    .select(
+      "*, location:locations(*), project:projects(name, location:locations(*))",
+    )
     .eq("id", id)
     .single();
   if (!action) notFound();
 
-  const location = (action.location as Record<string, unknown> | null) ?? null;
+  const directLocation = (action.location as Record<string, unknown> | null) ?? null;
+  const projectLocation =
+    (action.project as { location?: Record<string, unknown> } | null)?.location ?? null;
+  const location = directLocation ?? projectLocation;
   let asset: Record<string, unknown> | null = null;
   if (location?.id) {
     const { data: assets } = await db

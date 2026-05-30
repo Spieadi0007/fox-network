@@ -16,6 +16,7 @@ import { Button } from "@/components/ui/button";
 import { createLocation, updateLocation } from "@fox/supabase/actions/locations";
 import type { Location, CustomFieldDefinition, FieldRequirementOverride, ConfigurableFieldOption } from "@fox/supabase";
 import { CustomFieldsRenderer, extractCustomFields } from "@/components/custom-fields-renderer";
+import { Field } from "@/components/ui/field";
 import { MapPin, Loader2 } from "lucide-react";
 
 const fi = "h-12 rounded-xl border-stone-200 px-4 text-sm placeholder:text-stone-400 shadow-none";
@@ -248,121 +249,165 @@ export function LocationForm({ location, customFieldDefinitions = [], fieldOverr
         {/* Right card - form */}
         <div className="lg:col-span-3 rounded-2xl border border-stone-200 bg-white p-8">
           <div className="grid grid-cols-2 gap-5">
-            <Input className={fi} placeholder={`Location name${isRequired("name") ? " *" : ""}`} name="name" required={isRequired("name")} defaultValue={location?.name} />
-            <Input className={`${fi} bg-stone-50 text-stone-500`} placeholder="Auto-generated on save" name="code" value={location?.code ?? ""} readOnly tabIndex={-1} />
+            <Field label="Location name" required={isRequired("name")} htmlFor="name">
+              <Input id="name" className={fi} placeholder="e.g. Carrefour Lyon Part-Dieu" name="name" required={isRequired("name")} defaultValue={location?.name} />
+            </Field>
+            <Field label="Code" hint="auto-generated">
+              <Input className={`${fi} bg-stone-50 text-stone-500`} placeholder="Auto-generated on save" name="code" value={location?.code ?? ""} readOnly tabIndex={-1} />
+            </Field>
 
             {clients.length > 0 ? (
-              <Select name="client" defaultValue={location?.client ?? ""} onValueChange={() => setTimeout(updatePreview, 0)}>
-                <SelectTrigger className={ft}>
-                  <SelectValue placeholder={`Client${isRequired("client") ? " *" : ""}`} />
-                </SelectTrigger>
-                <SelectContent>
-                  {clients.map((c) => (
-                    <SelectItem key={c.value} value={c.value}>{c.label}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <Field label="Client" required={isRequired("client")}>
+                <Select name="client" defaultValue={location?.client ?? ""} onValueChange={() => setTimeout(updatePreview, 0)}>
+                  <SelectTrigger className={ft}>
+                    <SelectValue placeholder="Select client" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {clients.map((c) => (
+                      <SelectItem key={c.value} value={c.value}>{c.label}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </Field>
             ) : (
               <input type="hidden" name="client" value={location?.client ?? ""} />
             )}
 
-            <Select name="location_type" defaultValue={location?.location_type ?? "other"} onValueChange={() => setTimeout(updatePreview, 0)}>
-              <SelectTrigger className={ft}>
-                <SelectValue placeholder="Type" />
-              </SelectTrigger>
-              <SelectContent>
-                {locationTypes.map((t) => (
-                  <SelectItem key={t.value} value={t.value}>{t.label}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <Select name="status" defaultValue={location?.status ?? "active"} onValueChange={() => setTimeout(updatePreview, 0)}>
-              <SelectTrigger className={ft}>
-                <SelectValue placeholder="Status" />
-              </SelectTrigger>
-              <SelectContent>
-                {locationStatuses.map((s) => (
-                  <SelectItem key={s.value} value={s.value}>{s.label}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <Field label="Location type">
+              <Select name="location_type" defaultValue={location?.location_type ?? "other"} onValueChange={() => setTimeout(updatePreview, 0)}>
+                <SelectTrigger className={ft}>
+                  <SelectValue placeholder="Select type" />
+                </SelectTrigger>
+                <SelectContent>
+                  {locationTypes.map((t) => (
+                    <SelectItem key={t.value} value={t.value}>{t.label}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </Field>
+            <Field label="Status">
+              <Select name="status" defaultValue={location?.status ?? "active"} onValueChange={() => setTimeout(updatePreview, 0)}>
+                <SelectTrigger className={ft}>
+                  <SelectValue placeholder="Select status" />
+                </SelectTrigger>
+                <SelectContent>
+                  {locationStatuses.map((s) => (
+                    <SelectItem key={s.value} value={s.value}>{s.label}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </Field>
 
-            <Input className={`${fi} col-span-2`} placeholder={`Street address${isRequired("address") ? " *" : ""}`} name="address" required={isRequired("address")} defaultValue={location?.address} />
+            <Field label="Street address" required={isRequired("address")} className="col-span-2" htmlFor="address">
+              <Input id="address" className={fi} placeholder="17 Rue du Docteur Bouchut" name="address" required={isRequired("address")} defaultValue={location?.address} />
+            </Field>
 
-            <Input className={fi} placeholder={`City${isRequired("city") ? " *" : ""}`} name="city" required={isRequired("city")} defaultValue={location?.city} />
+            <Field label="City" required={isRequired("city")} htmlFor="city">
+              <Input id="city" className={fi} placeholder="Lyon" name="city" required={isRequired("city")} defaultValue={location?.city} />
+            </Field>
             <div className="grid grid-cols-2 gap-4">
-              <Input className={fi} placeholder={`State${isRequired("state") ? " *" : ""}`} name="state" required={isRequired("state")} defaultValue={location?.state} />
-              <Input className={fi} placeholder={`Zip code${isRequired("zip_code") ? " *" : ""}`} name="zip_code" required={isRequired("zip_code")} defaultValue={location?.zip_code} />
+              <Field label="State / region" required={isRequired("state")} htmlFor="state">
+                <Input id="state" className={fi} placeholder="Rhône" name="state" required={isRequired("state")} defaultValue={location?.state} />
+              </Field>
+              <Field label="Zip code" required={isRequired("zip_code")} htmlFor="zip_code">
+                <Input id="zip_code" className={fi} placeholder="69003" name="zip_code" required={isRequired("zip_code")} defaultValue={location?.zip_code} />
+              </Field>
             </div>
 
-            <Select name="country" defaultValue={location?.country ?? "US"} onValueChange={() => setTimeout(updatePreview, 0)}>
-              <SelectTrigger className={ft}>
-                <SelectValue placeholder="Country" />
-              </SelectTrigger>
-              <SelectContent>
-                {countries.map((c) => (
-                  <SelectItem key={c.value} value={c.value}>
-                    {c.label} <span className="text-stone-400 font-[family-name:var(--font-mono)] text-xs ml-1">{c.value}</span>
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <Input className={fi} placeholder="Region / Territory" name="region" defaultValue={location?.region ?? ""} />
+            <Field label="Country">
+              <Select name="country" defaultValue={location?.country ?? "US"} onValueChange={() => setTimeout(updatePreview, 0)}>
+                <SelectTrigger className={ft}>
+                  <SelectValue placeholder="Select country" />
+                </SelectTrigger>
+                <SelectContent>
+                  {countries.map((c) => (
+                    <SelectItem key={c.value} value={c.value}>
+                      {c.label} <span className="text-stone-400 font-[family-name:var(--font-mono)] text-xs ml-1">{c.value}</span>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </Field>
+            <Field label="Region / territory" htmlFor="region">
+              <Input id="region" className={fi} placeholder="e.g. Île-de-France" name="region" defaultValue={location?.region ?? ""} />
+            </Field>
           </div>
 
           {/* Scheduling & Classification */}
           <h3 className="text-xs font-medium uppercase tracking-wider text-stone-400 mt-6 mb-4">Classification</h3>
           <div className="grid grid-cols-2 gap-5">
-            <Select name="timezone" defaultValue={location?.timezone ?? "America/New_York"} onValueChange={() => setTimeout(updatePreview, 0)}>
-              <SelectTrigger className={ft}>
-                <SelectValue placeholder="Timezone" />
-              </SelectTrigger>
-              <SelectContent>
-                {timezones.map((tz) => (
-                  <SelectItem key={tz.value} value={tz.value}>
-                    {tz.label} <span className="text-stone-400 font-[family-name:var(--font-mono)] text-xs ml-1">{tz.value}</span>
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <Select name="criticality" defaultValue={location?.criticality ?? "medium"} onValueChange={() => setTimeout(updatePreview, 0)}>
-              <SelectTrigger className={ft}>
-                <SelectValue placeholder="Criticality" />
-              </SelectTrigger>
-              <SelectContent>
-                {criticalityOptions.map((c) => (
-                  <SelectItem key={c.value} value={c.value}>{c.label}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <Field label="Timezone">
+              <Select name="timezone" defaultValue={location?.timezone ?? "America/New_York"} onValueChange={() => setTimeout(updatePreview, 0)}>
+                <SelectTrigger className={ft}>
+                  <SelectValue placeholder="Select timezone" />
+                </SelectTrigger>
+                <SelectContent>
+                  {timezones.map((tz) => (
+                    <SelectItem key={tz.value} value={tz.value}>
+                      {tz.label} <span className="text-stone-400 font-[family-name:var(--font-mono)] text-xs ml-1">{tz.value}</span>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </Field>
+            <Field label="Criticality">
+              <Select name="criticality" defaultValue={location?.criticality ?? "medium"} onValueChange={() => setTimeout(updatePreview, 0)}>
+                <SelectTrigger className={ft}>
+                  <SelectValue placeholder="Select criticality" />
+                </SelectTrigger>
+                <SelectContent>
+                  {criticalityOptions.map((c) => (
+                    <SelectItem key={c.value} value={c.value}>{c.label}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </Field>
 
-            <Input className={fi} placeholder="Latitude" name="latitude" type="number" step="any" defaultValue={location?.latitude ?? ""} />
-            <Input className={fi} placeholder="Longitude" name="longitude" type="number" step="any" defaultValue={location?.longitude ?? ""} />
+            <Field label="Latitude" htmlFor="latitude">
+              <Input id="latitude" className={fi} placeholder="45.7640" name="latitude" type="number" step="any" defaultValue={location?.latitude ?? ""} />
+            </Field>
+            <Field label="Longitude" htmlFor="longitude">
+              <Input id="longitude" className={fi} placeholder="4.8357" name="longitude" type="number" step="any" defaultValue={location?.longitude ?? ""} />
+            </Field>
 
-            <Input className={`${fi} col-span-2`} placeholder="Tags (comma-separated)" name="tags" defaultValue={location?.tags?.join(", ") ?? ""} />
+            <Field label="Tags" hint="comma-separated" className="col-span-2" htmlFor="tags">
+              <Input id="tags" className={fi} placeholder="e.g. flagship, high-traffic" name="tags" defaultValue={location?.tags?.join(", ") ?? ""} />
+            </Field>
           </div>
 
           {/* Contact */}
           <h3 className="text-xs font-medium uppercase tracking-wider text-stone-400 mt-6 mb-4">Contact</h3>
           <div className="grid grid-cols-2 gap-5">
-            <Input className={fi} placeholder="Contact name" name="contact_name" defaultValue={location?.contact_name ?? ""} />
-            <Input className={fi} placeholder="Contact phone" name="contact_phone" defaultValue={location?.contact_phone ?? ""} />
-            <Input className={`${fi} col-span-2`} placeholder="Contact email" name="contact_email" type="email" defaultValue={location?.contact_email ?? ""} />
+            <Field label="Contact name" htmlFor="contact_name">
+              <Input id="contact_name" className={fi} placeholder="Jane Doe" name="contact_name" defaultValue={location?.contact_name ?? ""} />
+            </Field>
+            <Field label="Contact phone" htmlFor="contact_phone">
+              <Input id="contact_phone" className={fi} placeholder="+33 1 23 45 67 89" name="contact_phone" defaultValue={location?.contact_phone ?? ""} />
+            </Field>
+            <Field label="Contact email" className="col-span-2" htmlFor="contact_email">
+              <Input id="contact_email" className={fi} placeholder="jane@company.com" name="contact_email" type="email" defaultValue={location?.contact_email ?? ""} />
+            </Field>
           </div>
 
-          <Textarea
-            className={`${fa} mt-5 w-full`}
-            placeholder="Access instructions (gate codes, escort requirements, etc.)"
-            name="access_instructions"
-            defaultValue={location?.access_instructions ?? ""}
-          />
+          <Field label="Access instructions" hint="optional" className="mt-5" htmlFor="access_instructions">
+            <Textarea
+              id="access_instructions"
+              className={`${fa} w-full`}
+              placeholder="Gate codes, escort requirements, etc."
+              name="access_instructions"
+              defaultValue={location?.access_instructions ?? ""}
+            />
+          </Field>
 
-          <Textarea
-            className={`${fa} mt-5 w-full`}
-            placeholder="Notes (optional)"
-            name="notes"
-            defaultValue={location?.notes ?? ""}
-          />
+          <Field label="Notes" hint="optional" className="mt-5" htmlFor="notes">
+            <Textarea
+              id="notes"
+              className={`${fa} w-full`}
+              placeholder="Anything else worth recording"
+              name="notes"
+              defaultValue={location?.notes ?? ""}
+            />
+          </Field>
 
           {customFieldDefinitions.length > 0 && (
             <div className="mt-6 border-t border-stone-100 pt-6">

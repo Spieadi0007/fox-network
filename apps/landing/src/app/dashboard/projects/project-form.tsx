@@ -16,6 +16,7 @@ import { Button } from "@/components/ui/button";
 import { createProject, updateProject } from "@fox/supabase/actions/projects";
 import type { Project, Location, CustomFieldDefinition, FieldRequirementOverride, ConfigurableFieldOption } from "@fox/supabase";
 import { CustomFieldsRenderer, extractCustomFields } from "@/components/custom-fields-renderer";
+import { Field } from "@/components/ui/field";
 import { FolderKanban, Loader2 } from "lucide-react";
 
 const fi = "h-12 rounded-xl border-stone-200 px-4 text-sm placeholder:text-stone-400 shadow-none";
@@ -264,78 +265,108 @@ export function ProjectForm({
         {/* Right card - form */}
         <div className="lg:col-span-3 rounded-2xl border border-stone-200 bg-white p-8">
           <div className="grid grid-cols-2 gap-5">
-            <Input className={fi} placeholder={`Project name${isRequired("name") ? " *" : ""}`} name="name" required={isRequired("name")} defaultValue={project?.name} />
-            <Input className={`${fi} bg-stone-50 text-stone-500`} placeholder="Auto-generated on save" name="code" value={project?.code ?? ""} readOnly tabIndex={-1} />
+            <Field label="Project name" required={isRequired("name")} htmlFor="name">
+              <Input id="name" className={fi} placeholder="e.g. Q3 Tower Maintenance" name="name" required={isRequired("name")} defaultValue={project?.name} />
+            </Field>
+            <Field label="Code" hint="auto-generated">
+              <Input className={`${fi} bg-stone-50 text-stone-500`} placeholder="Auto-generated on save" name="code" value={project?.code ?? ""} readOnly tabIndex={-1} />
+            </Field>
 
-            <Select name="location_id" defaultValue={project?.location_id} required={isRequired("location_id")} onValueChange={() => setTimeout(updatePreview, 0)}>
-              <SelectTrigger className={ft}>
-                <SelectValue placeholder={`Location${isRequired("location_id") ? " *" : ""}`} />
-              </SelectTrigger>
-              <SelectContent>
-                {locations.map((loc) => (
-                  <SelectItem key={loc.id} value={loc.id}>{loc.name}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <Select name="project_type" defaultValue={project?.project_type ?? "deployment"} onValueChange={() => setTimeout(updatePreview, 0)}>
-              <SelectTrigger className={ft}>
-                <SelectValue placeholder="Type" />
-              </SelectTrigger>
-              <SelectContent>
-                {projectTypes.map((t) => (
-                  <SelectItem key={t.value} value={t.value}>{t.label}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <Field label="Location" required={isRequired("location_id")}>
+              <Select name="location_id" defaultValue={project?.location_id} required={isRequired("location_id")} onValueChange={() => setTimeout(updatePreview, 0)}>
+                <SelectTrigger className={ft}>
+                  <SelectValue placeholder="Select location" />
+                </SelectTrigger>
+                <SelectContent>
+                  {locations.map((loc) => (
+                    <SelectItem key={loc.id} value={loc.id}>{loc.name}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </Field>
+            <Field label="Project type">
+              <Select name="project_type" defaultValue={project?.project_type ?? "deployment"} onValueChange={() => setTimeout(updatePreview, 0)}>
+                <SelectTrigger className={ft}>
+                  <SelectValue placeholder="Select type" />
+                </SelectTrigger>
+                <SelectContent>
+                  {projectTypes.map((t) => (
+                    <SelectItem key={t.value} value={t.value}>{t.label}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </Field>
 
-            <Select name="status" defaultValue={project?.status ?? "draft"} onValueChange={() => setTimeout(updatePreview, 0)}>
-              <SelectTrigger className={ft}>
-                <SelectValue placeholder="Status" />
-              </SelectTrigger>
-              <SelectContent>
-                {projectStatuses.map((s) => (
-                  <SelectItem key={s.value} value={s.value}>{s.label}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <Select name="priority" defaultValue={project?.priority ?? "medium"} onValueChange={() => setTimeout(updatePreview, 0)}>
-              <SelectTrigger className={ft}>
-                <SelectValue placeholder="Priority" />
-              </SelectTrigger>
-              <SelectContent>
-                {priorities.map((p) => (
-                  <SelectItem key={p.value} value={p.value}>{p.label}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <Field label="Status">
+              <Select name="status" defaultValue={project?.status ?? "draft"} onValueChange={() => setTimeout(updatePreview, 0)}>
+                <SelectTrigger className={ft}>
+                  <SelectValue placeholder="Select status" />
+                </SelectTrigger>
+                <SelectContent>
+                  {projectStatuses.map((s) => (
+                    <SelectItem key={s.value} value={s.value}>{s.label}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </Field>
+            <Field label="Priority">
+              <Select name="priority" defaultValue={project?.priority ?? "medium"} onValueChange={() => setTimeout(updatePreview, 0)}>
+                <SelectTrigger className={ft}>
+                  <SelectValue placeholder="Select priority" />
+                </SelectTrigger>
+                <SelectContent>
+                  {priorities.map((p) => (
+                    <SelectItem key={p.value} value={p.value}>{p.label}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </Field>
           </div>
 
           {/* Timeline */}
           <h3 className="text-xs font-medium uppercase tracking-wider text-stone-400 mt-6 mb-4">Timeline</h3>
           <div className="grid grid-cols-2 gap-5">
-            <Input className={fi} placeholder={`Start date${isRequired("start_date") ? " *" : ""}`} name="start_date" type="date" required={isRequired("start_date")} defaultValue={project?.start_date} />
-            <Input className={fi} placeholder="End date" name="end_date" type="date" defaultValue={project?.end_date ?? ""} />
-            <Input className={fi} placeholder="Actual start" name="actual_start_date" type="date" defaultValue={project?.actual_start_date ?? ""} />
-            <Input className={fi} placeholder="Actual end" name="actual_end_date" type="date" defaultValue={project?.actual_end_date ?? ""} />
-            <Input className={fi} placeholder="Completion % (0-100)" name="completion_percentage" type="number" min="0" max="100" defaultValue={project?.completion_percentage ?? 0} />
-            <div />
+            <Field label="Start date" required={isRequired("start_date")} htmlFor="start_date">
+              <Input id="start_date" className={fi} name="start_date" type="date" required={isRequired("start_date")} defaultValue={project?.start_date} />
+            </Field>
+            <Field label="End date" htmlFor="end_date">
+              <Input id="end_date" className={fi} name="end_date" type="date" defaultValue={project?.end_date ?? ""} />
+            </Field>
+            <Field label="Actual start" htmlFor="actual_start_date">
+              <Input id="actual_start_date" className={fi} name="actual_start_date" type="date" defaultValue={project?.actual_start_date ?? ""} />
+            </Field>
+            <Field label="Actual end" htmlFor="actual_end_date">
+              <Input id="actual_end_date" className={fi} name="actual_end_date" type="date" defaultValue={project?.actual_end_date ?? ""} />
+            </Field>
+            <Field label="Completion" hint="0–100%" htmlFor="completion_percentage">
+              <Input id="completion_percentage" className={fi} placeholder="0" name="completion_percentage" type="number" min="0" max="100" defaultValue={project?.completion_percentage ?? 0} />
+            </Field>
           </div>
 
           {/* Budget */}
           <h3 className="text-xs font-medium uppercase tracking-wider text-stone-400 mt-6 mb-4">Budget</h3>
           <div className="grid grid-cols-2 gap-5">
-            <Input className={fi} placeholder="Budget ($)" name="budget" type="number" step="0.01" defaultValue={project?.budget ?? ""} />
-            <Input className={fi} placeholder="Actual cost ($)" name="actual_cost" type="number" step="0.01" defaultValue={project?.actual_cost ?? ""} />
+            <Field label="Budget ($)" htmlFor="budget">
+              <Input id="budget" className={fi} placeholder="0.00" name="budget" type="number" step="0.01" defaultValue={project?.budget ?? ""} />
+            </Field>
+            <Field label="Actual cost ($)" htmlFor="actual_cost">
+              <Input id="actual_cost" className={fi} placeholder="0.00" name="actual_cost" type="number" step="0.01" defaultValue={project?.actual_cost ?? ""} />
+            </Field>
           </div>
 
-          <Input className={`${fi} mt-5 w-full`} placeholder="Tags (comma-separated)" name="tags" defaultValue={project?.tags?.join(", ") ?? ""} />
+          <Field label="Tags" hint="comma-separated" className="mt-5" htmlFor="tags">
+            <Input id="tags" className={`${fi} w-full`} placeholder="e.g. priority, tower, q3" name="tags" defaultValue={project?.tags?.join(", ") ?? ""} />
+          </Field>
 
-          <Textarea
-            className={`${fa} mt-5 w-full`}
-            placeholder="Description (optional)"
-            name="description"
-            defaultValue={project?.description ?? ""}
-          />
+          <Field label="Description" hint="optional" className="mt-5" htmlFor="description">
+            <Textarea
+              id="description"
+              className={`${fa} w-full`}
+              placeholder="Add any context for this project"
+              name="description"
+              defaultValue={project?.description ?? ""}
+            />
+          </Field>
 
           {customFieldDefinitions.length > 0 && (
             <div className="mt-6 border-t border-stone-100 pt-6">
