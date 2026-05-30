@@ -3,6 +3,7 @@ import { redirect, notFound } from "next/navigation";
 import { getAction } from "@fox/supabase/actions/actions";
 import { getProjects } from "@fox/supabase/actions/projects";
 import { getLocations } from "@fox/supabase/actions/locations";
+import { getAssets } from "@fox/supabase/actions/assets";
 import { getOrgMembers } from "@fox/supabase/actions/members";
 import { getFieldDefinitions, getFieldRequirementOverrides } from "@fox/supabase/actions/custom-fields";
 import { getFieldOptions } from "@fox/supabase/actions/field-options";
@@ -18,10 +19,11 @@ export default async function EditActionPage({
   if (!user || !user.organizationId) redirect("/signin");
 
   const { id } = await params;
-  const [{ data: action }, { data: projects }, { data: locations }, { data: members }, { data: fieldDefs }, { data: overrides }, { data: fieldOpts }, { data: workflowSteps }] = await Promise.all([
+  const [{ data: action }, { data: projects }, { data: locations }, { data: assets }, { data: members }, { data: fieldDefs }, { data: overrides }, { data: fieldOpts }, { data: workflowSteps }] = await Promise.all([
     getAction(id),
     getProjects(user.organizationId),
     getLocations(user.organizationId),
+    getAssets(user.organizationId),
     getOrgMembers(user.organizationId),
     getFieldDefinitions(user.organizationId, "actions"),
     getFieldRequirementOverrides(user.organizationId, "actions"),
@@ -36,5 +38,5 @@ export default async function EditActionPage({
     (user.role === "technician" && action.assigned_to === user.id);
   if (!canEdit) redirect("/dashboard/actions");
 
-  return <ActionForm action={action} projects={projects ?? []} locations={locations ?? []} members={members ?? []} customFieldDefinitions={fieldDefs ?? []} fieldOverrides={overrides ?? []} fieldOptions={fieldOpts ?? []} workflowSteps={workflowSteps ?? []} />;
+  return <ActionForm action={action} projects={projects ?? []} locations={locations ?? []} assets={assets ?? []} members={members ?? []} customFieldDefinitions={fieldDefs ?? []} fieldOverrides={overrides ?? []} fieldOptions={fieldOpts ?? []} workflowSteps={workflowSteps ?? []} />;
 }

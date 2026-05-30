@@ -63,14 +63,24 @@ export default async function WorkOrderDetail({
   const projectLocation =
     (action.project as { location?: Record<string, unknown> } | null)?.location ?? null;
   const location = directLocation ?? projectLocation;
+
+  // Prefer the action's direct asset_id; else an asset at the location.
   let asset: Record<string, unknown> | null = null;
-  if (location?.id) {
-    const { data: assets } = await db
+  if (action.asset_id) {
+    const { data: byId } = await db
+      .from("assets")
+      .select("*")
+      .eq("id", action.asset_id)
+      .limit(1);
+    asset = byId?.[0] ?? null;
+  }
+  if (!asset && location?.id) {
+    const { data: byLoc } = await db
       .from("assets")
       .select("*")
       .eq("location_id", location.id)
       .limit(1);
-    asset = assets?.[0] ?? null;
+    asset = byLoc?.[0] ?? null;
   }
 
   // Config for this action type (fall back to defaults)

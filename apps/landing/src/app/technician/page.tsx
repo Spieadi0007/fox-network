@@ -67,7 +67,9 @@ export default async function TechnicianHome({
       OPEN_STATUSES.includes(a.status as string),
   );
 
-  // Assets by location (one query)
+  // Resolve each action's asset: prefer the action's direct asset_id, else an
+  // asset at the resolved location. Both fetched by simple queries (no FK embed)
+  // so this is safe whether or not migration 024 (asset_id) has been applied.
   const locationIds = [
     ...new Set(
       actions
@@ -75,17 +77,32 @@ export default async function TechnicianHome({
         .filter(Boolean),
     ),
   ];
+  const assetIds = [
+    ...new Set(actions.map((a) => a.asset_id as string | undefined).filter(Boolean)),
+  ];
+
   let assetsByLocation: Record<string, Record<string, unknown>> = {};
   if (locationIds.length > 0) {
-    const { data: assets } = await db
+    const { data: locAssets } = await db
       .from("assets")
       .select("*")
       .in("location_id", locationIds);
     assetsByLocation = Object.fromEntries(
-      (assets ?? []).map((as: Record<string, unknown>) => [
+      (locAssets ?? []).map((as: Record<string, unknown>) => [
         as.location_id as string,
         as,
       ]),
+    );
+  }
+
+  let assetsById: Record<string, Record<string, unknown>> = {};
+  if (assetIds.length > 0) {
+    const { data: idAssets } = await db
+      .from("assets")
+      .select("*")
+      .in("id", assetIds);
+    assetsById = Object.fromEntries(
+      (idAssets ?? []).map((as: Record<string, unknown>) => [as.id as string, as]),
     );
   }
 
@@ -130,7 +147,11 @@ export default async function TechnicianHome({
           resolved_location_id: rl?.id ?? null,
           location_name: rl?.name ?? null,
           address: rl?.address ?? null,
-          asset: rl?.id ? (assetsByLocation[rl.id as string]?.name ?? null) : null,
+          action_asset_id: a.asset_id ?? null,
+          asset:
+            (a.asset_id ? assetsById[a.asset_id as string]?.name : null) ??
+            (rl?.id ? assetsByLocation[rl.id as string]?.name : null) ??
+            null,
         };
       }),
     };
@@ -172,9 +193,12 @@ export default async function TechnicianHome({
         <div className="mt-5 space-y-3">
           {actions.map((action) => {
             const location = action.resolved_location as Record<string, unknown> | null;
-            const asset = location?.id
-              ? (assetsByLocation[location.id as string] ?? null)
+            const directAsset = action.asset_id
+              ? (assetsById[action.asset_id as string] ?? null)
               : null;
+            const asset =
+              directAsset ??
+              (location?.id ? (assetsByLocation[location.id as string] ?? null) : null);
             const fields = cardFieldsFor(action.action_type as string);
             const priority = action.priority as string;
 

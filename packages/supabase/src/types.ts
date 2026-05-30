@@ -386,6 +386,7 @@ export type Database = {
           description: string | null;
           project_id: string;
           location_id: string | null;
+          asset_id: string | null;
           action_type: ActionType;
           status: ActionStatus;
           priority: Priority;
@@ -416,6 +417,7 @@ export type Database = {
           description?: string | null;
           project_id: string;
           location_id?: string | null;
+          asset_id?: string | null;
           action_type: ActionType;
           status?: ActionStatus;
           priority?: Priority;
@@ -446,6 +448,7 @@ export type Database = {
           description?: string | null;
           project_id?: string;
           location_id?: string | null;
+          asset_id?: string | null;
           action_type?: ActionType;
           status?: ActionStatus;
           priority?: Priority;

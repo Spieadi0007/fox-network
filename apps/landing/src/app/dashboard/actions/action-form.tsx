@@ -98,6 +98,7 @@ export function ActionForm({
   action,
   projects,
   locations,
+  assets = [],
   members = [],
   customFieldDefinitions = [],
   fieldOverrides = [],
@@ -107,6 +108,7 @@ export function ActionForm({
   action?: ActionItem;
   projects: Project[];
   locations: Location[];
+  assets?: { id: string; name: string; asset_tag: string | null; location_id: string | null }[];
   members?: OrgMember[];
   customFieldDefinitions?: CustomFieldDefinition[];
   fieldOverrides?: FieldRequirementOverride[];
@@ -162,6 +164,7 @@ export function ActionForm({
         description: (form.get("description") as string) || null,
         project_id: form.get("project_id") as string,
         location_id: (form.get("location_id") as string) || null,
+        asset_id: (form.get("asset_id") as string) || null,
         action_type: form.get("action_type") as string,
         status: form.get("status") as string,
         priority: form.get("priority") as string,
@@ -197,6 +200,10 @@ export function ActionForm({
   const locationName = locations.find((l) => l.id === preview.location_id)?.name;
   const assignedMember = members.find((m) => m.id === preview.assigned_to);
   const hasScheduling = preview.due_date || preview.scheduled_start;
+  // Offer assets at the selected location; fall back to all when none chosen.
+  const availableAssets = preview.location_id
+    ? assets.filter((a) => a.location_id === preview.location_id)
+    : assets;
 
   return (
     <div className="p-8 max-w-6xl">
@@ -327,6 +334,23 @@ export function ActionForm({
                 <SelectContent>
                   {locations.map((loc) => (
                     <SelectItem key={loc.id} value={loc.id}>{loc.name}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </Field>
+            <Field label="Asset" hint="the machine being serviced">
+              <Select name="asset_id" defaultValue={action?.asset_id ?? ""} onValueChange={() => setTimeout(updatePreview, 0)}>
+                <SelectTrigger className={ft}>
+                  <SelectValue placeholder="Select asset" />
+                </SelectTrigger>
+                <SelectContent>
+                  {availableAssets.map((a) => (
+                    <SelectItem key={a.id} value={a.id}>
+                      {a.name}
+                      {a.asset_tag ? (
+                        <span className="text-stone-400 font-[family-name:var(--font-mono)] text-xs ml-1">{a.asset_tag}</span>
+                      ) : null}
+                    </SelectItem>
                   ))}
                 </SelectContent>
               </Select>

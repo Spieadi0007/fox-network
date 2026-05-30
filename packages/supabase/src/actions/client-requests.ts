@@ -129,32 +129,49 @@ export async function submitClientRequest(formData: FormData) {
   }
 
   const serial = `${networkType.toUpperCase()}-${Date.now()}`;
-  await db.from("assets").insert({
-    name: assetLabel,
-    asset_type: "other",
-    serial_number: serial,
-    status: "deployed",
-    location_id: location.id,
-    description: networkType,
-    tags: [networkType],
-    organization_id: orgId,
-    created_by: user.id,
-  });
+  const { data: asset } = await db
+    .from("assets")
+    .insert({
+      name: assetLabel,
+      asset_type: "other",
+      serial_number: serial,
+      status: "deployed",
+      location_id: location.id,
+      description: networkType,
+      tags: [networkType],
+      organization_id: orgId,
+      created_by: user.id,
+    })
+    .select("id")
+    .single();
 
-  await db.from("actions").insert({
-    name: `${serviceType} – ${assetLabel}`,
-    description: problemDescription,
-    project_id: project.id,
-    location_id: location.id,
-    action_type: actionType,
-    status: "pending",
-    priority,
-    estimated_cost: price,
-    category: networkType,
-    tags: [networkType, slaTier],
-    organization_id: orgId,
-    created_by: user.id,
-  });
+  const { data: createdAction } = await db
+    .from("actions")
+    .insert({
+      name: `${serviceType} – ${assetLabel}`,
+      description: problemDescription,
+      project_id: project.id,
+      location_id: location.id,
+      action_type: actionType,
+      status: "pending",
+      priority,
+      estimated_cost: price,
+      category: networkType,
+      tags: [networkType, slaTier],
+      organization_id: orgId,
+      created_by: user.id,
+    })
+    .select("id")
+    .single();
+
+  // Link the action to its asset. Best-effort: silently skipped if the asset_id
+  // column isn't present yet (migration 024 not applied).
+  if (createdAction?.id && asset?.id) {
+    await db
+      .from("actions")
+      .update({ asset_id: asset.id })
+      .eq("id", createdAction.id);
+  }
 
   redirect("/client/dashboard?success=Request+submitted");
 }

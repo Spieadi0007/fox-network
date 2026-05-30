@@ -52,17 +52,41 @@ export async function getActionsByProject(projectId: string) {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
+// Retry an insert/update without asset_id if that column doesn't exist yet
+// (migration 024 not applied). Keeps action create/update working pre-migration.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function isMissingAssetColumn(error: any) {
+  return (
+    error &&
+    (error.code === "PGRST204" ||
+      (typeof error.message === "string" && error.message.includes("asset_id")))
+  );
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function createAction(values: Record<string, any>) {
   const auth = await getProfile();
   if (!auth?.organizationId) return { data: null, error: { message: "Not authenticated" } };
 
   const supabase = await createServerClient();
+  const base = { ...values, organization_id: auth.organizationId, created_by: auth.userId };
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { data, error } = await (supabase as any)
+  let { data, error } = await (supabase as any)
     .from("actions")
-    .insert({ ...values, organization_id: auth.organizationId, created_by: auth.userId })
+    .insert(base)
     .select()
     .single();
+
+  if (error && isMissingAssetColumn(error) && "asset_id" in base) {
+    const { asset_id: _drop, ...rest } = base;
+    void _drop;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    ({ data, error } = await (supabase as any)
+      .from("actions")
+      .insert(rest)
+      .select()
+      .single());
+  }
 
   if (!error && data) {
     // Look up parent project's code for action code generation
@@ -89,12 +113,24 @@ export async function createAction(values: Record<string, any>) {
 export async function updateAction(id: string, values: Record<string, any>) {
   const supabase = await createServerClient();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { data, error } = await (supabase as any)
+  let { data, error } = await (supabase as any)
     .from("actions")
     .update(values)
     .eq("id", id)
     .select()
     .single();
+
+  if (error && isMissingAssetColumn(error) && "asset_id" in values) {
+    const { asset_id: _drop, ...rest } = values;
+    void _drop;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    ({ data, error } = await (supabase as any)
+      .from("actions")
+      .update(rest)
+      .eq("id", id)
+      .select()
+      .single());
+  }
   if (!error) {
     revalidatePath("/actions");
     revalidatePath(`/actions/${id}`);
