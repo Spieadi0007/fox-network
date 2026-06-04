@@ -42,8 +42,9 @@ export function ServicesHero() {
             variants={fadeInUp}
             className="mt-6 max-w-xl text-[17px] leading-[1.6] text-stone-500"
           >
-            We keep your machine network running. 99.9% uptime, a single
-            dashboard, and a maintenance manager you can call anytime.
+            Report what&apos;s broken in seconds, track every request&apos;s
+            status in one place, and reach a maintenance manager whenever you
+            need support.
           </motion.p>
 
           <motion.div
