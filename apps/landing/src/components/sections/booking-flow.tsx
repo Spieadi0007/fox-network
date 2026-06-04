@@ -24,7 +24,7 @@ const steps = [
     icon: Timer,
     title: "Pick an SLA tier",
     description:
-      "Lazy, Standard, Urgent or Emergency. You see the price before you confirm.",
+      "Relaxed, Standard, Urgent or Emergency. You see the price before you confirm.",
     detail: "Fixed price, no surprises",
   },
   {

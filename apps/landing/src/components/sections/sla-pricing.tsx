@@ -12,7 +12,7 @@ import { cn } from "@/lib/cn";
 
 const tiers = [
   {
-    name: "Lazy",
+    name: "Relaxed",
     price: 120,
     response: "Within 5 business days",
     description: "Planned work and non-blocking fixes you can schedule.",

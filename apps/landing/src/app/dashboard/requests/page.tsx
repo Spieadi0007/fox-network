@@ -26,7 +26,7 @@ const STATUS_STYLE: Record<string, string> = {
 };
 
 const PRIORITY_LABEL: Record<string, string> = {
-  low: "Lazy",
+  low: "Relaxed",
   medium: "Standard",
   high: "Urgent",
   critical: "Emergency",
