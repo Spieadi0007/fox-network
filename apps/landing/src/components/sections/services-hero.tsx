@@ -43,8 +43,7 @@ export function ServicesHero() {
             className="mt-6 max-w-xl text-[17px] leading-[1.6] text-stone-500"
           >
             Report what&apos;s broken in seconds, track every request&apos;s
-            status in one place, and reach a maintenance manager whenever you
-            need support.
+            status in one place, and get on-demand support when needed.
           </motion.p>
 
           <motion.div
