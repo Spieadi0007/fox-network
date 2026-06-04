@@ -7,9 +7,12 @@ create table if not exists public.quote_requests (
   email text not null,
   company_name text not null,
   network_size text not null default '',
+  notes text,
   status text not null default 'new',
   created_at timestamptz not null default now()
 );
+
+alter table public.quote_requests add column if not exists notes text;
 
 alter table public.quote_requests enable row level security;
 

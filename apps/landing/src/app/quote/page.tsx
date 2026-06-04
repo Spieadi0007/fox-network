@@ -95,6 +95,19 @@ async function QuoteInner({
             <option value="1000+">1000+</option>
           </select>
         </div>
+        <div>
+          <label htmlFor="notes" className={labelCls}>
+            What are you hoping we can help with?{" "}
+            <span className="font-normal text-stone-400">(optional)</span>
+          </label>
+          <textarea
+            id="notes"
+            name="notes"
+            rows={3}
+            className={inputCls}
+            placeholder="e.g. preventive maintenance across our locker network, faster response on outages…"
+          />
+        </div>
 
         <button
           type="submit"

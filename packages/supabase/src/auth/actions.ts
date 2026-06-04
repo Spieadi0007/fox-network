@@ -136,6 +136,7 @@ export async function submitQuote(formData: FormData) {
   const email = ((formData.get("email") as string) ?? "").trim();
   const companyName = ((formData.get("companyName") as string) ?? "").trim();
   const networkSize = ((formData.get("networkSize") as string) ?? "").trim();
+  const notes = ((formData.get("notes") as string) ?? "").trim() || null;
 
   if (!name || !email || !companyName || !networkSize) {
     redirect("/quote?error=Please+fill+all+fields");
@@ -148,6 +149,7 @@ export async function submitQuote(formData: FormData) {
     email,
     company_name: companyName,
     network_size: networkSize,
+    notes,
   });
 
   if (error) {
