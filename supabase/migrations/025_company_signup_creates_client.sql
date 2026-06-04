@@ -25,10 +25,11 @@ as $$
 declare
   new_org_id uuid;
 begin
-  -- Ensure profile exists
-  insert into public.profiles (id, email, name, avatar_url)
-  values (p_user_id, p_user_email, p_user_name, p_avatar_url)
-  on conflict (id) do nothing;
+  -- Ensure profile exists (it normally already does, from handle_new_user)
+  if not exists (select 1 from public.profiles where id = p_user_id) then
+    insert into public.profiles (id, email, name, avatar_url)
+    values (p_user_id, p_user_email, p_user_name, p_avatar_url);
+  end if;
 
   -- Create organization
   insert into public.organizations (name, size, industry, website, description, logo_url, created_by)
