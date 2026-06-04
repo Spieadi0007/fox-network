@@ -200,6 +200,7 @@ export async function completeCompanySetup(formData: FormData) {
   const website = (formData.get("website") as string) || null;
   const description = (formData.get("description") as string) || null;
   const logoUrl = (formData.get("logoUrl") as string) || null;
+  const networkType = (formData.get("networkType") as string) || null;
 
   const supabase = await createServerClient();
   const {
@@ -231,13 +232,22 @@ export async function completeCompanySetup(formData: FormData) {
     redirect(`/signup?step=company-2&error=${encodeURIComponent(setupError.message)}`);
   }
 
-  // Route by the account type the RPC actually set: once migration 025 is live,
-  // company signups become clients (→ /client/dashboard). Before then they
-  // stay 'company' (→ /dashboard), so there's no misroute window.
+  // Fetch the org the RPC just created/linked, and stamp the network type on it.
+  // Best-effort: silently skipped if the column isn't there yet (migration 026).
   const { data: prof } = await db
     .from("profiles")
-    .select("account_type")
+    .select("account_type, organization_id")
     .eq("id", user.id)
     .single();
+
+  if (networkType && prof?.organization_id) {
+    await db
+      .from("organizations")
+      .update({ network_type: networkType })
+      .eq("id", prof.organization_id);
+  }
+
+  // Route by the account type the RPC actually set: once migration 025 is live,
+  // company signups become clients (→ /client/dashboard).
   redirect(prof?.account_type === "client" ? "/client/dashboard" : "/dashboard");
 }

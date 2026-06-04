@@ -285,6 +285,7 @@ function CompanyStep2({
   const [description, setDescription] = useState("");
   const [industry, setIndustry] = useState("");
   const [companySize, setCompanySize] = useState("");
+  const [networkType, setNetworkType] = useState("");
   const [logoUrl, setLogoUrl] = useState("");
   const [logoError, setLogoError] = useState(false);
   const [isLooking, setIsLooking] = useState(false);
@@ -474,6 +475,31 @@ function CompanyStep2({
                 <option value="201-500">201-500 employees</option>
                 <option value="500+">500+ employees</option>
               </select>
+            </div>
+
+            <div>
+              <label htmlFor="networkType" className="block text-sm font-medium text-stone-700">
+                Network type
+              </label>
+              <select
+                id="networkType"
+                name="networkType"
+                required
+                value={networkType}
+                onChange={(e) => setNetworkType(e.target.value)}
+                className="mt-1 block w-full rounded-lg border border-stone-200 bg-white px-3 py-2.5 text-sm text-stone-900 focus:border-fox-orange focus:outline-none focus:ring-1 focus:ring-fox-orange"
+              >
+                <option value="" disabled>
+                  Select network type
+                </option>
+                <option value="locker">Locker network</option>
+                <option value="atm">ATM network</option>
+                <option value="ev_charger">EV charging stations</option>
+                <option value="other">Other</option>
+              </select>
+              <p className="mt-1 text-xs text-stone-400">
+                The kind of assets we&apos;ll maintain for you.
+              </p>
             </div>
 
             <div>

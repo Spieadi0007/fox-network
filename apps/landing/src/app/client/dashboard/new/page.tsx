@@ -2,13 +2,6 @@ import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { submitClientRequest } from "@fox/supabase/actions/client-requests";
 
-const NETWORK_OPTIONS = [
-  { value: "locker", label: "Locker" },
-  { value: "atm", label: "ATM" },
-  { value: "ev_charger", label: "EV charging station" },
-  { value: "other", label: "Other" },
-];
-
 const SERVICE_OPTIONS = [
   { value: "maintenance", label: "Maintenance" },
   { value: "repair", label: "Repair" },
@@ -75,7 +68,7 @@ export default async function NewRequestPage({
             </p>
 
             <div className="mt-5 grid gap-4 sm:grid-cols-2">
-              <div>
+              <div className="sm:col-span-2">
                 <label htmlFor="asset_label" className={labelCls}>
                   Asset name / ID *
                 </label>
@@ -87,27 +80,6 @@ export default async function NewRequestPage({
                   className={inputCls}
                   placeholder="LK-204"
                 />
-              </div>
-              <div>
-                <label htmlFor="network_type" className={labelCls}>
-                  Network type *
-                </label>
-                <select
-                  id="network_type"
-                  name="network_type"
-                  required
-                  defaultValue=""
-                  className={inputCls}
-                >
-                  <option value="" disabled>
-                    Select…
-                  </option>
-                  {NETWORK_OPTIONS.map((o) => (
-                    <option key={o.value} value={o.value}>
-                      {o.label}
-                    </option>
-                  ))}
-                </select>
               </div>
               <div className="sm:col-span-2">
                 <label htmlFor="problem_description" className={labelCls}>

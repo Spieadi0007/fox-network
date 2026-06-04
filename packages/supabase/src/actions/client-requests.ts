@@ -92,13 +92,16 @@ export async function submitClientRequest(formData: FormData) {
 
   const { data: org } = await db
     .from("organizations")
-    .select("name")
+    .select("name, network_type")
     .eq("id", orgId)
     .single();
   const clientName = (org?.name as string) ?? "";
 
   const assetLabel = pick(formData, "asset_label");
-  const networkType = pick(formData, "network_type");
+  // Network type is set once at company creation (org.network_type). Fall back
+  // to the form field for older orgs that pre-date that, then to "other".
+  const networkType =
+    (org?.network_type as string) || pick(formData, "network_type") || "other";
   const problemDescription = pick(formData, "problem_description");
   const siteName = pick(formData, "site_name") || assetLabel;
   const address = pick(formData, "address");
@@ -111,7 +114,6 @@ export async function submitClientRequest(formData: FormData) {
 
   const missing =
     !assetLabel ||
-    !networkType ||
     !address ||
     !city ||
     !state ||
