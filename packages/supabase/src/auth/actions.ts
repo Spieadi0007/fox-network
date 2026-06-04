@@ -131,6 +131,33 @@ export async function submitPartnerRequest(formData: FormData) {
   redirect("/signup?success=partner_submitted");
 }
 
+export async function submitQuote(formData: FormData) {
+  const name = ((formData.get("name") as string) ?? "").trim();
+  const email = ((formData.get("email") as string) ?? "").trim();
+  const companyName = ((formData.get("companyName") as string) ?? "").trim();
+  const networkSizeRaw = (formData.get("networkSize") as string) ?? "";
+  const networkSize = Number.parseInt(networkSizeRaw, 10);
+
+  if (!name || !email || !companyName || Number.isNaN(networkSize)) {
+    redirect("/quote?error=Please+fill+all+fields");
+  }
+
+  const supabase = await createServerClient();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { error } = await (supabase as any).from("quote_requests").insert({
+    name,
+    email,
+    company_name: companyName,
+    network_size: networkSize,
+  });
+
+  if (error) {
+    redirect(`/quote?error=${encodeURIComponent(error.message)}`);
+  }
+
+  redirect("/quote?success=1");
+}
+
 export async function signInWithOAuthCompany(provider: "google") {
   const supabase = await createServerClient();
 

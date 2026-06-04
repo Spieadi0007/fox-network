@@ -58,7 +58,7 @@ export function ServicesHero() {
               <ArrowRight className="h-4 w-4" />
             </a>
             <a
-              href="/client/signup?intent=quote"
+              href="/quote"
               className="inline-flex items-center gap-2 rounded-full border border-stone-200/80 bg-white px-7 py-3.5 text-sm font-medium text-stone-700 shadow-sm shadow-stone-200/20 transition-all hover:border-stone-300 hover:bg-stone-50"
             >
               Get a quote

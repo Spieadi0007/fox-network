@@ -44,7 +44,7 @@ export default function Home() {
                     <ArrowRight className="h-4 w-4" />
                   </a>
                   <a
-                    href="/client/signup?intent=quote"
+                    href="/quote"
                     className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-7 py-3.5 text-sm font-medium text-white/80 backdrop-blur-sm transition-all hover:bg-white/10"
                   >
                     Get a quote
