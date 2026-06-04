@@ -1,6 +1,7 @@
 "use server";
 
 import { redirect } from "next/navigation";
+import { revalidatePath } from "next/cache";
 import { createServerClient } from "../client/server";
 import type { ActionType, Priority } from "../types";
 
@@ -34,12 +35,124 @@ export async function getAllClientRequests() {
   const { data, error } = await db
     .from("actions")
     .select(
-      "id, name, status, priority, category, estimated_cost, description, created_at, organization_id, location:locations(name, city), organization:organizations(name)",
+      "id, name, status, approval_status, priority, category, estimated_cost, description, created_at, organization_id, location:locations(name, city), organization:organizations(name)",
     )
     .in("organization_id", orgIds)
     .order("created_at", { ascending: false });
 
   return { data: data ?? [], error };
+}
+
+async function requireFoxStaff() {
+  const supabase = await createServerClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) redirect("/signin");
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const db = supabase as any;
+  const { data: profile } = await db
+    .from("profiles")
+    .select("organization_id, fox_staff, role")
+    .eq("id", user.id)
+    .single();
+  if (!profile?.fox_staff) redirect("/dashboard");
+  return { db, userId: user.id, orgId: profile.organization_id as string };
+}
+
+/** Reject a client request — just marks it. */
+export async function rejectRequest(formData: FormData) {
+  const requestId = pick(formData, "request_id");
+  if (!requestId) redirect("/dashboard/requests");
+  const { db } = await requireFoxStaff();
+  await db
+    .from("actions")
+    .update({ approval_status: "rejected" })
+    .eq("id", requestId);
+  revalidatePath("/dashboard/requests");
+  redirect("/dashboard/requests?done=Request+rejected");
+}
+
+/**
+ * Approve a client request: mark it approved and spin up the operational
+ * location + project + action in our own org so a technician can be assigned.
+ */
+export async function approveRequest(formData: FormData) {
+  const requestId = pick(formData, "request_id");
+  if (!requestId) redirect("/dashboard/requests");
+  const { db, userId, orgId } = await requireFoxStaff();
+
+  const { data: req } = await db
+    .from("actions")
+    .select(
+      "id, name, description, action_type, priority, estimated_cost, category, location:locations(name, address, city, state, zip_code, country), organization:organizations(name)",
+    )
+    .eq("id", requestId)
+    .single();
+
+  if (!req) redirect("/dashboard/requests?done=Request+not+found");
+
+  const loc = (req.location as Record<string, unknown> | null) ?? {};
+  const clientName = (req.organization as { name?: string } | null)?.name ?? "";
+
+  // 1) Location in our org
+  const { data: location } = await db
+    .from("locations")
+    .insert({
+      name: (loc.name as string) || req.name,
+      address: (loc.address as string) || "—",
+      city: (loc.city as string) || "—",
+      state: (loc.state as string) || "—",
+      zip_code: (loc.zip_code as string) || "—",
+      country: (loc.country as string) || "FR",
+      client: clientName,
+      organization_id: orgId,
+      created_by: userId,
+    })
+    .select("id")
+    .single();
+
+  // 2) Project
+  const today = new Date().toISOString().slice(0, 10);
+  const { data: project } = await db
+    .from("projects")
+    .insert({
+      name: req.name,
+      location_id: location?.id,
+      project_type: "maintenance",
+      status: "planned",
+      priority: req.priority,
+      start_date: today,
+      organization_id: orgId,
+      created_by: userId,
+    })
+    .select("id")
+    .single();
+
+  // 3) Action (the dispatchable job)
+  await db.from("actions").insert({
+    name: req.name,
+    description: req.description,
+    project_id: project?.id,
+    location_id: location?.id,
+    action_type: req.action_type,
+    status: "pending",
+    priority: req.priority,
+    estimated_cost: req.estimated_cost,
+    category: req.category,
+    approval_status: "approved",
+    organization_id: orgId,
+    created_by: userId,
+  });
+
+  // 4) Mark the client's request approved (fox_staff update bypass)
+  await db
+    .from("actions")
+    .update({ approval_status: "approved" })
+    .eq("id", requestId);
+
+  revalidatePath("/dashboard/requests");
+  redirect("/dashboard/requests?done=Request+approved");
 }
 
 const PRIORITY_BY_TIER: Record<string, Priority> = {
@@ -247,15 +360,15 @@ export async function updateClientRequest(formData: FormData) {
 
   const { data: action } = await db
     .from("actions")
-    .select("id, status, location_id, asset_id, organization_id")
+    .select("id, approval_status, location_id, asset_id, organization_id")
     .eq("id", requestId)
     .single();
 
-  // Must be the client's own request and still editable.
+  // Must be the client's own request and still awaiting approval.
   if (!action || action.organization_id !== orgId) {
     redirect("/client/dashboard");
   }
-  if (action.status !== "pending") {
+  if (action.approval_status !== "pending") {
     redirect(
       `/client/dashboard/${requestId}?error=This+request+can+no+longer+be+edited`,
     );

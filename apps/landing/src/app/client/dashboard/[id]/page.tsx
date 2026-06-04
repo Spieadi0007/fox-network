@@ -32,13 +32,16 @@ const NETWORK_LABEL: Record<string, string> = {
   other: "Other",
 };
 
-const STATUS_STYLE: Record<string, string> = {
+const APPROVAL_STYLE: Record<string, string> = {
   pending: "bg-amber-50 text-amber-700 border-amber-200",
-  scheduled: "bg-blue-50 text-blue-700 border-blue-200",
-  in_progress: "bg-violet-50 text-violet-700 border-violet-200",
-  completed: "bg-emerald-50 text-emerald-700 border-emerald-200",
-  blocked: "bg-red-50 text-red-700 border-red-200",
-  cancelled: "bg-stone-100 text-stone-500 border-stone-200",
+  approved: "bg-emerald-50 text-emerald-700 border-emerald-200",
+  rejected: "bg-red-50 text-red-700 border-red-200",
+};
+
+const APPROVAL_LABEL: Record<string, string> = {
+  pending: "Pending approval",
+  approved: "Approved",
+  rejected: "Rejected",
 };
 
 const labelCls = "block text-xs font-medium text-stone-600";
@@ -78,7 +81,7 @@ export default async function ClientRequestDetail({
   const { data: action } = await db
     .from("actions")
     .select(
-      "id, name, description, status, priority, category, estimated_cost, action_type, created_at, location_id, asset_id, organization_id, location:locations(name, address, city, state, zip_code, country)",
+      "id, name, description, status, approval_status, priority, category, estimated_cost, action_type, created_at, location_id, asset_id, organization_id, location:locations(name, address, city, state, zip_code, country)",
     )
     .eq("id", id)
     .single();
@@ -103,7 +106,7 @@ export default async function ClientRequestDetail({
   const networkType = (org?.network_type as string) || "other";
 
   const loc = (action.location as Record<string, unknown> | null) ?? {};
-  const isPending = action.status === "pending";
+  const isPending = action.approval_status === "pending";
   const currentTier = TIER_BY_PRIORITY[action.priority] ?? "standard";
 
   return (
@@ -122,18 +125,20 @@ export default async function ClientRequestDetail({
             {action.name}
           </h1>
           <span
-            className={`inline-flex shrink-0 rounded-full border px-3 py-1 text-xs font-medium capitalize ${
-              STATUS_STYLE[action.status] ??
+            className={`inline-flex shrink-0 rounded-full border px-3 py-1 text-xs font-medium ${
+              APPROVAL_STYLE[action.approval_status] ??
               "border-stone-200 bg-stone-50 text-stone-600"
             }`}
           >
-            {String(action.status).replace(/_/g, " ")}
+            {APPROVAL_LABEL[action.approval_status] ?? action.approval_status}
           </span>
         </div>
         <p className="mt-1 text-sm text-stone-500">
-          {isPending
-            ? "Still pending — you can edit the details below."
-            : "This request is in progress and can no longer be edited."}
+          {action.approval_status === "rejected"
+            ? "This request was rejected. Contact your maintenance manager for details."
+            : isPending
+              ? "Pending approval — you can still edit the details below."
+              : "Approved and scheduled — it can no longer be edited."}
         </p>
       </div>
 

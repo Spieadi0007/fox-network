@@ -1,12 +1,17 @@
 import { getAuthUser } from "@/lib/auth";
 import { redirect } from "next/navigation";
-import { getAllClientRequests } from "@fox/supabase/actions/client-requests";
-import { Inbox } from "lucide-react";
+import {
+  getAllClientRequests,
+  approveRequest,
+  rejectRequest,
+} from "@fox/supabase/actions/client-requests";
+import { Inbox, Check, X } from "lucide-react";
 
 type RequestRow = {
   id: string;
   name: string;
   status: string;
+  approval_status: string;
   priority: string;
   category: string | null;
   estimated_cost: number | null;
@@ -16,13 +21,16 @@ type RequestRow = {
   organization: { name: string | null } | null;
 };
 
-const STATUS_STYLE: Record<string, string> = {
+const APPROVAL_STYLE: Record<string, string> = {
   pending: "bg-amber-50 text-amber-700 border-amber-200",
-  scheduled: "bg-blue-50 text-blue-700 border-blue-200",
-  in_progress: "bg-violet-50 text-violet-700 border-violet-200",
-  completed: "bg-emerald-50 text-emerald-700 border-emerald-200",
-  blocked: "bg-red-50 text-red-700 border-red-200",
-  cancelled: "bg-stone-100 text-stone-500 border-stone-200",
+  approved: "bg-emerald-50 text-emerald-700 border-emerald-200",
+  rejected: "bg-red-50 text-red-700 border-red-200",
+};
+
+const APPROVAL_LABEL: Record<string, string> = {
+  pending: "Pending approval",
+  approved: "Approved",
+  rejected: "Rejected",
 };
 
 const PRIORITY_LABEL: Record<string, string> = {
@@ -31,10 +39,6 @@ const PRIORITY_LABEL: Record<string, string> = {
   high: "Urgent",
   critical: "Emergency",
 };
-
-function statusLabel(s: string) {
-  return s.replace(/_/g, " ");
-}
 
 function formatDate(iso: string) {
   return new Date(iso).toLocaleString(undefined, {
@@ -46,9 +50,14 @@ function formatDate(iso: string) {
   });
 }
 
-export default async function RequestsPage() {
+export default async function RequestsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ done?: string }>;
+}) {
   const user = await getAuthUser();
   if (!user || !user.organizationId) redirect("/signin");
+  const { done } = await searchParams;
 
   const { data } = await getAllClientRequests();
   const requests = (data ?? []) as RequestRow[];
@@ -61,6 +70,12 @@ export default async function RequestsPage() {
       <p className="mt-1 text-sm text-stone-400">
         Every intervention requested across all companies.
       </p>
+
+      {done && (
+        <div className="mt-4 rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-700">
+          {done}
+        </div>
+      )}
 
       {requests.length === 0 ? (
         <div className="mt-10 rounded-2xl border border-dashed border-stone-300 bg-white px-6 py-16 text-center">
@@ -84,9 +99,10 @@ export default async function RequestsPage() {
                 <th className="px-5 py-3">Location</th>
                 <th className="px-5 py-3">Network</th>
                 <th className="px-5 py-3">SLA</th>
-                <th className="px-5 py-3">Status</th>
+                <th className="px-5 py-3">Approval</th>
                 <th className="px-5 py-3 text-right">Price</th>
                 <th className="px-5 py-3 text-right">Submitted</th>
+                <th className="px-5 py-3 text-right">Decision</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-stone-100">
@@ -117,12 +133,12 @@ export default async function RequestsPage() {
                   </td>
                   <td className="px-5 py-4">
                     <span
-                      className={`inline-flex rounded-full border px-2.5 py-0.5 text-[11px] font-medium capitalize ${
-                        STATUS_STYLE[r.status] ??
+                      className={`inline-flex rounded-full border px-2.5 py-0.5 text-[11px] font-medium ${
+                        APPROVAL_STYLE[r.approval_status] ??
                         "border-stone-200 bg-stone-50 text-stone-600"
                       }`}
                     >
-                      {statusLabel(r.status)}
+                      {APPROVAL_LABEL[r.approval_status] ?? r.approval_status}
                     </span>
                   </td>
                   <td className="px-5 py-4 text-right font-mono text-stone-700">
@@ -132,6 +148,36 @@ export default async function RequestsPage() {
                   </td>
                   <td className="px-5 py-4 text-right text-xs text-stone-500">
                     {formatDate(r.created_at)}
+                  </td>
+                  <td className="px-5 py-4">
+                    {r.approval_status === "pending" ? (
+                      <div className="flex items-center justify-end gap-2">
+                        <form action={approveRequest}>
+                          <input type="hidden" name="request_id" value={r.id} />
+                          <button
+                            type="submit"
+                            className="inline-flex items-center gap-1 rounded-full bg-emerald-600 px-3 py-1.5 text-[11px] font-medium text-white transition-colors hover:bg-emerald-700"
+                          >
+                            <Check className="h-3 w-3" />
+                            Approve
+                          </button>
+                        </form>
+                        <form action={rejectRequest}>
+                          <input type="hidden" name="request_id" value={r.id} />
+                          <button
+                            type="submit"
+                            className="inline-flex items-center gap-1 rounded-full border border-stone-200 bg-white px-3 py-1.5 text-[11px] font-medium text-stone-600 transition-colors hover:border-red-200 hover:bg-red-50 hover:text-red-700"
+                          >
+                            <X className="h-3 w-3" />
+                            Reject
+                          </button>
+                        </form>
+                      </div>
+                    ) : (
+                      <p className="text-right text-[11px] text-stone-400">
+                        {APPROVAL_LABEL[r.approval_status]}
+                      </p>
+                    )}
                   </td>
                 </tr>
               ))}

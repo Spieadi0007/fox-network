@@ -8,6 +8,7 @@ type RequestRow = {
   id: string;
   name: string;
   status: string;
+  approval_status: string;
   priority: string;
   category: string | null;
   estimated_cost: number | null;
@@ -15,13 +16,16 @@ type RequestRow = {
   created_at: string;
 };
 
-const STATUS_STYLE: Record<string, string> = {
+const APPROVAL_STYLE: Record<string, string> = {
   pending: "bg-amber-50 text-amber-700 border-amber-200",
-  scheduled: "bg-blue-50 text-blue-700 border-blue-200",
-  in_progress: "bg-violet-50 text-violet-700 border-violet-200",
-  completed: "bg-emerald-50 text-emerald-700 border-emerald-200",
-  blocked: "bg-red-50 text-red-700 border-red-200",
-  cancelled: "bg-stone-100 text-stone-500 border-stone-200",
+  approved: "bg-emerald-50 text-emerald-700 border-emerald-200",
+  rejected: "bg-red-50 text-red-700 border-red-200",
+};
+
+const APPROVAL_LABEL: Record<string, string> = {
+  pending: "Pending approval",
+  approved: "Approved",
+  rejected: "Rejected",
 };
 
 const PRIORITY_LABEL: Record<string, string> = {
@@ -30,10 +34,6 @@ const PRIORITY_LABEL: Record<string, string> = {
   high: "Urgent",
   critical: "Emergency",
 };
-
-function statusLabel(s: string) {
-  return s.replace(/_/g, " ");
-}
 
 function formatDate(iso: string) {
   return new Date(iso).toLocaleString(undefined, {
@@ -71,7 +71,7 @@ export default async function ClientDashboardPage({
   const { data: rows } = await db
     .from("actions")
     .select(
-      "id, name, status, priority, category, estimated_cost, description, created_at",
+      "id, name, status, approval_status, priority, category, estimated_cost, description, created_at",
     )
     .eq("organization_id", profile.organization_id)
     .order("created_at", { ascending: false });
@@ -129,6 +129,7 @@ export default async function ClientDashboardPage({
                 <th className="px-5 py-3">Network</th>
                 <th className="px-5 py-3">SLA</th>
                 <th className="px-5 py-3">Status</th>
+                {/* shows approval state */}
                 <th className="px-5 py-3 text-right">Price</th>
                 <th className="px-5 py-3 text-right">Submitted</th>
               </tr>
@@ -156,12 +157,12 @@ export default async function ClientDashboardPage({
                   </td>
                   <td className="px-5 py-4">
                     <span
-                      className={`inline-flex rounded-full border px-2.5 py-0.5 text-[11px] font-medium capitalize ${
-                        STATUS_STYLE[r.status] ??
+                      className={`inline-flex rounded-full border px-2.5 py-0.5 text-[11px] font-medium ${
+                        APPROVAL_STYLE[r.approval_status] ??
                         "border-stone-200 bg-stone-50 text-stone-600"
                       }`}
                     >
-                      {statusLabel(r.status)}
+                      {APPROVAL_LABEL[r.approval_status] ?? r.approval_status}
                     </span>
                   </td>
                   <td className="px-5 py-4 text-right font-mono text-stone-700">
