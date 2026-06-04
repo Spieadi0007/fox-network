@@ -143,7 +143,7 @@ export async function middleware(request: NextRequest) {
     }
     if (!profile?.organization_id) {
       return redirectWithCookies(
-        new URL("/signup?step=company-2", request.url),
+        new URL("/account/setup", request.url),
         client,
       );
     }
@@ -198,5 +198,6 @@ export const config = {
     "/dashboard/:path*",
     "/client/:path*",
     "/technician/:path*",
+    "/account/:path*",
   ],
 };
