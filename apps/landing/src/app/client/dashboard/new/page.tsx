@@ -17,10 +17,10 @@ const SERVICE_OPTIONS = [
 ];
 
 const SLA_OPTIONS = [
-  { value: "lazy", label: "Lazy", response: "Within 5 business days", price: 100 },
-  { value: "standard", label: "Standard", response: "Within 48 hours", price: 150 },
-  { value: "urgent", label: "Urgent", response: "Within 24 hours", price: 200 },
-  { value: "emergency", label: "Emergency", response: "Within 4 hours, 24/7", price: 250 },
+  { value: "lazy", label: "Lazy", response: "Within 5 business days", price: 120 },
+  { value: "standard", label: "Standard", response: "Within 48 hours", price: 200 },
+  { value: "urgent", label: "Urgent", response: "Within 24 hours", price: 300 },
+  { value: "emergency", label: "Emergency", response: "Within 4 hours, 24/7", price: 420 },
 ];
 
 const labelCls = "block text-sm font-medium text-stone-700";

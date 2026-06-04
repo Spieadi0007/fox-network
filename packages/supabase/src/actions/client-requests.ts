@@ -4,6 +4,44 @@ import { redirect } from "next/navigation";
 import { createServerClient } from "../client/server";
 import type { ActionType, Priority } from "../types";
 
+/**
+ * Every client request across all client organizations — for the internal
+ * FoxNetwork dashboard. Relies on the fox_staff RLS read-bypass (migration
+ * 021): only a profile with fox_staff = true sees other orgs' rows; everyone
+ * else gets just their own org back.
+ */
+export async function getAllClientRequests() {
+  const supabase = await createServerClient();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const db = supabase as any;
+
+  // Which organizations are client orgs?
+  const { data: clientProfiles } = await db
+    .from("profiles")
+    .select("organization_id")
+    .eq("account_type", "client")
+    .not("organization_id", "is", null);
+
+  const orgIds = [
+    ...new Set(
+      (clientProfiles ?? [])
+        .map((p: { organization_id: string }) => p.organization_id)
+        .filter(Boolean),
+    ),
+  ];
+  if (orgIds.length === 0) return { data: [], error: null };
+
+  const { data, error } = await db
+    .from("actions")
+    .select(
+      "id, name, status, priority, category, estimated_cost, description, created_at, organization_id, location:locations(name, city), organization:organizations(name)",
+    )
+    .in("organization_id", orgIds)
+    .order("created_at", { ascending: false });
+
+  return { data: data ?? [], error };
+}
+
 const PRIORITY_BY_TIER: Record<string, Priority> = {
   lazy: "low",
   standard: "medium",
@@ -11,11 +49,13 @@ const PRIORITY_BY_TIER: Record<string, Priority> = {
   emergency: "critical",
 };
 
+// Keep in sync with the landing page (sla-pricing.tsx) and the client
+// request form (client/dashboard/new SLA_OPTIONS).
 const PRICE_BY_TIER: Record<string, number> = {
-  lazy: 100,
-  standard: 150,
-  urgent: 200,
-  emergency: 250,
+  lazy: 120,
+  standard: 200,
+  urgent: 300,
+  emergency: 420,
 };
 
 const ACTION_BY_SERVICE: Record<string, ActionType> = {

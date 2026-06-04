@@ -11,11 +11,13 @@ import {
   Package,
   Users,
   Settings,
+  Inbox,
   ChevronRight,
 } from "lucide-react";
 
 const navItems = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+  { href: "/dashboard/requests", label: "Requests", icon: Inbox },
   { href: "/dashboard/locations", label: "Locations", icon: MapPin },
   { href: "/dashboard/projects", label: "Projects", icon: FolderKanban },
   { href: "/dashboard/actions", label: "Actions", icon: Zap },
