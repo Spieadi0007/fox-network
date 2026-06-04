@@ -231,5 +231,13 @@ export async function completeCompanySetup(formData: FormData) {
     redirect(`/signup?step=company-2&error=${encodeURIComponent(setupError.message)}`);
   }
 
-  redirect("/dashboard");
+  // Route by the account type the RPC actually set: once migration 025 is live,
+  // company signups become clients (→ /client/dashboard). Before then they
+  // stay 'company' (→ /dashboard), so there's no misroute window.
+  const { data: prof } = await db
+    .from("profiles")
+    .select("account_type")
+    .eq("id", user.id)
+    .single();
+  redirect(prof?.account_type === "client" ? "/client/dashboard" : "/dashboard");
 }
