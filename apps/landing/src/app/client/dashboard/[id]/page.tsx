@@ -13,7 +13,7 @@ const SERVICE_OPTIONS = [
 
 const SLA_OPTIONS = [
   { value: "lazy", label: "Relaxed", response: "Within 5 business days" },
-  { value: "standard", label: "Standard", response: "Within 48 hours" },
+  { value: "standard", label: "Standard", response: "Within 72 hours" },
   { value: "urgent", label: "Urgent", response: "Within 24 hours" },
   { value: "emergency", label: "Emergency", response: "Within 4 hours, 24/7" },
 ];

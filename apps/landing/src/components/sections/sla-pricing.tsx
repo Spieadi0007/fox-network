@@ -26,7 +26,7 @@ const tiers = [
   {
     name: "Standard",
     price: 200,
-    response: "Within 48 hours",
+    response: "Within 72 hours",
     description: "The default for normal field service requests.",
     features: [
       "Next-business-day dispatch",
