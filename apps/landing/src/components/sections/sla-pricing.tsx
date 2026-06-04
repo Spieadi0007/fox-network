@@ -88,7 +88,7 @@ export function SlaPricing() {
                 <span className="font-[family-name:var(--font-heading)] text-4xl font-bold tracking-tight text-stone-900">
                   €{tier.price}
                 </span>
-                <span className="text-xs text-stone-400">/ first hour</span>
+                <span className="text-xs text-stone-400">/ intervention</span>
               </div>
 
               <a
