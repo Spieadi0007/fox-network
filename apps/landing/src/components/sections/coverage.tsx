@@ -6,19 +6,21 @@ import { fadeInUp, viewportConfig } from "@/lib/animations";
 import { MapPin, ArrowRight } from "lucide-react";
 
 const DEPARTEMENTS = [
-  { code: "75", name: "Paris" },
-  { code: "92", name: "Hauts-de-Seine" },
-  { code: "93", name: "Seine-Saint-Denis" },
-  { code: "94", name: "Val-de-Marne" },
-  { code: "95", name: "Val-d'Oise" },
-  { code: "78", name: "Yvelines" },
-  { code: "77", name: "Seine-et-Marne" },
-  { code: "91", name: "Essonne" },
+  { code: "75", name: "Paris", x: 236, y: 222, paris: true },
+  { code: "92", name: "Hauts-de-Seine", x: 200, y: 232 },
+  { code: "93", name: "Seine-Saint-Denis", x: 284, y: 186 },
+  { code: "94", name: "Val-de-Marne", x: 288, y: 262 },
+  { code: "95", name: "Val-d'Oise", x: 246, y: 108 },
+  { code: "78", name: "Yvelines", x: 116, y: 232 },
+  { code: "77", name: "Seine-et-Marne", x: 384, y: 268 },
+  { code: "91", name: "Essonne", x: 182, y: 348 },
 ];
 
-// OpenStreetMap embed of Île-de-France with a marker on Paris (keyless).
-const MAP_SRC =
-  "https://www.openstreetmap.org/export/embed.html?bbox=1.45%2C48.12%2C3.56%2C49.24&layer=mapnik&marker=48.8566%2C2.3522";
+const PARIS = DEPARTEMENTS.find((d) => d.paris)!;
+
+// Stylised Île-de-France outline (wider on the right for Seine-et-Marne).
+const REGION_PATH =
+  "M150 60 C220 48 300 50 344 76 C402 96 456 132 458 202 C460 272 430 342 368 396 C320 432 250 420 200 396 C150 372 108 360 88 318 C58 280 48 240 54 190 C60 138 96 74 150 60 Z";
 
 export function Coverage() {
   return (
@@ -52,7 +54,6 @@ export function Coverage() {
                 across all eight départements, with the same SLAs everywhere.
               </p>
 
-              {/* Département chips */}
               <div className="mt-7 flex flex-wrap gap-2">
                 {DEPARTEMENTS.map((d) => (
                   <span
@@ -77,24 +78,119 @@ export function Coverage() {
               </a>
             </div>
 
-            {/* Right — live map of Île-de-France */}
-            <div className="relative min-h-[340px] border-t border-stone-200/70 lg:border-l lg:border-t-0">
-              <iframe
-                title="FoxNetwork service area — Paris & Île-de-France"
-                src={MAP_SRC}
-                className="absolute inset-0 h-full w-full"
-                style={{ border: 0 }}
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-              />
-              <a
-                href="https://www.openstreetmap.org/#map=9/48.85/2.35"
-                target="_blank"
-                rel="noreferrer"
-                className="absolute bottom-3 right-3 rounded-full bg-white/90 px-3 py-1 text-[10px] font-medium text-stone-500 shadow-sm backdrop-blur-sm hover:text-stone-700"
+            {/* Right — animated Île-de-France network map */}
+            <div className="relative flex items-center justify-center overflow-hidden border-t border-stone-200/70 bg-gradient-to-br from-stone-50 via-white to-blue-50/40 p-8 lg:border-l lg:border-t-0">
+              <svg
+                viewBox="0 0 480 440"
+                className="h-auto w-full max-w-[440px]"
+                role="img"
+                aria-label="FoxNetwork coverage across Paris and Île-de-France"
               >
-                View larger map
-              </a>
+                <defs>
+                  <pattern
+                    id="cov-dots"
+                    width="20"
+                    height="20"
+                    patternUnits="userSpaceOnUse"
+                  >
+                    <circle cx="1.5" cy="1.5" r="1.2" fill="rgba(59,130,246,0.12)" />
+                  </pattern>
+                  <clipPath id="cov-clip">
+                    <path d={REGION_PATH} />
+                  </clipPath>
+                  <radialGradient id="cov-fill" cx="50%" cy="45%" r="65%">
+                    <stop offset="0%" stopColor="rgba(59,130,246,0.10)" />
+                    <stop offset="100%" stopColor="rgba(59,130,246,0.03)" />
+                  </radialGradient>
+                </defs>
+
+                {/* Region fill + dotted texture */}
+                <path d={REGION_PATH} fill="url(#cov-fill)" />
+                <rect
+                  width="480"
+                  height="440"
+                  fill="url(#cov-dots)"
+                  clipPath="url(#cov-clip)"
+                />
+
+                {/* Region outline draws itself in */}
+                <motion.path
+                  d={REGION_PATH}
+                  fill="none"
+                  stroke="rgba(59,130,246,0.55)"
+                  strokeWidth="2"
+                  strokeLinejoin="round"
+                  initial={{ pathLength: 0, opacity: 0 }}
+                  whileInView={{ pathLength: 1, opacity: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 1.8, ease: "easeInOut" }}
+                />
+
+                {/* Animated network lines flowing from Paris to each département */}
+                {DEPARTEMENTS.filter((d) => !d.paris).map((d, i) => (
+                  <motion.line
+                    key={`line-${d.code}`}
+                    x1={PARIS.x}
+                    y1={PARIS.y}
+                    x2={d.x}
+                    y2={d.y}
+                    stroke="rgba(59,130,246,0.45)"
+                    strokeWidth="1.5"
+                    strokeDasharray="2 6"
+                    strokeLinecap="round"
+                    initial={{ strokeDashoffset: 0 }}
+                    animate={{ strokeDashoffset: -16 }}
+                    transition={{
+                      duration: 0.9,
+                      repeat: Infinity,
+                      ease: "linear",
+                      delay: i * 0.12,
+                    }}
+                  />
+                ))}
+
+                {/* Département nodes */}
+                {DEPARTEMENTS.filter((d) => !d.paris).map((d, i) => (
+                  <motion.g
+                    key={d.code}
+                    initial={{ scale: 0, opacity: 0 }}
+                    whileInView={{ scale: 1, opacity: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: 0.6 + i * 0.1, type: "spring", stiffness: 260, damping: 18 }}
+                    style={{ transformOrigin: `${d.x}px ${d.y}px` }}
+                  >
+                    <circle cx={d.x} cy={d.y} r="6" fill="white" stroke="#3B82F6" strokeWidth="2" />
+                    <circle cx={d.x} cy={d.y} r="2.2" fill="#3B82F6" />
+                    <text
+                      x={d.x}
+                      y={d.y - 11}
+                      textAnchor="middle"
+                      className="font-mono"
+                      fontSize="11"
+                      fontWeight="600"
+                      fill="#57534e"
+                    >
+                      {d.code}
+                    </text>
+                  </motion.g>
+                ))}
+
+                {/* Paris — pulsing hub */}
+                <circle cx={PARIS.x} cy={PARIS.y} r="18" fill="rgba(59,130,246,0.16)" className="animate-glow" />
+                <circle cx={PARIS.x} cy={PARIS.y} r="9" fill="#3B82F6" />
+                <circle cx={PARIS.x} cy={PARIS.y} r="3.5" fill="white" />
+                <text
+                  x={PARIS.x}
+                  y={PARIS.y - 24}
+                  textAnchor="middle"
+                  className="font-[family-name:var(--font-heading)]"
+                  fontSize="14"
+                  fontWeight="700"
+                  fill="#1c1917"
+                >
+                  Paris
+                </text>
+              </svg>
             </div>
           </div>
         </motion.div>
