@@ -217,3 +217,116 @@ export async function submitClientRequest(formData: FormData) {
 
   redirect("/client/dashboard?success=Request+submitted");
 }
+
+/**
+ * Edit an existing request — only while it's still pending. Updates the linked
+ * location, asset, and action. Network type stays whatever the org is set to.
+ */
+export async function updateClientRequest(formData: FormData) {
+  const supabase = await createServerClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) redirect("/client/signin");
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const db = supabase as any;
+
+  const requestId = pick(formData, "request_id");
+  if (!requestId) redirect("/client/dashboard");
+
+  const { data: profile } = await db
+    .from("profiles")
+    .select("organization_id")
+    .eq("id", user.id)
+    .single();
+  const orgId: string | undefined = profile?.organization_id;
+  if (!orgId) {
+    redirect("/client/signin?error=No+organization+linked+to+your+account");
+  }
+
+  const { data: action } = await db
+    .from("actions")
+    .select("id, status, location_id, asset_id, organization_id")
+    .eq("id", requestId)
+    .single();
+
+  // Must be the client's own request and still editable.
+  if (!action || action.organization_id !== orgId) {
+    redirect("/client/dashboard");
+  }
+  if (action.status !== "pending") {
+    redirect(
+      `/client/dashboard/${requestId}?error=This+request+can+no+longer+be+edited`,
+    );
+  }
+
+  const { data: org } = await db
+    .from("organizations")
+    .select("network_type")
+    .eq("id", orgId)
+    .single();
+  const networkType = (org?.network_type as string) || "other";
+
+  const assetLabel = pick(formData, "asset_label");
+  const problemDescription = pick(formData, "problem_description");
+  const siteName = pick(formData, "site_name") || assetLabel;
+  const address = pick(formData, "address");
+  const city = pick(formData, "city");
+  const state = pick(formData, "state");
+  const zipCode = pick(formData, "zip_code");
+  const country = pick(formData, "country") || "FR";
+  const serviceType = pick(formData, "service_type");
+  const slaTier = pick(formData, "sla_tier");
+
+  const missing =
+    !assetLabel ||
+    !address ||
+    !city ||
+    !state ||
+    !zipCode ||
+    !serviceType ||
+    !slaTier;
+  if (missing) {
+    redirect(
+      `/client/dashboard/${requestId}?error=Please+fill+all+required+fields`,
+    );
+  }
+
+  const priority: Priority = PRIORITY_BY_TIER[slaTier] ?? "medium";
+  const price = PRICE_BY_TIER[slaTier] ?? 200;
+  const actionType: ActionType = ACTION_BY_SERVICE[serviceType] ?? "maintenance";
+
+  if (action.location_id) {
+    await db
+      .from("locations")
+      .update({
+        name: siteName,
+        address,
+        city,
+        state,
+        zip_code: zipCode,
+        country,
+      })
+      .eq("id", action.location_id);
+  }
+
+  if (action.asset_id) {
+    await db.from("assets").update({ name: assetLabel }).eq("id", action.asset_id);
+  }
+
+  await db
+    .from("actions")
+    .update({
+      name: `${serviceType} – ${assetLabel}`,
+      description: problemDescription,
+      action_type: actionType,
+      priority,
+      estimated_cost: price,
+      category: networkType,
+      tags: [networkType, slaTier],
+    })
+    .eq("id", requestId);
+
+  redirect(`/client/dashboard/${requestId}?success=Request+updated`);
+}

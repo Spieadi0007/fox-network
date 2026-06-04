@@ -2,6 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createServerClient } from "@fox/supabase/client/server";
 import { ArrowRight, Plus } from "lucide-react";
+import { ClickableRow } from "./clickable-row";
 
 type RequestRow = {
   id: string;
@@ -134,7 +135,11 @@ export default async function ClientDashboardPage({
             </thead>
             <tbody className="divide-y divide-stone-100">
               {requests.map((r) => (
-                <tr key={r.id} className="text-sm">
+                <ClickableRow
+                  key={r.id}
+                  href={`/client/dashboard/${r.id}`}
+                  className="text-sm"
+                >
                   <td className="px-5 py-4">
                     <p className="font-medium text-stone-900">{r.name}</p>
                     {r.description && (
@@ -167,7 +172,7 @@ export default async function ClientDashboardPage({
                   <td className="px-5 py-4 text-right text-xs text-stone-500">
                     {formatDate(r.created_at)}
                   </td>
-                </tr>
+                </ClickableRow>
               ))}
             </tbody>
           </table>
