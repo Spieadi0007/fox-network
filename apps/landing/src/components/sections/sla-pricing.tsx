@@ -19,10 +19,8 @@ const tiers = [
 
 // Same for every tier — only the response time and price change.
 const INCLUDED = [
-  "Dedicated maintenance manager",
   "Live dashboard tracking",
   "Photo evidence on close",
-  "Parts included",
 ];
 
 export function SlaPricing() {

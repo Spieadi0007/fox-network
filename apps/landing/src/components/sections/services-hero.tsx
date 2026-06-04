@@ -70,7 +70,6 @@ export function ServicesHero() {
           >
             {[
               "Fixed-price SLA tiers",
-              "Dedicated maintenance manager",
               "Live dashboard across every site",
             ].map((text) => (
               <span

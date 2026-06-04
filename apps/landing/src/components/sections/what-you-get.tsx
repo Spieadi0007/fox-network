@@ -7,7 +7,7 @@ import {
   staggerContainer,
   viewportConfig,
 } from "@/lib/animations";
-import { LayoutDashboard, Headset, Eye } from "lucide-react";
+import { LayoutDashboard, Eye } from "lucide-react";
 
 const value = [
   {
@@ -15,12 +15,6 @@ const value = [
     title: "Live network dashboard",
     description:
       "Every site, every intervention, every cost — in one view. Filter by network, asset type, or SLA. Export at month-end.",
-  },
-  {
-    icon: Headset,
-    title: "Dedicated maintenance manager",
-    description:
-      "One human you can call. They know your network, your assets, and your SLA. No ticket-routing roulette.",
   },
   {
     icon: Eye,
