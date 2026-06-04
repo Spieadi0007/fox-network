@@ -11,9 +11,14 @@ const inputCls =
 async function QuoteInner({
   searchParams,
 }: {
-  searchParams: Promise<{ error?: string; success?: string }>;
+  searchParams: Promise<{ error?: string; success?: string; intent?: string }>;
 }) {
-  const { error, success } = await searchParams;
+  const { error, success, intent } = await searchParams;
+  const isWaitlist = intent === "waitlist";
+  const title = isWaitlist ? "Join the waitlist" : "Get a quote";
+  const subtitle = isWaitlist
+    ? "We're expanding beyond Île-de-France. Tell us about your network and we'll reach out as soon as we cover your area."
+    : "Tell us about your network and we'll send you tailored pricing.";
 
   if (success) {
     return (
@@ -40,11 +45,9 @@ async function QuoteInner({
   return (
     <div className="rounded-2xl border border-stone-200/80 bg-white/80 p-8 shadow-xl shadow-stone-200/40 backdrop-blur-xl">
       <h1 className="font-[family-name:var(--font-heading)] text-2xl font-bold tracking-tight text-stone-900">
-        Get a quote
+        {title}
       </h1>
-      <p className="mt-2 text-sm text-stone-500">
-        Tell us about your network and we&apos;ll send you tailored pricing.
-      </p>
+      <p className="mt-2 text-sm text-stone-500">{subtitle}</p>
 
       {error && (
         <div className="mt-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">

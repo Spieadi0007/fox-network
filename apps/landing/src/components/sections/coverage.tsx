@@ -69,7 +69,7 @@ export function Coverage() {
               </div>
 
               <a
-                href="/quote"
+                href="/quote?intent=waitlist"
                 className="mt-7 inline-flex items-center gap-1.5 text-sm font-medium text-stone-900 transition-colors hover:text-fox-orange"
               >
                 <MapPin className="h-4 w-4" />
