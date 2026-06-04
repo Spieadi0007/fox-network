@@ -413,9 +413,11 @@ export function ActionForm({
                   <SelectValue placeholder="Select technician" />
                 </SelectTrigger>
                 <SelectContent>
-                  {members.map((m) => (
-                    <SelectItem key={m.id} value={m.id}>{m.name || m.email}</SelectItem>
-                  ))}
+                  {members
+                    .filter((m) => m.role === "technician")
+                    .map((m) => (
+                      <SelectItem key={m.id} value={m.id}>{m.name || m.email}</SelectItem>
+                    ))}
                 </SelectContent>
               </Select>
             </Field>
