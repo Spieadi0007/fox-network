@@ -135,10 +135,9 @@ export async function submitQuote(formData: FormData) {
   const name = ((formData.get("name") as string) ?? "").trim();
   const email = ((formData.get("email") as string) ?? "").trim();
   const companyName = ((formData.get("companyName") as string) ?? "").trim();
-  const networkSizeRaw = (formData.get("networkSize") as string) ?? "";
-  const networkSize = Number.parseInt(networkSizeRaw, 10);
+  const networkSize = ((formData.get("networkSize") as string) ?? "").trim();
 
-  if (!name || !email || !companyName || Number.isNaN(networkSize)) {
+  if (!name || !email || !companyName || !networkSize) {
     redirect("/quote?error=Please+fill+all+fields");
   }
 

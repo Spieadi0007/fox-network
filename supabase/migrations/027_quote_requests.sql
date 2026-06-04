@@ -6,7 +6,7 @@ create table if not exists public.quote_requests (
   name text not null,
   email text not null,
   company_name text not null,
-  network_size integer not null default 0,
+  network_size text not null default '',
   status text not null default 'new',
   created_at timestamptz not null default now()
 );

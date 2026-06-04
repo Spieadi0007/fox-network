@@ -78,15 +78,22 @@ async function QuoteInner({
               (number of assets to manage)
             </span>
           </label>
-          <input
+          <select
             id="networkSize"
             name="networkSize"
-            type="number"
-            min="1"
             required
+            defaultValue=""
             className={inputCls}
-            placeholder="e.g. 250"
-          />
+          >
+            <option value="" disabled>
+              Select…
+            </option>
+            <option value="10">Up to 10</option>
+            <option value="50">Up to 50</option>
+            <option value="100">Up to 100</option>
+            <option value="500">Up to 500</option>
+            <option value="1000+">1000+</option>
+          </select>
         </div>
 
         <button
