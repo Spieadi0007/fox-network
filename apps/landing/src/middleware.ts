@@ -142,8 +142,9 @@ export async function middleware(request: NextRequest) {
       return redirectWithCookies(new URL("/technician", request.url), client);
     }
     if (!profile?.organization_id) {
+      // No org yet — keep them moving through account creation.
       return redirectWithCookies(
-        new URL("/account/setup", request.url),
+        new URL("/signup?step=company-2", request.url),
         client,
       );
     }
@@ -198,6 +199,5 @@ export const config = {
     "/dashboard/:path*",
     "/client/:path*",
     "/technician/:path*",
-    "/account/:path*",
   ],
 };
