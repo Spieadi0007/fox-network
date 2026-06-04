@@ -11,54 +11,18 @@ import { ArrowRight, Check } from "lucide-react";
 import { cn } from "@/lib/cn";
 
 const tiers = [
-  {
-    name: "Relaxed",
-    price: 150,
-    response: "Within 5 business days",
-    description: "Planned work and non-blocking fixes you can schedule.",
-    features: [
-      "Scheduled visit window",
-      "Email + dashboard updates",
-      "Standard parts inventory",
-    ],
-    accent: false,
-  },
-  {
-    name: "Standard",
-    price: 200,
-    response: "Within 72 hours",
-    description: "The default for normal field service requests.",
-    features: [
-      "Next-business-day dispatch",
-      "Photo evidence on close",
-      "Standard parts inventory",
-    ],
-    accent: false,
-  },
-  {
-    name: "Urgent",
-    price: 300,
-    response: "Within 24 hours",
-    description: "Service is degraded and customers are affected.",
-    features: [
-      "Same-day dispatch",
-      "Maintenance manager on call",
-      "Priority parts routing",
-    ],
-    accent: true,
-  },
-  {
-    name: "Emergency",
-    price: 420,
-    response: "Within 4 hours, 24/7",
-    description: "Asset is down. You need someone on site, now.",
-    features: [
-      "24/7 dispatch",
-      "Dedicated emergency hotline",
-      "Hot-swap parts when available",
-    ],
-    accent: false,
-  },
+  { name: "Relaxed", price: 150, response: "Within 5 business days", accent: false },
+  { name: "Standard", price: 200, response: "Within 72 hours", accent: false },
+  { name: "Urgent", price: 300, response: "Within 24 hours", accent: true },
+  { name: "Emergency", price: 420, response: "Within 4 hours, 24/7", accent: false },
+];
+
+// Same for every tier — only the response time and price change.
+const INCLUDED = [
+  "Dedicated maintenance manager",
+  "Live dashboard tracking",
+  "Photo evidence on close",
+  "Parts included",
 ];
 
 export function SlaPricing() {
@@ -127,27 +91,6 @@ export function SlaPricing() {
                 <span className="text-xs text-stone-400">/ intervention</span>
               </div>
 
-              <p className="mt-3 text-[13px] leading-[1.55] text-stone-500">
-                {tier.description}
-              </p>
-
-              <ul className="mt-5 space-y-2.5">
-                {tier.features.map((f) => (
-                  <li
-                    key={f}
-                    className="flex items-start gap-2 text-[13px] text-stone-600"
-                  >
-                    <Check
-                      className={cn(
-                        "mt-0.5 h-3.5 w-3.5 shrink-0",
-                        tier.accent ? "text-fox-orange" : "text-stone-400",
-                      )}
-                    />
-                    <span>{f}</span>
-                  </li>
-                ))}
-              </ul>
-
               <a
                 href="/client/signup"
                 className={cn(
@@ -163,6 +106,22 @@ export function SlaPricing() {
             </motion.div>
           ))}
         </motion.div>
+
+        {/* Same for every tier — only response time and price change */}
+        <div className="mt-10 flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
+          <span className="text-xs font-medium uppercase tracking-wider text-stone-400">
+            Every tier includes
+          </span>
+          {INCLUDED.map((f) => (
+            <span
+              key={f}
+              className="flex items-center gap-1.5 text-sm text-stone-600"
+            >
+              <Check className="h-3.5 w-3.5 shrink-0 text-fox-orange" />
+              {f}
+            </span>
+          ))}
+        </div>
 
         <p className="mt-8 text-center text-xs text-stone-400">
           *Travel time not included — billed at ~€1/km. Prices excl. VAT.
