@@ -6,29 +6,21 @@ import { fadeInUp, viewportConfig } from "@/lib/animations";
 import { MapPin, ArrowRight } from "lucide-react";
 
 const DEPARTEMENTS = [
-  { code: "75", name: "Paris", x: 252, y: 228, paris: true },
-  { code: "92", name: "Hauts-de-Seine", x: 216, y: 242 },
-  { code: "93", name: "Seine-Saint-Denis", x: 292, y: 196 },
-  { code: "94", name: "Val-de-Marne", x: 296, y: 270 },
-  { code: "95", name: "Val-d'Oise", x: 236, y: 96 },
-  { code: "78", name: "Yvelines", x: 104, y: 252 },
-  { code: "77", name: "Seine-et-Marne", x: 392, y: 252 },
-  { code: "91", name: "Essonne", x: 236, y: 360 },
+  { code: "75", name: "Paris", x: 236, y: 222, paris: true },
+  { code: "92", name: "Hauts-de-Seine", x: 200, y: 232 },
+  { code: "93", name: "Seine-Saint-Denis", x: 284, y: 186 },
+  { code: "94", name: "Val-de-Marne", x: 288, y: 262 },
+  { code: "95", name: "Val-d'Oise", x: 246, y: 108 },
+  { code: "78", name: "Yvelines", x: 116, y: 232 },
+  { code: "77", name: "Seine-et-Marne", x: 384, y: 268 },
+  { code: "91", name: "Essonne", x: 182, y: 348 },
 ];
 
 const PARIS = DEPARTEMENTS.find((d) => d.paris)!;
 
-// Jagged Île-de-France silhouette (straight segments, like the real border).
+// Stylised Île-de-France outline (wider on the right for Seine-et-Marne).
 const REGION_PATH =
-  "M158 28 L196 52 L244 30 L272 64 L322 58 L352 92 L404 104 L432 142 L456 180 L442 214 L468 250 L440 294 L456 326 L414 356 L428 392 L376 402 L360 420 L322 402 L300 418 L252 412 L236 418 L198 406 L160 416 L150 382 L112 388 L92 350 L72 360 L56 320 L38 282 L62 246 L44 212 L72 176 L56 142 L96 122 L112 82 L142 70 Z";
-
-// Internal département boundaries — carve top/left/right/bottom + centre cluster.
-const BORDERS = [
-  "M96 148 L185 150 L255 160 L340 148", // bottom of Val-d'Oise (95)
-  "M185 150 L190 235 L162 310 L150 382", // Yvelines (78) / centre
-  "M340 148 L348 250 L330 330 L322 402", // Seine-et-Marne (77) / centre
-  "M162 310 L250 305 L330 330", // top of Essonne (91)
-];
+  "M150 60 C220 48 300 50 344 76 C402 96 456 132 458 202 C460 272 430 342 368 396 C320 432 250 420 200 396 C150 372 108 360 88 318 C58 280 48 240 54 190 C60 138 96 74 150 60 Z";
 
 export function Coverage() {
   return (
@@ -86,7 +78,7 @@ export function Coverage() {
               </a>
             </div>
 
-            {/* Right — animated Île-de-France map */}
+            {/* Right — animated Île-de-France network map */}
             <div className="relative flex items-center justify-center overflow-hidden border-t border-stone-200/70 bg-gradient-to-br from-stone-50 via-white to-blue-50/40 p-8 lg:border-l lg:border-t-0">
               <svg
                 viewBox="0 0 480 440"
@@ -121,35 +113,41 @@ export function Coverage() {
                   clipPath="url(#cov-clip)"
                 />
 
-                {/* Internal département borders draw in */}
-                {BORDERS.map((d, i) => (
-                  <motion.path
-                    key={`b-${i}`}
-                    d={d}
-                    fill="none"
-                    stroke="rgba(59,130,246,0.35)"
-                    strokeWidth="1.5"
-                    strokeLinejoin="round"
-                    strokeLinecap="round"
-                    initial={{ pathLength: 0, opacity: 0 }}
-                    whileInView={{ pathLength: 1, opacity: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 1.1, ease: "easeInOut", delay: 0.7 + i * 0.25 }}
-                  />
-                ))}
-
                 {/* Region outline draws itself in */}
                 <motion.path
                   d={REGION_PATH}
                   fill="none"
-                  stroke="rgba(59,130,246,0.6)"
-                  strokeWidth="2.5"
+                  stroke="rgba(59,130,246,0.55)"
+                  strokeWidth="2"
                   strokeLinejoin="round"
                   initial={{ pathLength: 0, opacity: 0 }}
                   whileInView={{ pathLength: 1, opacity: 1 }}
                   viewport={{ once: true }}
-                  transition={{ duration: 1.9, ease: "easeInOut" }}
+                  transition={{ duration: 1.8, ease: "easeInOut" }}
                 />
+
+                {/* Animated network lines flowing from Paris to each département */}
+                {DEPARTEMENTS.filter((d) => !d.paris).map((d, i) => (
+                  <motion.line
+                    key={`line-${d.code}`}
+                    x1={PARIS.x}
+                    y1={PARIS.y}
+                    x2={d.x}
+                    y2={d.y}
+                    stroke="rgba(59,130,246,0.45)"
+                    strokeWidth="1.5"
+                    strokeDasharray="2 6"
+                    strokeLinecap="round"
+                    initial={{ strokeDashoffset: 0 }}
+                    animate={{ strokeDashoffset: -16 }}
+                    transition={{
+                      duration: 0.9,
+                      repeat: Infinity,
+                      ease: "linear",
+                      delay: i * 0.12,
+                    }}
+                  />
+                ))}
 
                 {/* Département nodes */}
                 {DEPARTEMENTS.filter((d) => !d.paris).map((d, i) => (
@@ -158,14 +156,14 @@ export function Coverage() {
                     initial={{ scale: 0, opacity: 0 }}
                     whileInView={{ scale: 1, opacity: 1 }}
                     viewport={{ once: true }}
-                    transition={{ delay: 1 + i * 0.1, type: "spring", stiffness: 260, damping: 18 }}
+                    transition={{ delay: 0.6 + i * 0.1, type: "spring", stiffness: 260, damping: 18 }}
                     style={{ transformOrigin: `${d.x}px ${d.y}px` }}
                   >
-                    <circle cx={d.x} cy={d.y} r="5.5" fill="white" stroke="#3B82F6" strokeWidth="2" />
-                    <circle cx={d.x} cy={d.y} r="2" fill="#3B82F6" />
+                    <circle cx={d.x} cy={d.y} r="6" fill="white" stroke="#3B82F6" strokeWidth="2" />
+                    <circle cx={d.x} cy={d.y} r="2.2" fill="#3B82F6" />
                     <text
                       x={d.x}
-                      y={d.y - 10}
+                      y={d.y - 11}
                       textAnchor="middle"
                       className="font-mono"
                       fontSize="11"
@@ -178,15 +176,15 @@ export function Coverage() {
                 ))}
 
                 {/* Paris — pulsing hub */}
-                <circle cx={PARIS.x} cy={PARIS.y} r="16" fill="rgba(59,130,246,0.16)" className="animate-glow" />
-                <circle cx={PARIS.x} cy={PARIS.y} r="8" fill="#3B82F6" />
-                <circle cx={PARIS.x} cy={PARIS.y} r="3" fill="white" />
+                <circle cx={PARIS.x} cy={PARIS.y} r="18" fill="rgba(59,130,246,0.16)" className="animate-glow" />
+                <circle cx={PARIS.x} cy={PARIS.y} r="9" fill="#3B82F6" />
+                <circle cx={PARIS.x} cy={PARIS.y} r="3.5" fill="white" />
                 <text
                   x={PARIS.x}
-                  y={PARIS.y - 22}
+                  y={PARIS.y - 24}
                   textAnchor="middle"
                   className="font-[family-name:var(--font-heading)]"
-                  fontSize="13"
+                  fontSize="14"
                   fontWeight="700"
                   fill="#1c1917"
                 >
