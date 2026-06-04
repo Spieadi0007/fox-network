@@ -46,8 +46,8 @@ export function SlaPricing() {
             You pick the response time.
           </h2>
           <p className="mt-5 text-base leading-[1.7] text-stone-500">
-            One flat price per intervention.* Pick the SLA that matches the
-            urgency — we hit it or we eat the cost.
+            One price to get us on site — first hour included.* Pick the SLA
+            that matches the urgency — we hit it or we eat the cost.
           </p>
         </motion.div>
 
@@ -88,7 +88,7 @@ export function SlaPricing() {
                 <span className="font-[family-name:var(--font-heading)] text-4xl font-bold tracking-tight text-stone-900">
                   €{tier.price}
                 </span>
-                <span className="text-xs text-stone-400">/ intervention</span>
+                <span className="text-xs text-stone-400">/ first hour</span>
               </div>
 
               <a
@@ -124,7 +124,8 @@ export function SlaPricing() {
         </div>
 
         <p className="mt-8 text-center text-xs text-stone-400">
-          *Travel time not included — billed at ~€1/km. Prices excl. VAT.
+          *Covers the first hour on site — additional time billed hourly.
+          Travel time not included — billed at ~€1/km. Prices excl. VAT.
           Volume contracts available — talk to us about your fleet.
         </p>
       </Container>
