@@ -32,10 +32,9 @@ export function ServicesHero() {
             variants={fadeInUp}
             className="mt-8 font-[family-name:var(--font-heading)] text-[clamp(2.5rem,6vw,4.5rem)] font-bold leading-[1.05] tracking-[-0.035em] text-stone-900"
           >
-            Book intervention,
+            You run the network.
             <br />
-            control cost,{" "}
-            <span className="text-gradient-fox">and act.</span>
+            <span className="text-gradient-fox">We keep it running.</span>
           </motion.h1>
 
           <motion.p
