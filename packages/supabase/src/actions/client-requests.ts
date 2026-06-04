@@ -52,7 +52,7 @@ const PRIORITY_BY_TIER: Record<string, Priority> = {
 // Keep in sync with the landing page (sla-pricing.tsx) and the client
 // request form (client/dashboard/new SLA_OPTIONS).
 const PRICE_BY_TIER: Record<string, number> = {
-  lazy: 120,
+  lazy: 150,
   standard: 200,
   urgent: 300,
   emergency: 420,
