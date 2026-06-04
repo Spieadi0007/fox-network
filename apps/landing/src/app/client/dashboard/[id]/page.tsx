@@ -107,7 +107,7 @@ export default async function ClientRequestDetail({
   const currentTier = TIER_BY_PRIORITY[action.priority] ?? "standard";
 
   return (
-    <div>
+    <div className="mx-auto max-w-3xl">
       <Link
         href="/client/dashboard"
         className="inline-flex items-center gap-1.5 text-sm text-stone-500 transition-colors hover:text-stone-900"
@@ -116,25 +116,25 @@ export default async function ClientRequestDetail({
         Back to requests
       </Link>
 
-      <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
-        <div>
+      <div className="mt-4">
+        <div className="flex items-center gap-3">
           <h1 className="font-[family-name:var(--font-heading)] text-2xl font-bold tracking-tight text-stone-900">
             {action.name}
           </h1>
-          <p className="mt-1 text-sm text-stone-500">
-            {isPending
-              ? "Still pending — you can edit the details below."
-              : "This request is in progress and can no longer be edited."}
-          </p>
+          <span
+            className={`inline-flex shrink-0 rounded-full border px-3 py-1 text-xs font-medium capitalize ${
+              STATUS_STYLE[action.status] ??
+              "border-stone-200 bg-stone-50 text-stone-600"
+            }`}
+          >
+            {String(action.status).replace(/_/g, " ")}
+          </span>
         </div>
-        <span
-          className={`inline-flex rounded-full border px-3 py-1 text-xs font-medium capitalize ${
-            STATUS_STYLE[action.status] ??
-            "border-stone-200 bg-stone-50 text-stone-600"
-          }`}
-        >
-          {String(action.status).replace(/_/g, " ")}
-        </span>
+        <p className="mt-1 text-sm text-stone-500">
+          {isPending
+            ? "Still pending — you can edit the details below."
+            : "This request is in progress and can no longer be edited."}
+        </p>
       </div>
 
       {error && (
@@ -149,10 +149,7 @@ export default async function ClientRequestDetail({
       )}
 
       {isPending ? (
-        <form
-          action={updateClientRequest}
-          className="mt-6 max-w-2xl space-y-6"
-        >
+        <form action={updateClientRequest} className="mt-6 space-y-6">
           <input type="hidden" name="request_id" value={action.id} />
 
           <section className="rounded-2xl border border-stone-200 bg-white p-6">
@@ -346,7 +343,7 @@ export default async function ClientRequestDetail({
           </div>
         </form>
       ) : (
-        <div className="mt-6 max-w-2xl space-y-3">
+        <div className="mt-6 space-y-3">
           {[
             { label: "Asset", value: asset?.name },
             {
