@@ -9,6 +9,7 @@ const labels = [
   "Cover",
   "Macro Shift",
   "Pain Points",
+  "Network Model",
   "Orchestration",
   "Interfaces",
   "AI Validation",

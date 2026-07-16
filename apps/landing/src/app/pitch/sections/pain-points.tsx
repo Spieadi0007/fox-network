@@ -8,7 +8,7 @@ const pains = [
   {
     icon: DollarSign,
     title: "High Cost of Field Operations",
-    desc: "Linear headcount growth: more assets require more staff — an unsustainable model.",
+    desc: "Density of hardware is low, which leads to a low intervention rate per technician and high cost per intervention.",
     color: "text-red-400",
     bg: "bg-red-500/10",
     border: "border-red-500/20",

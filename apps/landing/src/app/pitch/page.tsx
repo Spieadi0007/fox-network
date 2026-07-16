@@ -2,6 +2,7 @@ import { Cover } from "./sections/cover";
 import { MacroShift } from "./sections/macro-shift";
 import { LinearTrap } from "./sections/linear-trap";
 import { PainPoints } from "./sections/pain-points";
+import { NetworkModel } from "./sections/network-model";
 
 import { Orchestration } from "./sections/orchestration";
 import { Interfaces } from "./sections/interfaces";
@@ -25,6 +26,7 @@ export default function PitchPage() {
       <Cover />
       <MacroShift />
       <PainPoints />
+      <NetworkModel />
 
       <Orchestration />
       <Interfaces />

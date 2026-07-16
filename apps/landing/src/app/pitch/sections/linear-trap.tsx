@@ -3,7 +3,7 @@
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
 import { fadeInUp, viewportConfig } from "@/lib/animations";
-import { Users, AlertTriangle, TrendingDown } from "lucide-react";
+import { Users, TrendingDown, UserCheck } from "lucide-react";
 import { usePitchColors } from "@/app/pitch/pitch-theme";
 
 export function LinearTrap() {
@@ -160,15 +160,6 @@ export function LinearTrap() {
               border: "border-red-500/20",
             },
             {
-              icon: AlertTriangle,
-              stat: "60%",
-              label: "of costs are coordination",
-              desc: "Most operational spend isn't on the work itself — it's managing who does it, when, and verifying it was done.",
-              color: "text-amber-400",
-              bg: "bg-amber-500/10",
-              border: "border-amber-500/20",
-            },
-            {
               icon: TrendingDown,
               stat: "Near-flat",
               label: "cost curve with Fox",
@@ -176,6 +167,15 @@ export function LinearTrap() {
               color: "text-blue-400",
               bg: "bg-blue-500/10",
               border: "border-blue-500/20",
+            },
+            {
+              icon: UserCheck,
+              stat: "Up to 60%",
+              label: "lower Ops cost",
+              desc: "One shared pool of certified technicians serves many asset types across different clients — high utilization, lower cost per intervention.",
+              color: "text-emerald-400",
+              bg: "bg-emerald-500/10",
+              border: "border-emerald-500/20",
             },
           ].map((card, i) => (
             <motion.div
