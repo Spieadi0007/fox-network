@@ -9,7 +9,6 @@ import { Interfaces } from "./sections/interfaces";
 import { AIValidation } from "./sections/ai-validation";
 
 import { Engagement } from "./sections/engagement";
-import { Roadmap } from "./sections/roadmap";
 import { ImprovementCycle } from "./sections/improvement-cycle";
 
 import { PitchCTA } from "./sections/pitch-cta";
@@ -34,7 +33,6 @@ export default function PitchPage() {
       <LinearTrap />
 
       <Engagement />
-      <Roadmap />
       <ImprovementCycle />
 
       <PitchCTA />

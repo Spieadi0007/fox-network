@@ -15,7 +15,6 @@ const labels = [
   "AI Validation",
   "Linear Trap",
   "Engagement",
-  "Roadmap",
   "Improvement",
   "Let's Talk",
 ];
