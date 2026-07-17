@@ -270,8 +270,11 @@ export function Orchestration() {
           viewport={viewportConfig}
           className="text-center"
         >
-          <h2 className="font-[family-name:var(--font-heading)] text-[clamp(1.75rem,4vw,3rem)] font-bold leading-[1.08] tracking-[-0.03em]">
-            The Solution: <span className="text-blue-500">Maintenance as a Service</span>
+          <h2 className="mx-auto max-w-4xl font-[family-name:var(--font-heading)] text-[clamp(1.5rem,3.2vw,2.5rem)] font-bold leading-[1.12] tracking-[-0.03em]">
+            The Platform:{" "}
+            <span className="text-blue-500">
+              From IoT alert to resolved incident in a single, unified journey
+            </span>
           </h2>
           <p className="mx-auto mt-3 max-w-2xl text-base leading-[1.6] text-[var(--p-text-subtle)]">
             An orchestrated intervention flow from predictive machine signal to verified compliance.

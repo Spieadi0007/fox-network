@@ -38,11 +38,11 @@ export function NetworkModel() {
             The Model
           </span>
           <h2 className="mt-3 font-[family-name:var(--font-heading)] text-[clamp(1.75rem,4vw,3rem)] font-bold leading-[1.08] tracking-[-0.03em]">
-            The &ldquo;Uber Model&rdquo; for Physical Infrastructure
+            On-Demand Maintenance Orchestration Platform
           </h2>
           <p className="mx-auto mt-3 max-w-2xl text-base leading-[1.6] text-[var(--p-text-subtle)]">
-            A secure, two-sided operational network matching global demand with
-            immediate local supply.
+            An &ldquo;Uber model&rdquo; for physical infrastructure — a secure,
+            two-sided network matching global demand with immediate local supply.
           </p>
         </motion.div>
 
