@@ -6,7 +6,7 @@ import {
   DEFAULT_CARD_FIELDS,
   FIELD_LABELS,
   resolveFieldValue,
-} from "@/lib/field-app-catalog";
+} from "@fox/shared";
 
 const PRIORITY_STYLE: Record<string, string> = {
   low: "bg-stone-100 text-stone-600",

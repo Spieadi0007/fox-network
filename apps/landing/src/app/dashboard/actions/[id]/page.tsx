@@ -7,6 +7,7 @@ import { StatusBadge } from "@/components/status-badge";
 import { CustomFieldsDisplay } from "@/components/custom-fields-renderer";
 import Link from "next/link";
 import { ActionDetailClient } from "./action-detail-client";
+import { Visits } from "./visits";
 
 export default async function ActionDetailPage({
   params,
@@ -34,6 +35,8 @@ export default async function ActionDetailPage({
       <PageHeader title={action.name} />
 
       <ActionDetailClient actionId={action.id} canEdit={canEdit} />
+
+      <Visits actionId={action.id} />
 
       <div className="grid gap-6 md:grid-cols-2">
         <div className="rounded-xl border border-stone-200 bg-white p-6">

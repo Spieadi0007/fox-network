@@ -8,10 +8,16 @@ import {
   FIELD_GROUPS,
   FIELD_LABELS,
   MODULE_DEFS,
-  FIXED_MODULES,
+  isFixedModule,
   resolveFieldValue,
   type FieldGroupKey,
-} from "@/lib/field-app-catalog";
+} from "@fox/shared";
+import {
+  ProcedureRunner,
+  type RunnerSection,
+  type RunnerStep,
+  type CatalogPart,
+} from "./procedure-runner";
 
 const GROUP_ICON = {
   location: MapPin,
@@ -95,14 +101,64 @@ export default async function WorkOrderDetail({
     cfg?.detail_fields?.length ? cfg.detail_fields : DEFAULT_DETAIL_FIELDS;
   const enabledModules: Record<string, boolean> = cfg?.enabled_modules ?? {};
 
+  // The live procedure for this service type, if one has been published.
+  const { data: procedure } = await db
+    .from("procedure_templates")
+    .select(
+      `name,
+       procedure_sections ( id, title, position,
+         procedure_steps ( id, position, label, step_type, required, units, help,
+                           captures_parts, suggested_parts, spec_target, spec_min,
+                           spec_max, applies_when )
+       )`,
+    )
+    .eq("organization_id", orgId)
+    .eq("action_type_code", action.action_type)
+    .eq("is_active", true)
+    .maybeSingle();
+
+  // The nested select nests steps under `procedure_steps`; the runner wants
+  // them as `steps`. Postgres also gives no ordering guarantee through a
+  // nested select, and sequence is the whole point of a procedure — so sort
+  // both levels explicitly rather than trusting the order they arrive in.
+  type RawSection = Omit<RunnerSection, "steps"> & {
+    procedure_steps: RunnerStep[] | null;
+  };
+
+  const procedureSections: RunnerSection[] = (
+    (procedure?.procedure_sections ?? []) as RawSection[]
+  )
+    .map((s) => ({
+      id: s.id,
+      title: s.title,
+      position: s.position,
+      steps: [...(s.procedure_steps ?? [])].sort(
+        (a, b) => a.position - b.position,
+      ),
+    }))
+    .sort((a, b) => a.position - b.position)
+    .filter((s) => s.steps.length > 0);
+
+  // The parts picker needs something to pick from; only fetch when some step
+  // actually consumes materials.
+  const needsParts = procedureSections.some((s) =>
+    s.steps.some((st) => st.captures_parts),
+  );
+  const { data: catalogParts } = needsParts
+    ? await db
+        .from("parts")
+        .select("id, part_number, name, unit")
+        .eq("organization_id", orgId)
+        .eq("is_active", true)
+        .order("part_number", { ascending: true })
+    : { data: [] as CatalogPart[] };
+
   const fieldsByGroup = (group: FieldGroupKey) =>
     detailFields.filter((f) => f.group === group);
 
   // Modules to render: always-on + enabled, in catalog order
   const activeModules = MODULE_DEFS.filter(
-    (m) =>
-      (FIXED_MODULES as readonly string[]).includes(m.key) ||
-      enabledModules[m.key],
+    (m) => isFixedModule(m.key) || enabledModules[m.key],
   ).filter((m) => m.key !== "chat" && m.key !== "auto_translate");
 
   return (
@@ -176,7 +232,19 @@ export default async function WorkOrderDetail({
         })}
       </div>
 
-      {/* Entry form — modules */}
+      {/* When this service type has a published procedure, the technician
+          works through that instead of the flat module form — completing it
+          is what produces the report. */}
+      {procedureSections.length > 0 ? (
+        <ProcedureRunner
+          actionId={id}
+          organizationId={orgId}
+          procedureName={procedure!.name}
+          sections={procedureSections}
+          catalogParts={catalogParts ?? []}
+        />
+      ) : (
+      /* Entry form — modules */
       <form action={submitFieldEntry} className="mt-6 space-y-4">
         <input type="hidden" name="action_id" value={id} />
 
@@ -257,7 +325,7 @@ export default async function WorkOrderDetail({
                   name={m.key}
                   rows={3}
                   className={inputCls}
-                  placeholder={m.description}
+                  placeholder={m.placeholder}
                 />
               ) : (
                 <input
@@ -265,7 +333,7 @@ export default async function WorkOrderDetail({
                   name={m.key}
                   type="text"
                   className={inputCls}
-                  placeholder={m.description}
+                  placeholder={m.placeholder}
                 />
               )}
             </div>
@@ -309,6 +377,7 @@ export default async function WorkOrderDetail({
           Submit visit
         </button>
       </form>
+      )}
     </div>
   );
 }

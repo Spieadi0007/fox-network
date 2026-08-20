@@ -27,164 +27,49 @@ import {
   LayoutGrid,
   List,
   Lock,
+  FileUp,
 } from "lucide-react";
 import type { FieldAppConfig, ConfigurableFieldOption } from "@fox/supabase";
 import { upsertFieldAppConfig } from "@fox/supabase/actions/field-app-config";
+import {
+  FIELD_GROUPS as CARD_FIELD_GROUPS,
+  MODULE_GROUPS,
+  MODULE_DEFS,
+  MODULE_BY_KEY,
+  isFixedModule,
+  DEFAULT_CARD_FIELDS,
+  DEFAULT_DETAIL_FIELDS,
+  DEFAULT_ENABLED_MODULES,
+  DEFAULT_DISPLAY_MODE,
+} from "@fox/shared";
+import { SopImportDialog, type SopApplyResult } from "./sop-import-dialog";
 
-// ─── Field definitions ───────────────────────────────────────────────
+// ─── Icons ───────────────────────────────────────────────────────────
+// The catalog in @fox/shared is data-only so the technician runtime can
+// import it without pulling in React. Icons are mapped by key here.
 
-type FieldDef = { key: string; label: string };
-type FieldGroup = {
-  key: string;
-  label: string;
-  icon: React.ComponentType<{ className?: string }>;
-  fields: FieldDef[];
+type IconComponent = React.ComponentType<{ className?: string }>;
+
+const GROUP_ICON: Record<string, IconComponent> = {
+  location: MapPin,
+  asset: Box,
+  issue: AlertTriangle,
 };
 
-const CARD_FIELD_GROUPS: FieldGroup[] = [
-  {
-    key: "location",
-    label: "Location Details",
-    icon: MapPin,
-    fields: [
-      { key: "location_name", label: "Location Name" },
-      { key: "location_address", label: "Address" },
-      { key: "location_city", label: "City" },
-      { key: "location_country", label: "Country" },
-      { key: "location_client", label: "Client" },
-      { key: "location_contact_name", label: "Contact Person" },
-      { key: "location_contact_phone", label: "Phone" },
-    ],
-  },
-  {
-    key: "asset",
-    label: "Asset Details",
-    icon: Box,
-    fields: [
-      { key: "asset_name", label: "Asset Name" },
-      { key: "asset_type", label: "Asset Type" },
-      { key: "asset_serial_number", label: "Serial Number" },
-      { key: "asset_condition", label: "Condition" },
-      { key: "asset_manufacturer", label: "Manufacturer" },
-      { key: "asset_model", label: "Model" },
-    ],
-  },
-  {
-    key: "issue",
-    label: "Issue Details",
-    icon: AlertTriangle,
-    fields: [
-      { key: "action_name", label: "Issue Title" },
-      { key: "action_code", label: "Issue Code" },
-      { key: "action_type", label: "Issue Type" },
-      { key: "action_priority", label: "Priority" },
-      { key: "action_status", label: "Status" },
-      { key: "action_scheduled_start", label: "Scheduled Date" },
-      { key: "action_due_date", label: "Due Date" },
-      { key: "action_description", label: "Description" },
-    ],
-  },
-];
-
-type ModuleDef = {
-  key: string;
-  label: string;
-  description: string;
-  icon: React.ComponentType<{ className?: string }>;
+const MODULE_ICON: Record<string, IconComponent> = {
+  start_time: Play,
+  end_time: Square,
+  travel_time: Clock,
+  work_duration: Timer,
+  parts_used: Package,
+  customer_signature: PenTool,
+  technician_signature: UserCheck,
+  checklist: ListChecks,
+  photos: Camera,
+  auto_translate: Languages,
+  notes: FileText,
+  chat: MessageCircle,
 };
-
-type ModuleGroup = { label: string; modules: ModuleDef[] };
-
-// Start Time and End Time are always enabled and cannot be toggled off
-const FIXED_MODULES = new Set(["start_time", "end_time"]);
-
-const MODULE_GROUPS: ModuleGroup[] = [
-  {
-    label: "TIME TRACKING",
-    modules: [
-      { key: "travel_time", label: "Travel Time", description: "Time spent traveling to location", icon: Clock },
-      { key: "work_duration", label: "Work Duration", description: "Calculated total work duration", icon: Timer },
-    ],
-  },
-  {
-    label: "MATERIALS & PARTS",
-    modules: [
-      { key: "parts_used", label: "Parts Used", description: "Materials consumed during service", icon: Package },
-    ],
-  },
-  {
-    label: "VERIFICATION",
-    modules: [
-      { key: "customer_signature", label: "Customer Signature", description: "Digital signature from customer", icon: PenTool },
-      { key: "technician_signature", label: "Technician Signature", description: "Digital signature from technician", icon: UserCheck },
-      { key: "checklist", label: "Checklist", description: "Checklist of items to verify", icon: ListChecks },
-    ],
-  },
-  {
-    label: "MEDIA & PHOTOS",
-    modules: [
-      { key: "photos", label: "Photos", description: "Before/after photos from the service", icon: Camera },
-    ],
-  },
-  {
-    label: "LANGUAGE",
-    modules: [
-      { key: "auto_translate", label: "Auto Translate", description: "Auto-translate notes and text fields", icon: Languages },
-    ],
-  },
-  {
-    label: "GENERAL",
-    modules: [
-      { key: "notes", label: "Notes", description: "Additional notes about the service", icon: FileText },
-      { key: "chat", label: "Chat", description: "Real-time chat with support/team", icon: MessageCircle },
-    ],
-  },
-];
-
-// ─── Default config ──────────────────────────────────────────────────
-
-const DEFAULT_CARD_FIELDS: { key: string; group: string }[] = [
-  { key: "location_name", group: "location" },
-  { key: "location_address", group: "location" },
-  { key: "asset_name", group: "asset" },
-  { key: "action_name", group: "issue" },
-  { key: "action_priority", group: "issue" },
-];
-
-const DEFAULT_DETAIL_FIELDS: { key: string; group: string }[] = [
-  { key: "location_name", group: "location" },
-  { key: "location_address", group: "location" },
-  { key: "location_city", group: "location" },
-  { key: "location_client", group: "location" },
-  { key: "location_contact_name", group: "location" },
-  { key: "asset_name", group: "asset" },
-  { key: "asset_type", group: "asset" },
-  { key: "asset_serial_number", group: "asset" },
-  { key: "asset_condition", group: "asset" },
-  { key: "action_name", group: "issue" },
-  { key: "action_code", group: "issue" },
-  { key: "action_type", group: "issue" },
-  { key: "action_priority", group: "issue" },
-  { key: "action_status", group: "issue" },
-  { key: "action_description", group: "issue" },
-];
-
-const DEFAULT_ENABLED_MODULES: Record<string, boolean> = {
-  start_time: false,
-  end_time: false,
-  travel_time: false,
-  work_duration: false,
-  parts_used: false,
-  customer_signature: false,
-  technician_signature: false,
-  checklist: false,
-  photos: false,
-  auto_translate: false,
-  notes: false,
-  chat: false,
-};
-
-const DEFAULT_DISPLAY_MODE = "cards" as const;
 
 // ─── Default action types (fallback when no field options configured) ─
 // MUST mirror the action_type enum values used on the action form
@@ -302,6 +187,9 @@ export function FieldAppManager({
   const [drafts, setDrafts] = useState<Record<string, DraftConfig>>(buildInitialDrafts);
   const [dirty, setDirty] = useState<Record<string, boolean>>({});
   const [collapsedGroups, setCollapsedGroups] = useState<Record<string, boolean>>({});
+  const [sopOpen, setSopOpen] = useState(false);
+  // Count of changes from the last SOP import, shown until the next save.
+  const [sopApplied, setSopApplied] = useState<number | null>(null);
 
   // Get current draft (or default)
   const currentDraft: DraftConfig = drafts[activeType] ?? {
@@ -382,15 +270,30 @@ export function FieldAppManager({
     });
   }
 
+  function handleSopApply(result: SopApplyResult) {
+    updateDraft((draft) => ({
+      ...draft,
+      detail_fields: result.detailFields,
+      enabled_modules: result.enabledModules,
+      // The import only touches the details page, so surface it — otherwise
+      // a manager in Cards mode applies changes and sees nothing move.
+      display_mode: "details",
+    }));
+    setSopApplied(result.appliedCount);
+  }
+
   // Count enabled modules for badge
   const enabledModuleCount = Object.values(currentDraft.enabled_modules).filter(Boolean).length;
 
   // ─── Render ──────────────────────────────────────────────
 
+  const activeTypeLabel =
+    actionTypes.find((at) => at.code === activeType)?.label ?? activeType;
+
   return (
     <div className="space-y-6">
       {/* Section A: Service Type Selector */}
-      <div className="flex flex-wrap gap-2">
+      <div className="flex flex-wrap items-center gap-2">
         {actionTypes.map((at) => {
           const isActive = activeType === at.code;
           const config = drafts[at.code];
@@ -419,7 +322,35 @@ export function FieldAppManager({
             </button>
           );
         })}
+
+        <button
+          onClick={() => setSopOpen(true)}
+          className="ml-auto flex items-center gap-2 rounded-full border border-stone-300 bg-white px-4 py-2 text-sm font-medium text-stone-700 transition-colors hover:border-stone-400 hover:bg-stone-50"
+        >
+          <FileUp className="h-3.5 w-3.5" />
+          Import from SOP
+        </button>
       </div>
+
+      {sopApplied !== null && (
+        <div className="flex items-center gap-2 rounded-lg border border-blue-200 bg-blue-50 px-3 py-2 text-sm text-blue-800">
+          <Check className="h-4 w-4 flex-shrink-0" />
+          <span>
+            Applied {sopApplied} change{sopApplied === 1 ? "" : "s"} from the
+            SOP to {activeTypeLabel}. Review below, then press Save.
+          </span>
+        </div>
+      )}
+
+      <SopImportDialog
+        open={sopOpen}
+        onOpenChange={setSopOpen}
+        actionTypeCode={activeType}
+        serviceTypeLabel={activeTypeLabel}
+        currentDetailFields={currentDraft.detail_fields}
+        currentModules={currentDraft.enabled_modules}
+        onApply={handleSopApply}
+      />
 
       {/* Section B: Two-Column Layout */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-5">
@@ -466,7 +397,7 @@ export function FieldAppManager({
 
             <div className="divide-y divide-stone-100">
               {CARD_FIELD_GROUPS.map((group) => {
-                const Icon = group.icon;
+                const Icon = GROUP_ICON[group.key];
                 const collapsed = collapsedGroups[group.key] ?? false;
                 const enabledCount = group.fields.filter((f) =>
                   enabledFieldKeys.has(f.key),
@@ -542,11 +473,8 @@ export function FieldAppManager({
                     ALWAYS ENABLED
                   </p>
                   <div className="space-y-3">
-                    {[
-                      { key: "start_time", label: "Start Time", description: "When the technician started working", icon: Play },
-                      { key: "end_time", label: "End Time", description: "When the technician finished working", icon: Square },
-                    ].map((mod) => {
-                      const Icon = mod.icon;
+                    {MODULE_DEFS.filter((m) => isFixedModule(m.key)).map((mod) => {
+                      const Icon = MODULE_ICON[mod.key];
                       return (
                         <div key={mod.key} className="flex items-center gap-3 opacity-75">
                           <Icon className="h-4 w-4 flex-shrink-0 text-blue-500" />
@@ -570,7 +498,7 @@ export function FieldAppManager({
                     </p>
                     <div className="space-y-3">
                       {group.modules.map((mod) => {
-                        const Icon = mod.icon;
+                        const Icon = MODULE_ICON[mod.key];
                         const enabled = currentDraft.enabled_modules[mod.key] ?? false;
                         return (
                           <div
@@ -736,7 +664,7 @@ export function FieldAppManager({
                           )}
 
                           {CARD_FIELD_GROUPS.map((group) => {
-                            const Icon = group.icon;
+                            const Icon = GROUP_ICON[group.key];
                             const enabledFields = group.fields.filter((f) =>
                               enabledFieldKeys.has(f.key),
                             );
@@ -779,14 +707,14 @@ export function FieldAppManager({
 
                           {/* Modules: Start Time (fixed) → toggled modules → End Time (fixed) */}
                           {(() => {
-                            const startMod = { key: "start_time", label: "Start Time", icon: Play };
-                            const endMod = { key: "end_time", label: "End Time", icon: Square };
+                            const startMod = MODULE_BY_KEY.start_time;
+                            const endMod = MODULE_BY_KEY.end_time;
                             const toggledModules = ALL_MODULES.filter(
-                              (m) => !FIXED_MODULES.has(m.key) && currentDraft.enabled_modules[m.key],
+                              (m) => !isFixedModule(m.key) && currentDraft.enabled_modules[m.key],
                             );
 
-                            const renderModuleCard = (m: { key: string; label: string; icon: React.ComponentType<{ className?: string }> }) => {
-                              const Icon = m.icon;
+                            const renderModuleCard = (m: { key: string; label: string }) => {
+                              const Icon = MODULE_ICON[m.key];
                               const preview = MODULE_PREVIEW[m.key];
                               return (
                                 <div
