@@ -865,6 +865,112 @@ export type FieldAppConfig = {
   updated_at: string;
 };
 
+/**
+ * A single "configure the Field App from this SOP" run.
+ *
+ * `extracted` is what the model proposed; `applied` is the subset the manager
+ * accepted, and is null until they do. Both hold `SopExtraction`-shaped data —
+ * typed as `unknown` here because the extraction route owns that shape.
+ */
+export type SopImport = {
+  id: string;
+  organization_id: string;
+  action_type_code: string;
+  storage_path: string;
+  file_name: string;
+  extracted: unknown;
+  applied: unknown | null;
+  applied_at: string | null;
+  created_by: string | null;
+  created_at: string;
+  updated_at: string;
+};
+
+/** What a technician does at a procedure step. Mirrors `procedure_step_type`. */
+export type ProcedureStepType =
+  | "pass_fail"
+  | "photo"
+  | "text"
+  | "number"
+  | "signature";
+
+/** A service type's procedure. Re-importing an SOP creates a new version. */
+export type ProcedureTemplate = {
+  id: string;
+  organization_id: string;
+  action_type_code: string;
+  name: string;
+  summary: string;
+  source_sop_import_id: string | null;
+  version: number;
+  is_active: boolean;
+  created_by: string | null;
+  created_at: string;
+  updated_at: string;
+};
+
+export type ProcedureSection = {
+  id: string;
+  template_id: string;
+  organization_id: string;
+  title: string;
+  position: number;
+  created_at: string;
+  updated_at: string;
+};
+
+export type ProcedureStep = {
+  id: string;
+  section_id: string;
+  organization_id: string;
+  position: number;
+  label: string;
+  step_type: ProcedureStepType;
+  required: boolean;
+  /** Only ever set on a `number` step. */
+  units: string;
+  help: string;
+  /** Verbatim SOP text this step came from. */
+  evidence: string;
+  created_at: string;
+  updated_at: string;
+};
+
+/** The answer to a step, shaped by the step's type. */
+export type StepValue =
+  | { result: "pass" | "fail" }
+  | { number: number }
+  | { text: string }
+  | { name: string; signed_at: string }
+  | Record<string, never>;
+
+/**
+ * One answered step on one visit. Carries its own copy of what was asked —
+ * templates get edited and re-imported, and a past report has to keep
+ * showing the wording that was actually put to the technician.
+ */
+export type ActionEntryStep = {
+  id: string;
+  entry_id: string;
+  organization_id: string;
+  /** Null once the source template is deleted; the snapshot below remains. */
+  step_id: string | null;
+  section_title: string;
+  section_position: number;
+  step_label: string;
+  step_type: ProcedureStepType;
+  step_position: number;
+  units: string;
+  value: StepValue;
+  photo_paths: string[];
+  is_failure: boolean;
+  /** Required whenever `is_failure` is true. */
+  note: string;
+  completed_at: string | null;
+  created_at: string;
+  updated_at: string;
+};
+
 export type Profile = Database["public"]["Tables"]["profiles"]["Row"];
 export type Organization = Database["public"]["Tables"]["organizations"]["Row"];
 export type PartnerRequest = Database["public"]["Tables"]["partner_requests"]["Row"];

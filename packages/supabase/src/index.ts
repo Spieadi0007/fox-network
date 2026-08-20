@@ -31,4 +31,11 @@ export type {
   EntryOutcome,
   ActionEntry,
   FieldAppConfig,
+  SopImport,
+  ProcedureStepType,
+  ProcedureTemplate,
+  ProcedureSection,
+  ProcedureStep,
+  StepValue,
+  ActionEntryStep,
 } from "./types";
