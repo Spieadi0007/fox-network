@@ -14,6 +14,11 @@ import {
 // the manager edits the draft and saves it from the Procedures page, which
 // is what creates the template version.
 
+// Reading a long SOP into a full procedure runs to about 80 seconds.
+// Vercel's default function timeout kills it well before that.
+// 300s is the Vercel Pro ceiling; Hobby caps at 60s, which is not enough.
+export const maxDuration = 300;
+
 const MAX_BYTES = 32 * 1024 * 1024;
 
 function fail(message: string, status: number) {

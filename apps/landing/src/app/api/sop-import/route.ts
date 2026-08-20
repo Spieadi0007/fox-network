@@ -14,6 +14,10 @@ import {
 // `field_app_config` here — the manager reviews the proposal first.
 
 /** Mirrors the Anthropic API's request ceiling and the bucket's own limit. */
+// Reading an SOP takes tens of seconds — past Vercel's default timeout.
+// 300s is the Vercel Pro ceiling; Hobby caps at 60s, which is not enough.
+export const maxDuration = 300;
+
 const MAX_BYTES = 32 * 1024 * 1024;
 
 const DEFAULT_ACTION_TYPE_LABELS: Record<string, string> = {
