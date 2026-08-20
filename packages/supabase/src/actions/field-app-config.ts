@@ -44,26 +44,24 @@ export async function upsertFieldAppConfig(
 
   const supabase = await createServerClient();
 
-  // Delete existing config for this action type
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  await (supabase as any)
-    .from("field_app_config")
-    .delete()
-    .eq("organization_id", auth.organizationId)
-    .eq("action_type_code", actionTypeCode);
-
-  // Insert new config
+  // Single upsert on the (organization_id, action_type_code) unique
+  // constraint. This used to delete then insert, which is not atomic: if the
+  // insert failed, the org was left with no config row at all and the
+  // technician app silently fell back to hardcoded defaults.
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { data, error } = await (supabase as any)
     .from("field_app_config")
-    .insert({
-      organization_id: auth.organizationId,
-      action_type_code: actionTypeCode,
-      card_fields: config.card_fields,
-      detail_fields: config.detail_fields,
-      enabled_modules: config.enabled_modules,
-      display_mode: config.display_mode,
-    })
+    .upsert(
+      {
+        organization_id: auth.organizationId,
+        action_type_code: actionTypeCode,
+        card_fields: config.card_fields,
+        detail_fields: config.detail_fields,
+        enabled_modules: config.enabled_modules,
+        display_mode: config.display_mode,
+      },
+      { onConflict: "organization_id,action_type_code" },
+    )
     .select()
     .single();
 
