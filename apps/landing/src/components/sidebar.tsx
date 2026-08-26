@@ -12,6 +12,7 @@ import {
   Users,
   Settings,
   Inbox,
+  Receipt,
   ChevronRight,
 } from "lucide-react";
 import { SubmitButton } from "@/components/ui/submit-button";
@@ -30,9 +31,12 @@ const navItems = [
 export function Sidebar({
   user,
   org,
+  foxStaff = false,
 }: {
   user: { email: string; role: string };
   org: { name: string; logoUrl: string | null } | null;
+  /** Invoices are raised by FoxNetwork, so the link is theirs alone. */
+  foxStaff?: boolean;
 }) {
   const pathname = usePathname();
 
@@ -68,7 +72,12 @@ export function Sidebar({
       </Link>
 
       <nav className="flex-1 space-y-1 px-3 py-4">
-        {navItems.map((item) => {
+        {[
+          ...navItems,
+          ...(foxStaff
+            ? [{ href: "/dashboard/invoices", label: "Invoices", icon: Receipt }]
+            : []),
+        ].map((item) => {
           const Icon = item.icon;
           const active = isActive(item.href, (item as { activePrefix?: string }).activePrefix);
           return (

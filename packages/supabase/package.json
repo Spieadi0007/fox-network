@@ -28,7 +28,8 @@
     "./actions/service-types": "./src/actions/service-types.ts",
     "./actions/client-documents": "./src/actions/client-documents.ts",
     "./actions/client-spare-parts": "./src/actions/client-spare-parts.ts",
-    "./actions/client-invoices": "./src/actions/client-invoices.ts"
+    "./actions/client-invoices": "./src/actions/client-invoices.ts",
+    "./actions/staff-invoices": "./src/actions/staff-invoices.ts"
   },
   "dependencies": {
     "@supabase/ssr": "^0.6.1",
