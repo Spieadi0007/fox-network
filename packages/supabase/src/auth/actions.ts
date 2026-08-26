@@ -279,3 +279,90 @@ export async function completeCompanySetup(formData: FormData) {
   // company signups become clients (→ /client/dashboard).
   redirect(prof?.account_type === "client" ? "/client/dashboard" : "/dashboard");
 }
+
+// --- Invited member signup ---
+
+export type InvitationDetails = {
+  email: string;
+  name: string | null;
+  role: "admin" | "manager" | "technician" | "viewer";
+  organizationName: string;
+  status: "pending" | "accepted" | "revoked";
+  isExpired: boolean;
+};
+
+/**
+ * Read an invitation from its emailed token. Runs through a security-definer
+ * RPC because the reader has no account yet, and RLS on `invitations` scopes
+ * SELECT to the inviting organisation.
+ */
+export async function getInvitation(
+  token: string
+): Promise<InvitationDetails | null> {
+  const supabase = await createServerClient();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data, error } = await (supabase as any).rpc("invitation_by_token", {
+    p_token: token,
+  });
+
+  if (error || !data || data.length === 0) return null;
+
+  const row = data[0];
+  return {
+    email: row.email,
+    name: row.name ?? null,
+    role: row.role,
+    organizationName: row.organization_name,
+    status: row.status,
+    isExpired: row.is_expired,
+  };
+}
+
+export async function acceptInvitation(formData: FormData) {
+  const token = formData.get("token") as string;
+  const name = ((formData.get("name") as string) || "").trim();
+  const password = formData.get("password") as string;
+
+  const fail = (message: string) =>
+    redirect(`/invite/${token}?error=${encodeURIComponent(message)}`);
+
+  // The email comes from the invitation, never from the form — otherwise
+  // whoever held the link could sign up as any address they liked and be
+  // dropped straight into the organisation.
+  const invitation = await getInvitation(token);
+
+  if (!invitation) fail("This invitation link is not valid.");
+  if (invitation!.status === "revoked") fail("This invitation has been revoked.");
+  if (invitation!.status === "accepted")
+    fail("This invitation has already been used. Sign in instead.");
+  if (invitation!.isExpired)
+    fail("This invitation has expired. Ask for a new one.");
+  if (password.length < 8) fail("Choose a password of at least 8 characters.");
+
+  const supabase = await createServerClient();
+  const { error } = await supabase.auth.signUp({
+    email: invitation!.email,
+    password,
+    options: {
+      // No company_name: handle_new_user() must take the invitation branch
+      // and join the inviting org, not create a second one.
+      data: { name: name || invitation!.name || null, account_type: "company" },
+    },
+  });
+
+  if (error) {
+    fail(
+      error.message.toLowerCase().includes("already registered")
+        ? "You already have an account. Sign in and you will be added automatically."
+        : error.message
+    );
+  }
+
+  const { data: session } = await supabase.auth.getUser();
+  if (!session?.user) {
+    redirect("/signin?success=Check your email to confirm your account");
+  }
+
+  // Middleware routes by role from here.
+  redirect("/dashboard");
+}

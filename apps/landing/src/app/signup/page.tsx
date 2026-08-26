@@ -518,7 +518,7 @@ function CompanyStep2({
             </div>
 
             <SubmitButton
-  pendingLabel="Setting up…"
+              pendingLabel="Setting up…"
               className="w-full cursor-pointer rounded-full bg-stone-900 px-5 py-3 text-sm font-medium text-white transition-colors hover:bg-stone-800"
             >
               Complete setup
@@ -618,7 +618,7 @@ function PartnerForm({
             />
           </div>
           <SubmitButton
-  pendingLabel="Submitting…"
+            pendingLabel="Submitting…"
             className="w-full cursor-pointer rounded-full bg-stone-900 px-5 py-3 text-sm font-medium text-white transition-colors hover:bg-stone-800"
           >
             Submit application

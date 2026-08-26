@@ -87,7 +87,7 @@ function SignInForm() {
             />
           </div>
           <SubmitButton
-  pendingLabel="Signing in…"
+            pendingLabel="Signing in…"
             className="w-full cursor-pointer rounded-full bg-stone-900 px-5 py-3 text-sm font-medium text-white transition-colors hover:bg-stone-800"
           >
             Sign in

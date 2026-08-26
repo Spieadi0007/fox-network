@@ -114,7 +114,7 @@ function SignUpForm() {
             />
           </div>
           <SubmitButton
-  pendingLabel="Creating account…"
+            pendingLabel="Creating account…"
             className="w-full cursor-pointer rounded-full bg-stone-900 px-5 py-3 text-sm font-medium text-white transition-colors hover:bg-stone-800"
           >
             Create account
