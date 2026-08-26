@@ -22,7 +22,6 @@
     "./actions/field-app-config": "./src/actions/field-app-config.ts",
     "./actions/client-requests": "./src/actions/client-requests.ts",
     "./actions/technician-entries": "./src/actions/technician-entries.ts",
-    "./actions/sop-imports": "./src/actions/sop-imports.ts",
     "./actions/procedures": "./src/actions/procedures.ts",
     "./actions/procedure-entries": "./src/actions/procedure-entries.ts",
     "./actions/parts": "./src/actions/parts.ts",

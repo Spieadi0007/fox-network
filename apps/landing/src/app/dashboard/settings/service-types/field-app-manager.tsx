@@ -27,7 +27,6 @@ import {
   LayoutGrid,
   List,
   Lock,
-  FileUp,
 } from "lucide-react";
 import type { FieldAppConfig, ConfigurableFieldOption } from "@fox/supabase";
 import { upsertFieldAppConfig } from "@fox/supabase/actions/field-app-config";
@@ -42,7 +41,6 @@ import {
   DEFAULT_ENABLED_MODULES,
   DEFAULT_DISPLAY_MODE,
 } from "@fox/shared";
-import { SopImportDialog, type SopApplyResult } from "./sop-import-dialog";
 
 // ─── Icons ───────────────────────────────────────────────────────────
 // The catalog in @fox/shared is data-only so the technician runtime can
@@ -195,9 +193,6 @@ export function FieldAppManager({
   const [drafts, setDrafts] = useState<Record<string, DraftConfig>>(buildInitialDrafts);
   const [dirty, setDirty] = useState<Record<string, boolean>>({});
   const [collapsedGroups, setCollapsedGroups] = useState<Record<string, boolean>>({});
-  const [sopOpen, setSopOpen] = useState(false);
-  // Count of changes from the last SOP import, shown until the next save.
-  const [sopApplied, setSopApplied] = useState<number | null>(null);
 
   // Get current draft (or default)
   const currentDraft: DraftConfig = drafts[activeType] ?? {
@@ -278,22 +273,9 @@ export function FieldAppManager({
     });
   }
 
-  function handleSopApply(result: SopApplyResult) {
-    updateDraft((draft) => ({
-      ...draft,
-      detail_fields: result.detailFields,
-      enabled_modules: result.enabledModules,
-      // The import only touches the details page, so surface it — otherwise
-      // a manager in Cards mode applies changes and sees nothing move.
-      display_mode: "details",
-    }));
-    setSopApplied(result.appliedCount);
-  }
 
   // ─── Render ──────────────────────────────────────────────
 
-  const activeTypeLabel =
-    actionTypes.find((at) => at.code === activeType)?.label ?? activeType;
 
   return (
     <div className="space-y-6">
@@ -330,36 +312,9 @@ export function FieldAppManager({
           );
         })}
 
-        <button
-          onClick={() => setSopOpen(true)}
-          className="ml-auto flex items-center gap-2 rounded-full border border-stone-300 bg-white px-4 py-2 text-sm font-medium text-stone-700 transition-colors hover:border-stone-400 hover:bg-stone-50"
-        >
-          <FileUp className="h-3.5 w-3.5" />
-          Import from SOP
-        </button>
       </div>
 
-      {!hideChrome && sopApplied !== null && (
-        <div className="flex items-center gap-2 rounded-lg border border-blue-200 bg-blue-50 px-3 py-2 text-sm text-blue-800">
-          <Check className="h-4 w-4 flex-shrink-0" />
-          <span>
-            Applied {sopApplied} change{sopApplied === 1 ? "" : "s"} from the
-            SOP to {activeTypeLabel}. Review below, then press Save.
-          </span>
-        </div>
-      )}
 
-      {!hideChrome && (
-      <SopImportDialog
-        open={sopOpen}
-        onOpenChange={setSopOpen}
-        actionTypeCode={activeType}
-        serviceTypeLabel={activeTypeLabel}
-        currentDetailFields={currentDraft.detail_fields}
-        currentModules={currentDraft.enabled_modules}
-        onApply={handleSopApply}
-      />
-      )}
 
       {/* Section B: Two-Column Layout */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-5">
