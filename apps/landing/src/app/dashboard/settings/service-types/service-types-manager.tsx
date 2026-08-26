@@ -205,6 +205,40 @@ export function ServiceTypesManager({
    * Marked as added manually rather than left with an empty evidence line —
    * a reviewer should be able to tell what came from the SOP and what did not.
    */
+  function renameAnalysisSection(si: number, title: string) {
+    setAnalysis((a) =>
+      a
+        ? {
+            ...a,
+            procedure: {
+              ...a.procedure,
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              sections: a.procedure.sections.map((sec: any, i: number) =>
+                i === si ? { ...sec, title } : sec,
+              ),
+            },
+          }
+        : a,
+    );
+  }
+
+  /** Drop a whole section — an SOP often yields one that is not field work. */
+  function removeAnalysisSection(si: number) {
+    setAnalysis((a) =>
+      a
+        ? {
+            ...a,
+            procedure: {
+              ...a.procedure,
+              sections: a.procedure.sections.filter(
+                (_: unknown, i: number) => i !== si,
+              ),
+            },
+          }
+        : a,
+    );
+  }
+
   function insertAnalysisStep(si: number, after: number) {
     setAnalysis((a) => {
       if (!a) return a;
@@ -276,6 +310,17 @@ export function ServiceTypesManager({
     if (blank.length > 0) {
       setError(
         `${blank.length} step${blank.length === 1 ? " has" : "s have"} no wording yet. Fill ${blank.length === 1 ? "it" : "them"} in on the Procedure tab, or delete ${blank.length === 1 ? "it" : "them"}.`,
+      );
+      return;
+    }
+
+    // An unnamed section reaches the technician as a blank heading.
+    const unnamed = analysis.procedure.sections.filter(
+      (sec: { title?: string }) => !sec.title?.trim(),
+    );
+    if (unnamed.length > 0) {
+      setError(
+        `${unnamed.length} section${unnamed.length === 1 ? " has" : "s have"} no name. Name ${unnamed.length === 1 ? "it" : "them"} on the Procedure tab.`,
       );
       return;
     }
@@ -535,6 +580,8 @@ export function ServiceTypesManager({
           onRemoveStep={removeAnalysisStep}
           onPatchStep={patchAnalysisStep}
           onInsertStep={insertAnalysisStep}
+          onRenameSection={renameAnalysisSection}
+          onRemoveSection={removeAnalysisSection}
         />
       )}
 
@@ -754,6 +801,8 @@ function ImportReview({
   onRemoveStep,
   onPatchStep,
   onInsertStep,
+  onRenameSection,
+  onRemoveSection,
 }: {
   analysis: Analysis;
   isNewType: boolean;
@@ -769,6 +818,8 @@ function ImportReview({
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onPatchStep: (si: number, ti: number, patch: any) => void;
   onInsertStep: (si: number, after: number) => void;
+  onRenameSection: (si: number, title: string) => void;
+  onRemoveSection: (si: number) => void;
 }) {
   const [tab, setTab] = useState<Tab>("fields");
 
@@ -900,12 +951,26 @@ function ImportReview({
           <div className="divide-y divide-stone-100">
             {sections.map((section, si) => (
               <div key={si} className="px-5 py-3">
-                <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-stone-400">
-                  {section.title}
-                  <span className="ml-2 font-normal normal-case tracking-normal text-stone-300">
+                <div className="mb-2 flex items-center gap-2">
+                  <input
+                    value={section.title}
+                    onChange={(e) => onRenameSection(si, e.target.value)}
+                    placeholder="Section name"
+                    aria-label="Section name"
+                    className="min-w-0 flex-1 rounded border border-transparent px-1.5 py-0.5 text-xs font-semibold uppercase tracking-wider text-stone-500 hover:border-stone-200 focus:border-stone-300 focus:bg-white focus:outline-none"
+                  />
+                  <span className="flex-shrink-0 text-xs text-stone-300">
                     {section.steps.length}
                   </span>
-                </p>
+                  <button
+                    onClick={() => onRemoveSection(si)}
+                    aria-label={`Remove section ${section.title}`}
+                    title="Remove this section and its steps"
+                    className="flex-shrink-0 text-stone-300 hover:text-red-500"
+                  >
+                    <Trash2 className="h-3.5 w-3.5" />
+                  </button>
+                </div>
                 <div>
                   <InsertHere onClick={() => onInsertStep(si, -1)} />
                   {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
