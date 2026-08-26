@@ -118,6 +118,7 @@ export function MembersClient({
   const [inviteName, setInviteName] = useState("");
   const [inviteRole, setInviteRole] = useState<AppRole>("viewer");
   const [inviteError, setInviteError] = useState<string | null>(null);
+  const [emailWarning, setEmailWarning] = useState<string | null>(null);
 
   const isAdmin = userRole === "admin";
   const canInvite = userRole === "admin" || userRole === "manager";
@@ -126,7 +127,7 @@ export function MembersClient({
     if (!inviteEmail.trim()) return;
     setInviteError(null);
     startTransition(async () => {
-      const { error } = await inviteMember(
+      const { error, emailWarning } = await inviteMember(
         orgId,
         currentUserId,
         inviteEmail.trim().toLowerCase(),
@@ -140,6 +141,9 @@ export function MembersClient({
         setInviteEmail("");
         setInviteName("");
         setInviteRole("viewer");
+        // The invitation is saved either way. If the email did not go out the
+        // inviter needs to know, or they will assume it is on its way.
+        setEmailWarning(emailWarning ?? null);
         router.refresh();
       }
     });
@@ -200,6 +204,19 @@ export function MembersClient({
       {error && (
         <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
           {error}
+        </div>
+      )}
+
+      {emailWarning && (
+        <div className="flex items-start justify-between gap-4 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+          <span>{emailWarning}</span>
+          <button
+            type="button"
+            onClick={() => setEmailWarning(null)}
+            className="shrink-0 cursor-pointer font-medium text-amber-900 hover:underline"
+          >
+            Dismiss
+          </button>
         </div>
       )}
 
