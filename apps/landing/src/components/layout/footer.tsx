@@ -11,7 +11,7 @@ const footerLinks = {
     { label: "About", href: "#about" },
     { label: "Careers", href: "#" },
     { label: "Blog", href: "#" },
-    { label: "Contact", href: "#" },
+    { label: "Contact", href: "mailto:contact@foxnetwork.io" },
   ],
   Resources: [
     { label: "Documentation", href: "#" },
@@ -63,11 +63,17 @@ export function Footer() {
             &copy; {new Date().getFullYear()} FoxNetwork Inc. All rights reserved.
           </p>
           <div className="flex gap-6">
-            <a href="#" className="text-[12px] text-stone-400 hover:text-stone-600">
+            <a
+              href="/privacy"
+              className="text-[12px] text-stone-400 hover:text-stone-600"
+            >
               Privacy Policy
             </a>
-            <a href="#" className="text-[12px] text-stone-400 hover:text-stone-600">
-              Terms of Service
+            <a
+              href="/terms"
+              className="text-[12px] text-stone-400 hover:text-stone-600"
+            >
+              Terms of Use
             </a>
           </div>
         </div>
