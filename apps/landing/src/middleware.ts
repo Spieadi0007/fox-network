@@ -185,16 +185,33 @@ export async function middleware(request: NextRequest) {
   if (user) {
     if (pathname === "/signin") {
       const profile = await fetchProfile();
-      if (profile?.account_type === "client") {
+      if (profile?.account_type === "client" && profile.organization_id) {
         return redirectWithCookies(
           new URL("/client/dashboard", request.url),
           client,
         );
       }
-      if (profile?.role === "technician") {
+      // The organisation check is not redundant. /technician bounces a
+      // member with no organisation straight back to /signin, so routing on
+      // role alone would ping-pong between the two for ever.
+      if (profile?.role === "technician" && profile.organization_id) {
         return redirectWithCookies(new URL("/technician", request.url), client);
       }
-      return redirectWithCookies(new URL("/dashboard", request.url), client);
+      if (profile?.organization_id) {
+        return redirectWithCookies(new URL("/dashboard", request.url), client);
+      }
+
+      // Signed in, but attached to no organisation. Sending them on to
+      // /dashboard used to bounce them to /signup?step=company-2 — so opening
+      // the sign-in page landed you in company creation, with no way back to
+      // the form to sign in as somebody else. Show the page and say why.
+      if (!request.nextUrl.searchParams.has("incomplete")) {
+        return redirectWithCookies(
+          new URL("/signin?incomplete=1", request.url),
+          client,
+        );
+      }
+      return client.response;
     }
     if (pathname === "/signup" && !request.nextUrl.searchParams.has("step")) {
       const profile = await fetchProfile();
