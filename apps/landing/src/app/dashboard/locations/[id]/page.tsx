@@ -155,8 +155,8 @@ export default async function LocationDetailPage({
           Projects at this Location
         </h2>
         {projects && projects.length > 0 ? (
-          <div className="mt-3 rounded-xl border border-stone-200 bg-white">
-            <table className="w-full text-sm">
+          <div className="mt-3 overflow-x-auto rounded-xl border border-stone-200 bg-white">
+            <table className="w-full min-w-[560px] text-sm">
               <thead>
                 <tr className="border-b border-stone-100 text-left text-stone-500">
                   <th className="px-4 py-3 font-medium">Name</th>
@@ -198,8 +198,8 @@ export default async function LocationDetailPage({
           Assets at this Location
         </h2>
         {assets && assets.length > 0 ? (
-          <div className="mt-3 rounded-xl border border-stone-200 bg-white">
-            <table className="w-full text-sm">
+          <div className="mt-3 overflow-x-auto rounded-xl border border-stone-200 bg-white">
+            <table className="w-full min-w-[560px] text-sm">
               <thead>
                 <tr className="border-b border-stone-100 text-left text-stone-500">
                   <th className="px-4 py-3 font-medium">Name</th>

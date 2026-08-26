@@ -121,8 +121,8 @@ export default async function ClientDashboardPage({
           </Link>
         </div>
       ) : (
-        <div className="mt-8 overflow-hidden rounded-2xl border border-stone-200 bg-white">
-          <table className="w-full">
+        <div className="mt-8 overflow-x-auto rounded-2xl border border-stone-200 bg-white">
+          <table className="w-full min-w-[760px]">
             <thead className="bg-stone-50">
               <tr className="text-left text-[11px] font-semibold uppercase tracking-wider text-stone-500">
                 <th className="px-5 py-3">Request</th>
