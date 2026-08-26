@@ -174,8 +174,8 @@ export default async function ProjectDetailPage({
           Actions in this Project
         </h2>
         {actions && actions.length > 0 ? (
-          <div className="mt-3 rounded-xl border border-stone-200 bg-white">
-            <table className="w-full text-sm">
+          <div className="mt-3 overflow-x-auto rounded-xl border border-stone-200 bg-white">
+            <table className="w-full min-w-[560px] text-sm">
               <thead>
                 <tr className="border-b border-stone-100 text-left text-stone-500">
                   <th className="px-4 py-3 font-medium">Name</th>

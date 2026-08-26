@@ -91,8 +91,12 @@ export default async function RequestsPage({
           </p>
         </div>
       ) : (
-        <div className="mt-8 overflow-hidden rounded-2xl border border-stone-200 bg-white">
-          <table className="w-full">
+        <div className="mt-8 overflow-x-auto rounded-2xl border border-stone-200 bg-white">
+          {/* Nine columns do not fit a laptop beside the sidebar, so the table
+              scrolls rather than clipping. Decision stays pinned to the right:
+              approving is the whole point of this screen, and it was the
+              column being cut off. */}
+          <table className="w-full min-w-[1000px]">
             <thead className="bg-stone-50">
               <tr className="text-left text-[11px] font-semibold uppercase tracking-wider text-stone-500">
                 <th className="px-5 py-3">Company</th>
@@ -103,7 +107,9 @@ export default async function RequestsPage({
                 <th className="px-5 py-3">Approval</th>
                 <th className="px-5 py-3 text-right">Price</th>
                 <th className="px-5 py-3 text-right">Submitted</th>
-                <th className="px-5 py-3 text-right">Decision</th>
+                <th className="sticky right-0 z-10 border-l border-stone-200 bg-stone-50 px-5 py-3 text-right">
+                  Decision
+                </th>
               </tr>
             </thead>
             <tbody className="divide-y divide-stone-100">
@@ -150,7 +156,7 @@ export default async function RequestsPage({
                   <td className="px-5 py-4 text-right text-xs text-stone-500">
                     {formatDate(r.created_at)}
                   </td>
-                  <td className="px-5 py-4">
+                  <td className="sticky right-0 z-10 border-l border-stone-100 bg-white px-5 py-4">
                     {r.approval_status === "pending" ? (
                       <div className="flex items-center justify-end gap-2">
                         <form action={approveRequest}>

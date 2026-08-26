@@ -223,8 +223,8 @@ export function MembersClient({
       {members.length > 0 ? (
         <>
           {/* Active Members Table */}
-          <div className="overflow-hidden rounded-xl border border-stone-200 bg-white">
-            <table className="w-full">
+          <div className="overflow-x-auto rounded-xl border border-stone-200 bg-white">
+            <table className="w-full min-w-[600px]">
               <thead>
                 <tr className="border-b border-stone-100 bg-stone-50/50">
                   <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-stone-400">
@@ -332,7 +332,7 @@ export function MembersClient({
               <h3 className="mb-3 text-sm font-semibold text-stone-700">
                 Pending Invitations ({invitations.length})
               </h3>
-              <div className="overflow-hidden rounded-xl border border-dashed border-stone-200 bg-white">
+              <div className="overflow-x-auto rounded-xl border border-dashed border-stone-200 bg-white">
                 <table className="w-full">
                   <thead>
                     <tr className="border-b border-stone-100 bg-stone-50/50">

@@ -56,7 +56,7 @@ export function ClientAccounts({ groups }: { groups: ClientAccountGroup[] }) {
           {groups.map((group) => (
             <div
               key={group.organizationId}
-              className="overflow-hidden rounded-xl border border-stone-200 bg-white"
+              className="overflow-x-auto rounded-xl border border-stone-200 bg-white"
             >
               <div className="flex items-center gap-2 border-b border-stone-100 bg-stone-50/50 px-4 py-3">
                 <Building2 className="h-4 w-4 text-stone-400" />
@@ -68,7 +68,7 @@ export function ClientAccounts({ groups }: { groups: ClientAccountGroup[] }) {
                 </span>
               </div>
 
-              <table className="w-full">
+              <table className="w-full min-w-[520px]">
                 <tbody className="divide-y divide-stone-100">
                   {group.members.map((member) => (
                     <tr key={member.id}>

@@ -577,7 +577,8 @@ export function WorkflowManager({
             </p>
           </div>
         ) : (
-          <table className="w-full text-sm">
+          <div className="overflow-x-auto">
+            <table className="w-full min-w-[720px] text-sm">
             <thead>
               <tr className="border-b border-stone-100 text-left text-stone-500">
                 <th className="px-6 py-3 font-medium">Client</th>
@@ -636,7 +637,8 @@ export function WorkflowManager({
                 );
               })}
             </tbody>
-          </table>
+            </table>
+          </div>
         )}
       </div>
     </div>
