@@ -120,9 +120,15 @@ function specLabel(s: {
 export function ProceduresManager({
   templates,
   actionTypeOptions,
+  controlledType,
+  hideChrome,
 }: {
   templates: SavedTemplate[];
   actionTypeOptions: ConfigurableFieldOption[];
+  /** When set, the parent owns type selection and the pill row is hidden. */
+  controlledType?: string;
+  /** Hide the pill row and the SOP button — the parent provides both. */
+  hideChrome?: boolean;
 }) {
   const router = useRouter();
   const [pending, startTransition] = useTransition();
@@ -135,9 +141,9 @@ export function ProceduresManager({
     [actionTypeOptions],
   );
 
-  const [activeType, setActiveType] = useState(
-    actionTypes[0]?.code ?? "survey",
-  );
+  const [ownType, setOwnType] = useState(actionTypes[0]?.code ?? "survey");
+  const activeType = controlledType ?? ownType;
+  const setActiveType = setOwnType;
   const [draft, setDraft] = useState<ProcedureDraft | null>(null);
   const [importId, setImportId] = useState<string | null>(null);
   const [sourceFile, setSourceFile] = useState<string | null>(null);
@@ -304,8 +310,10 @@ export function ProceduresManager({
 
   return (
     <div className="space-y-6">
-      {/* Service type */}
-      <div className="flex flex-wrap items-center gap-2">
+      {/* Service type — hidden when a parent owns selection */}
+      <div
+        className={`flex flex-wrap items-center gap-2 ${hideChrome ? "hidden" : ""}`}
+      >
         {actionTypes.map((at) => {
           const isActive = activeType === at.code;
           const t = templates.find((x) => x.action_type_code === at.code);

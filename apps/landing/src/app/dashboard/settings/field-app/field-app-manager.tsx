@@ -153,9 +153,15 @@ const ALL_MODULES = MODULE_GROUPS.flatMap((g) => g.modules);
 export function FieldAppManager({
   configs,
   actionTypeOptions,
+  controlledType,
+  hideChrome,
 }: {
   configs: FieldAppConfig[];
   actionTypeOptions: ConfigurableFieldOption[];
+  /** When set, the parent owns type selection and the pill row is hidden. */
+  controlledType?: string;
+  /** Hide the pill row and the SOP button — the parent provides both. */
+  hideChrome?: boolean;
 }) {
   const router = useRouter();
   const [pending, startTransition] = useTransition();
@@ -168,7 +174,9 @@ export function FieldAppManager({
     return DEFAULT_ACTION_TYPES;
   }, [actionTypeOptions]);
 
-  const [activeType, setActiveType] = useState(actionTypes[0]?.code ?? "survey");
+  const [ownType, setOwnType] = useState(actionTypes[0]?.code ?? "survey");
+  const activeType = controlledType ?? ownType;
+  const setActiveType = setOwnType;
 
   // Build initial drafts from saved configs
   const buildInitialDrafts = useCallback(() => {
@@ -282,9 +290,6 @@ export function FieldAppManager({
     setSopApplied(result.appliedCount);
   }
 
-  // Count enabled modules for badge
-  const enabledModuleCount = Object.values(currentDraft.enabled_modules).filter(Boolean).length;
-
   // ─── Render ──────────────────────────────────────────────
 
   const activeTypeLabel =
@@ -292,8 +297,10 @@ export function FieldAppManager({
 
   return (
     <div className="space-y-6">
-      {/* Section A: Service Type Selector */}
-      <div className="flex flex-wrap items-center gap-2">
+      {/* Section A: Service Type Selector — hidden when a parent owns it */}
+      <div
+        className={`flex flex-wrap items-center gap-2 ${hideChrome ? "hidden" : ""}`}
+      >
         {actionTypes.map((at) => {
           const isActive = activeType === at.code;
           const config = drafts[at.code];
@@ -332,7 +339,7 @@ export function FieldAppManager({
         </button>
       </div>
 
-      {sopApplied !== null && (
+      {!hideChrome && sopApplied !== null && (
         <div className="flex items-center gap-2 rounded-lg border border-blue-200 bg-blue-50 px-3 py-2 text-sm text-blue-800">
           <Check className="h-4 w-4 flex-shrink-0" />
           <span>
@@ -342,6 +349,7 @@ export function FieldAppManager({
         </div>
       )}
 
+      {!hideChrome && (
       <SopImportDialog
         open={sopOpen}
         onOpenChange={setSopOpen}
@@ -351,6 +359,7 @@ export function FieldAppManager({
         currentModules={currentDraft.enabled_modules}
         onApply={handleSopApply}
       />
+      )}
 
       {/* Section B: Two-Column Layout */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-5">
