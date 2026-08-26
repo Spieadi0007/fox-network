@@ -32,7 +32,7 @@ export default async function NewRequestPage({
   return (
     <div>
       <Link
-        href="/client/dashboard"
+        href="/client/requests"
         className="inline-flex items-center gap-1.5 text-sm text-stone-500 transition-colors hover:text-stone-900"
       >
         <ArrowLeft className="h-4 w-4" />
@@ -266,7 +266,7 @@ export default async function NewRequestPage({
               Submit request
             </SubmitButton>
             <Link
-              href="/client/dashboard"
+              href="/client/requests"
               className="mt-3 block text-center text-xs text-stone-500 hover:text-stone-900"
             >
               Cancel

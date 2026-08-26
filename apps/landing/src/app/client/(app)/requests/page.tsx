@@ -90,7 +90,7 @@ export default async function ClientDashboardPage({
           </p>
         </div>
         <Link
-          href="/client/dashboard/new"
+          href="/client/requests/new"
           className="inline-flex items-center gap-2 rounded-full bg-stone-900 px-5 py-2.5 text-sm font-medium text-white shadow-sm transition-all hover:bg-stone-800"
         >
           <Plus className="h-4 w-4" />
@@ -113,7 +113,7 @@ export default async function ClientDashboardPage({
             Book your first intervention — it takes about two minutes.
           </p>
           <Link
-            href="/client/dashboard/new"
+            href="/client/requests/new"
             className="mt-6 inline-flex items-center gap-2 rounded-full bg-stone-900 px-5 py-2.5 text-sm font-medium text-white transition-all hover:bg-stone-800"
           >
             Book first intervention
@@ -138,7 +138,7 @@ export default async function ClientDashboardPage({
               {requests.map((r) => (
                 <ClickableRow
                   key={r.id}
-                  href={`/client/dashboard/${r.id}`}
+                  href={`/client/requests/${r.id}`}
                   className="text-sm"
                 >
                   <td className="px-5 py-4">

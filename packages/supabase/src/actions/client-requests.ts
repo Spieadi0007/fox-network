@@ -234,7 +234,7 @@ export async function submitClientRequest(formData: FormData) {
     !serviceType ||
     !slaTier;
   if (missing) {
-    redirect("/client/dashboard/new?error=Please+fill+all+required+fields");
+    redirect("/client/requests/new?error=Please+fill+all+required+fields");
   }
 
   const priority: Priority = PRIORITY_BY_TIER[slaTier] ?? "medium";
@@ -258,7 +258,7 @@ export async function submitClientRequest(formData: FormData) {
     .single();
   if (locError) {
     redirect(
-      `/client/dashboard/new?error=${encodeURIComponent(locError.message)}`,
+      `/client/requests/new?error=${encodeURIComponent(locError.message)}`,
     );
   }
 
@@ -279,7 +279,7 @@ export async function submitClientRequest(formData: FormData) {
     .single();
   if (projError) {
     redirect(
-      `/client/dashboard/new?error=${encodeURIComponent(projError.message)}`,
+      `/client/requests/new?error=${encodeURIComponent(projError.message)}`,
     );
   }
 
@@ -328,7 +328,7 @@ export async function submitClientRequest(formData: FormData) {
       .eq("id", createdAction.id);
   }
 
-  redirect("/client/dashboard?success=Request+submitted");
+  redirect("/client/requests?success=Request+submitted");
 }
 
 /**
@@ -346,7 +346,7 @@ export async function updateClientRequest(formData: FormData) {
   const db = supabase as any;
 
   const requestId = pick(formData, "request_id");
-  if (!requestId) redirect("/client/dashboard");
+  if (!requestId) redirect("/client/requests");
 
   const { data: profile } = await db
     .from("profiles")
@@ -366,11 +366,11 @@ export async function updateClientRequest(formData: FormData) {
 
   // Must be the client's own request and still awaiting approval.
   if (!action || action.organization_id !== orgId) {
-    redirect("/client/dashboard");
+    redirect("/client/requests");
   }
   if (action.approval_status !== "pending") {
     redirect(
-      `/client/dashboard/${requestId}?error=This+request+can+no+longer+be+edited`,
+      `/client/requests/${requestId}?error=This+request+can+no+longer+be+edited`,
     );
   }
 
@@ -402,7 +402,7 @@ export async function updateClientRequest(formData: FormData) {
     !slaTier;
   if (missing) {
     redirect(
-      `/client/dashboard/${requestId}?error=Please+fill+all+required+fields`,
+      `/client/requests/${requestId}?error=Please+fill+all+required+fields`,
     );
   }
 
@@ -441,5 +441,5 @@ export async function updateClientRequest(formData: FormData) {
     })
     .eq("id", requestId);
 
-  redirect(`/client/dashboard/${requestId}?success=Request+updated`);
+  redirect(`/client/requests/${requestId}?success=Request+updated`);
 }
