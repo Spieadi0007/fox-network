@@ -25,7 +25,8 @@
     "./actions/sop-imports": "./src/actions/sop-imports.ts",
     "./actions/procedures": "./src/actions/procedures.ts",
     "./actions/procedure-entries": "./src/actions/procedure-entries.ts",
-    "./actions/parts": "./src/actions/parts.ts"
+    "./actions/parts": "./src/actions/parts.ts",
+    "./actions/service-types": "./src/actions/service-types.ts"
   },
   "dependencies": {
     "@supabase/ssr": "^0.6.1",
