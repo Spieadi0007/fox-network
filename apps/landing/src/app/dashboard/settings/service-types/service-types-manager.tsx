@@ -200,6 +200,44 @@ export function ServiceTypesManager({
     });
   }
 
+  /**
+   * Add a step by hand. `after` is the index it follows, so -1 puts it first.
+   * Marked as added manually rather than left with an empty evidence line —
+   * a reviewer should be able to tell what came from the SOP and what did not.
+   */
+  function insertAnalysisStep(si: number, after: number) {
+    setAnalysis((a) => {
+      if (!a) return a;
+      const blank = {
+        label: "",
+        type: "pass_fail",
+        required: true,
+        units: "",
+        help: "",
+        evidence: "Added manually.",
+        captures_parts: false,
+        suggested_parts: [],
+        spec_target: null,
+        spec_min: null,
+        spec_max: null,
+        applies_when: "",
+      };
+      return {
+        ...a,
+        procedure: {
+          ...a.procedure,
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          sections: a.procedure.sections.map((sec: any, i: number) => {
+            if (i !== si) return sec;
+            const steps = [...sec.steps];
+            steps.splice(after + 1, 0, blank);
+            return { ...sec, steps };
+          }),
+        },
+      };
+    });
+  }
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   function patchAnalysisStep(si: number, ti: number, patch: any) {
     setAnalysis((a) =>
@@ -229,6 +267,18 @@ export function ServiceTypesManager({
   function handlePublish() {
     if (!analysis) return;
     setError(null);
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const blank = analysis.procedure.sections.flatMap((sec: any) =>
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      sec.steps.filter((st: any) => !st.label?.trim()),
+    );
+    if (blank.length > 0) {
+      setError(
+        `${blank.length} step${blank.length === 1 ? " has" : "s have"} no wording yet. Fill ${blank.length === 1 ? "it" : "them"} in on the Procedure tab, or delete ${blank.length === 1 ? "it" : "them"}.`,
+      );
+      return;
+    }
     startTransition(async () => {
       const { data, error: err } = await publishServiceType({
         code: analysis.target_code,
@@ -484,6 +534,7 @@ export function ServiceTypesManager({
           onToggleModule={toggleAnalysisModule}
           onRemoveStep={removeAnalysisStep}
           onPatchStep={patchAnalysisStep}
+          onInsertStep={insertAnalysisStep}
         />
       )}
 
@@ -702,6 +753,7 @@ function ImportReview({
   onToggleModule,
   onRemoveStep,
   onPatchStep,
+  onInsertStep,
 }: {
   analysis: Analysis;
   isNewType: boolean;
@@ -716,6 +768,7 @@ function ImportReview({
   onRemoveStep: (si: number, ti: number) => void;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onPatchStep: (si: number, ti: number, patch: any) => void;
+  onInsertStep: (si: number, after: number) => void;
 }) {
   const [tab, setTab] = useState<Tab>("fields");
 
@@ -853,12 +906,17 @@ function ImportReview({
                     {section.steps.length}
                   </span>
                 </p>
-                <div className="space-y-1.5">
+                <div>
+                  <InsertHere onClick={() => onInsertStep(si, -1)} />
                   {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                   {section.steps.map((step: any, ti: number) => (
+                    <div key={ti}>
                     <div
-                      key={ti}
-                      className="rounded-lg border border-stone-200 px-2.5 py-2"
+                      className={`rounded-lg border px-2.5 py-2 ${
+                        step.evidence === "Added manually."
+                          ? "border-dashed border-blue-300 bg-blue-50/30"
+                          : "border-stone-200"
+                      }`}
                     >
                       <div className="flex items-start gap-2">
                         <input
@@ -866,13 +924,49 @@ function ImportReview({
                           onChange={(e) =>
                             onPatchStep(si, ti, { label: e.target.value })
                           }
-                          className="min-w-0 flex-1 rounded border border-transparent px-1.5 py-0.5 text-sm text-stone-800 hover:border-stone-200 focus:border-stone-300 focus:outline-none"
+                          placeholder="What does the technician do?"
+                          className={`min-w-0 flex-1 rounded border px-1.5 py-0.5 text-sm text-stone-800 focus:border-stone-300 focus:outline-none ${
+                            step.label?.trim()
+                              ? "border-transparent hover:border-stone-200"
+                              : "border-blue-300 bg-white"
+                          }`}
                         />
-                        <span
-                          className={`flex-shrink-0 rounded px-1.5 py-0.5 text-[10px] font-medium ${STEP_TYPE_STYLE[step.type as keyof typeof STEP_TYPE_STYLE] ?? "bg-stone-100 text-stone-600"}`}
+                        <select
+                          value={step.type}
+                          onChange={(e) => {
+                            const type = e.target.value;
+                            onPatchStep(si, ti, {
+                              type,
+                              ...(type === "number"
+                                ? {}
+                                : {
+                                    units: "",
+                                    spec_target: null,
+                                    spec_min: null,
+                                    spec_max: null,
+                                  }),
+                            });
+                          }}
+                          aria-label="Step type"
+                          className={`flex-shrink-0 cursor-pointer rounded px-1.5 py-0.5 text-[11px] font-medium ${STEP_TYPE_STYLE[step.type as keyof typeof STEP_TYPE_STYLE] ?? "bg-stone-100 text-stone-600"}`}
                         >
-                          {step.type.replace("_", "/")}
-                        </span>
+                          {STEP_TYPES.map((t) => (
+                            <option key={t.value} value={t.value}>
+                              {t.label}
+                            </option>
+                          ))}
+                        </select>
+                        {step.type === "number" && (
+                          <input
+                            value={step.units ?? ""}
+                            onChange={(e) =>
+                              onPatchStep(si, ti, { units: e.target.value })
+                            }
+                            placeholder="unit"
+                            aria-label="Unit"
+                            className="w-14 flex-shrink-0 rounded border border-stone-200 px-1.5 py-0.5 text-[11px] text-stone-600 focus:outline-none"
+                          />
+                        )}
                         <label className="flex flex-shrink-0 cursor-pointer items-center gap-1 text-[11px] text-stone-400">
                           <input
                             type="checkbox"
@@ -934,6 +1028,8 @@ function ImportReview({
                           {step.evidence}
                         </p>
                       )}
+                    </div>
+                    <InsertHere onClick={() => onInsertStep(si, ti)} />
                     </div>
                   ))}
                 </div>
@@ -1021,5 +1117,38 @@ function Row({
         </span>
       </span>
     </label>
+  );
+}
+
+/** The five things a step can ask a technician to do. */
+const STEP_TYPES = [
+  { value: "pass_fail", label: "pass/fail" },
+  { value: "photo", label: "photo" },
+  { value: "text", label: "text" },
+  { value: "number", label: "number" },
+  { value: "signature", label: "signature" },
+] as const;
+
+/**
+ * A thin, mostly invisible band between steps. An SOP never covers
+ * everything a particular client expects, so a manager needs to add a step
+ * exactly where it belongs rather than at the end.
+ */
+function InsertHere({ onClick }: { onClick: () => void }) {
+  return (
+    <div className="group relative h-2">
+      <button
+        onClick={onClick}
+        aria-label="Add a step here"
+        className="absolute inset-x-0 top-1/2 flex -translate-y-1/2 items-center gap-2 opacity-0 transition-opacity focus:opacity-100 group-hover:opacity-100"
+      >
+        <span className="h-px flex-1 bg-blue-300" />
+        <span className="flex items-center gap-1 rounded-full border border-blue-300 bg-white px-2 py-0.5 text-[10px] font-medium text-blue-600">
+          <Plus className="h-2.5 w-2.5" />
+          Add step
+        </span>
+        <span className="h-px flex-1 bg-blue-300" />
+      </button>
+    </div>
   );
 }
