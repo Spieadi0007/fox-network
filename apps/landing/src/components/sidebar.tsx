@@ -14,6 +14,7 @@ import {
   Inbox,
   ChevronRight,
 } from "lucide-react";
+import { SubmitButton } from "@/components/ui/submit-button";
 
 const navItems = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -96,12 +97,11 @@ export function Sidebar({
             {user.role}
           </span>
           <form action={signOut}>
-            <button
-              type="submit"
+            <SubmitButton
               className="cursor-pointer text-xs text-stone-500 hover:text-stone-700"
             >
               Sign out
-            </button>
+            </SubmitButton>
           </form>
         </div>
       </div>

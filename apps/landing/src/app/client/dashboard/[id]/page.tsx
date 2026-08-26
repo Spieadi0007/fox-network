@@ -3,6 +3,7 @@ import { redirect, notFound } from "next/navigation";
 import { createServerClient } from "@fox/supabase/client/server";
 import { updateClientRequest } from "@fox/supabase/actions/client-requests";
 import { ArrowLeft } from "lucide-react";
+import { SubmitButton } from "@/components/ui/submit-button";
 
 const SERVICE_OPTIONS = [
   { value: "maintenance", label: "Maintenance" },
@@ -333,12 +334,12 @@ export default async function ClientRequestDetail({
           </section>
 
           <div className="flex items-center gap-3">
-            <button
-              type="submit"
+            <SubmitButton
+              pendingLabel="Saving…"
               className="cursor-pointer rounded-full bg-stone-900 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-stone-800"
             >
               Save changes
-            </button>
+            </SubmitButton>
             <Link
               href="/client/dashboard"
               className="text-sm text-stone-500 hover:text-stone-900"

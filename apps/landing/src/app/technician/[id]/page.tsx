@@ -18,6 +18,7 @@ import {
   type RunnerStep,
   type CatalogPart,
 } from "./procedure-runner";
+import { SubmitButton } from "@/components/ui/submit-button";
 
 const GROUP_ICON = {
   location: MapPin,
@@ -370,12 +371,12 @@ export default async function WorkOrderDetail({
           />
         </div>
 
-        <button
-          type="submit"
+        <SubmitButton
+          pendingLabel="Submitting…"
           className="w-full cursor-pointer rounded-full bg-stone-900 px-5 py-3 text-sm font-medium text-white transition-colors hover:bg-stone-800"
         >
           Submit visit
-        </button>
+        </SubmitButton>
       </form>
       )}
     </div>

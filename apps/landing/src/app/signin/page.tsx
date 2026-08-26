@@ -5,6 +5,7 @@ import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
 import { GridBackground } from "@/components/marketing/grid-background";
 import { signInWithEmail, signInWithOAuth } from "@fox/supabase/auth/actions";
+import { SubmitButton } from "@/components/ui/submit-button";
 
 function GoogleIcon({ className }: { className?: string }) {
   return (
@@ -85,12 +86,12 @@ function SignInForm() {
               placeholder="••••••••"
             />
           </div>
-          <button
-            type="submit"
+          <SubmitButton
+  pendingLabel="Signing in…"
             className="w-full cursor-pointer rounded-full bg-stone-900 px-5 py-3 text-sm font-medium text-white transition-colors hover:bg-stone-800"
           >
             Sign in
-          </button>
+          </SubmitButton>
         </form>
 
         <div className="relative mt-6">
@@ -104,13 +105,12 @@ function SignInForm() {
 
         <div className="mt-6 space-y-3">
           <form action={() => signInWithOAuth("google")}>
-            <button
-              type="submit"
+            <SubmitButton
               className="flex w-full cursor-pointer items-center justify-center gap-3 rounded-full border border-stone-200/80 bg-white px-5 py-3 text-sm font-medium text-stone-700 shadow-sm shadow-stone-200/20 transition-all duration-200 hover:border-stone-300 hover:bg-stone-50"
             >
               <GoogleIcon className="h-5 w-5" />
               Continue with Google
-            </button>
+            </SubmitButton>
           </form>
 
           <button

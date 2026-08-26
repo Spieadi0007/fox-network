@@ -2,6 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createServerClient } from "@fox/supabase/client/server";
 import { signOut } from "@fox/supabase/auth/actions";
+import { SubmitButton } from "@/components/ui/submit-button";
 
 export default async function ClientDashboardLayout({
   children,
@@ -47,12 +48,11 @@ export default async function ClientDashboardLayout({
               <p className="text-[11px] text-stone-400">{user.email}</p>
             </div>
             <form action={signOut}>
-              <button
-                type="submit"
+              <SubmitButton
                 className="rounded-full border border-stone-200 bg-white px-4 py-1.5 text-xs font-medium text-stone-600 transition-all hover:border-stone-300 hover:bg-stone-50"
               >
                 Sign out
-              </button>
+              </SubmitButton>
             </form>
           </div>
         </div>
