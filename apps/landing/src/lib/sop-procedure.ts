@@ -1,4 +1,5 @@
 import Anthropic from "@anthropic-ai/sdk";
+import { describeApiError } from "./anthropic-errors";
 
 // Turn an SOP's written procedure into the form a technician actually fills
 // in on site — ordered sections, each holding typed steps.
@@ -65,7 +66,14 @@ export type ProcedureSection = {
 };
 
 export type SopProcedure = {
+  /** The procedure's own name, which may carry the document's reference. */
   name: string;
+  /**
+   * What to call the *kind of job* this SOP describes. A service type is a
+   * button a manager picks and a badge a technician reads, so it wants a
+   * short job name rather than the document's title.
+   */
+  service_type_name: string;
   summary: string;
   sections: ProcedureSection[];
 };
@@ -179,6 +187,11 @@ const PROCEDURE_SCHEMA = {
       description:
         "Short name for the procedure, taken from the SOP's title or document code.",
     },
+    service_type_name: {
+      type: "string",
+      description:
+        "Two to four words naming the kind of job, in title case: what a dispatcher would say they are sending someone to do. Never a document code, revision, or the word SOP.",
+    },
     summary: {
       type: "string",
       description: "One sentence on what this procedure covers.",
@@ -202,7 +215,7 @@ const PROCEDURE_SCHEMA = {
       },
     },
   },
-  required: ["name", "summary", "sections"],
+  required: ["name", "service_type_name", "summary", "sections"],
   additionalProperties: false,
 } as const;
 
@@ -212,7 +225,9 @@ const PROMPT = `You are turning a Standard Operating Procedure into the form a f
 
 Read the attached SOP and produce the sequence of things the technician must actually do and record. When they finish filling this in, the completed form becomes the service report — so every action the SOP requires evidence of needs a step, and nothing else does.
 
-Work through the document in order and keep its own structure: if it has numbered sections, keep those as sections, in that order.
+First, name the kind of job. \`name\` is the procedure's own title and may keep the document's reference. \`service_type_name\` is different: it is what a dispatcher would say they are sending a technician to do, and it becomes a button in the app and a badge on a work order. Two to four words, title case, no document code, no revision, never the word SOP. "VLT-SOP-REP-0418 - HMI Display Assembly Replacement" is a document; "HMI Display Replacement" is the job. "Retrofit SOP - FSC" is a document; "Locker Retrofit" is the job.
+
+Then work through the document in order and keep its own structure: if it has numbered sections, keep those as sections, in that order.
 
 Choosing a step type:
 - \`pass_fail\` — an acceptance criterion, verification, or check that either holds or does not.
@@ -313,6 +328,10 @@ export function normaliseProcedure(raw: Partial<SopProcedure>): SopProcedure {
 
   return {
     name: raw.name?.trim() || "Procedure",
+    // Fall back to the procedure's own name rather than something invented;
+    // a manager can edit it before publishing either way.
+    service_type_name:
+      raw.service_type_name?.trim() || raw.name?.trim() || "New service type",
     summary: raw.summary?.trim() || "",
     sections,
   };
@@ -356,7 +375,14 @@ export async function extractSopProcedure(
     ],
   });
 
-  const message = await stream.finalMessage();
+  let message;
+  try {
+    message = await stream.finalMessage();
+  } catch (e) {
+    const known = describeApiError(e);
+    if (known) throw new ProcedureExtractionError(known.message, known.status);
+    throw e;
+  }
 
   if (message.stop_reason === "refusal") {
     throw new ProcedureExtractionError(
