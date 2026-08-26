@@ -4,7 +4,11 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
 import { GridBackground } from "@/components/marketing/grid-background";
-import { signInWithEmail, signInWithOAuth } from "@fox/supabase/auth/actions";
+import {
+  signInWithEmail,
+  signInWithOAuth,
+  signOut,
+} from "@fox/supabase/auth/actions";
 import { SubmitButton } from "@/components/ui/submit-button";
 
 function GoogleIcon({ className }: { className?: string }) {
@@ -32,6 +36,7 @@ function MicrosoftIcon({ className }: { className?: string }) {
 function SignInForm() {
   const searchParams = useSearchParams();
   const error = searchParams.get("error");
+  const incomplete = searchParams.get("incomplete");
 
   return (
     <div className="relative z-10 w-full max-w-md">
@@ -55,6 +60,36 @@ function SignInForm() {
         {error && (
           <div className="mt-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
             {error}
+          </div>
+        )}
+
+        {/* Set by middleware when a signed-in account belongs to no
+            organisation. Without both ways out, signing in again just returns
+            them here — the form alone is a dead end. */}
+        {incomplete && (
+          <div className="mt-4 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+            <p>
+              You&rsquo;re signed in, but your account isn&rsquo;t linked to a
+              company yet.
+            </p>
+            <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1">
+              <Link
+                href="/signup?step=company-2"
+                className="font-medium text-amber-900 underline underline-offset-2"
+              >
+                Finish setting up your company
+              </Link>
+              {/* signOut lands on the home page, so the label says what it
+                  does rather than promising the sign-in form. */}
+              <form action={signOut}>
+                <SubmitButton
+                  pendingLabel="Signing out…"
+                  className="cursor-pointer font-medium text-amber-900 underline underline-offset-2"
+                >
+                  Sign out
+                </SubmitButton>
+              </form>
+            </div>
           </div>
         )}
 
