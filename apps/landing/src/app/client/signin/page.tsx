@@ -5,6 +5,7 @@ import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
 import { GridBackground } from "@/components/marketing/grid-background";
 import { signInClient } from "@fox/supabase/auth/actions";
+import { SubmitButton } from "@/components/ui/submit-button";
 
 function SignInForm() {
   const searchParams = useSearchParams();
@@ -73,12 +74,12 @@ function SignInForm() {
               placeholder="••••••••"
             />
           </div>
-          <button
-            type="submit"
+          <SubmitButton
+  pendingLabel="Signing in…"
             className="w-full cursor-pointer rounded-full bg-stone-900 px-5 py-3 text-sm font-medium text-white transition-colors hover:bg-stone-800"
           >
             Sign in
-          </button>
+          </SubmitButton>
         </form>
       </div>
 

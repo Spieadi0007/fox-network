@@ -49,6 +49,25 @@ export async function middleware(request: NextRequest) {
       .select("role, organization_id, account_type")
       .eq("id", user.id)
       .single<ProfileShape>();
+
+    // An invitation is normally accepted by handle_new_user when the account
+    // is created. Someone invited *after* they signed up never hits that
+    // trigger, so they arrive here with no organisation and would be sent to
+    // company signup. Give them their invitation instead.
+    if (data && !data.organization_id) {
+      const { data: orgId } = await client.supabase.rpc(
+        "claim_pending_invitation",
+      );
+      if (orgId) {
+        const { data: linked } = await client.supabase
+          .from("profiles")
+          .select("role, organization_id, account_type")
+          .eq("id", user.id)
+          .single<ProfileShape>();
+        return linked ?? data;
+      }
+    }
+
     return data;
   }
 

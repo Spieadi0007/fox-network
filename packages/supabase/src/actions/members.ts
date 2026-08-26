@@ -48,6 +48,18 @@ export async function inviteMember(
     return { data: null, error: { message: "This person is already a member of your organization." } };
   }
 
+  // Someone who already has an account never passes through
+  // handle_new_user() again, so an invitation alone would sit pending for
+  // ever. If they exist and belong to no organisation, link them now.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data: unlinked } = await (supabase as any)
+    .from("profiles")
+    .select("id")
+    .ilike("email", email)
+    .is("organization_id", null)
+    .limit(1)
+    .maybeSingle();
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { data, error } = await (supabase as any)
     .from("invitations")
@@ -61,11 +73,29 @@ export async function inviteMember(
     .select()
     .single();
 
-  if (!error) {
-    revalidatePath("/members");
+  if (error) return { data, error };
+
+  if (unlinked?.id) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const db = supabase as any;
+    const { error: linkError } = await db
+      .from("profiles")
+      .update({ organization_id: orgId, role })
+      .eq("id", unlinked.id);
+
+    // A failure here is not fatal: the invitation stands, and the person
+    // will claim it on their next request via claim_pending_invitation().
+    if (!linkError) {
+      await db
+        .from("invitations")
+        .update({ status: "accepted" })
+        .eq("id", data.id);
+      data.status = "accepted";
+    }
   }
 
-  return { data, error };
+  revalidatePath("/members");
+  return { data, error: null };
 }
 
 export async function updateMemberRole(

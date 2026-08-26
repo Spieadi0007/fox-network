@@ -3,6 +3,7 @@ import { Suspense } from "react";
 import { GridBackground } from "@/components/marketing/grid-background";
 import { submitQuote } from "@fox/supabase/auth/actions";
 import { CheckCircle2, ArrowLeft } from "lucide-react";
+import { SubmitButton } from "@/components/ui/submit-button";
 
 const labelCls = "block text-sm font-medium text-stone-700";
 const inputCls =
@@ -112,12 +113,12 @@ async function QuoteInner({
           />
         </div>
 
-        <button
-          type="submit"
+        <SubmitButton
+          pendingLabel="Sending…"
           className="w-full cursor-pointer rounded-full bg-stone-900 px-5 py-3 text-sm font-medium text-white transition-colors hover:bg-stone-800"
         >
           Request quote
-        </button>
+        </SubmitButton>
       </form>
     </div>
   );

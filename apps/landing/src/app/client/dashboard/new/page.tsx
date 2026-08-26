@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { submitClientRequest } from "@fox/supabase/actions/client-requests";
+import { SubmitButton } from "@/components/ui/submit-button";
 
 const SERVICE_OPTIONS = [
   { value: "maintenance", label: "Maintenance" },
@@ -258,12 +259,12 @@ export default async function NewRequestPage({
               update you on the dashboard. Your dedicated maintenance manager
               is copied on every request.
             </p>
-            <button
-              type="submit"
+            <SubmitButton
+              pendingLabel="Submitting…"
               className="mt-5 w-full cursor-pointer rounded-full bg-stone-900 px-5 py-3 text-sm font-medium text-white transition-colors hover:bg-stone-800"
             >
               Submit request
-            </button>
+            </SubmitButton>
             <Link
               href="/client/dashboard"
               className="mt-3 block text-center text-xs text-stone-500 hover:text-stone-900"

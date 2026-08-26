@@ -6,6 +6,7 @@ import {
   rejectRequest,
 } from "@fox/supabase/actions/client-requests";
 import { Inbox, Check, X } from "lucide-react";
+import { SubmitButton } from "@/components/ui/submit-button";
 
 type RequestRow = {
   id: string;
@@ -154,23 +155,23 @@ export default async function RequestsPage({
                       <div className="flex items-center justify-end gap-2">
                         <form action={approveRequest}>
                           <input type="hidden" name="request_id" value={r.id} />
-                          <button
-                            type="submit"
+                          <SubmitButton
+                            pendingLabel="Approving…"
                             className="inline-flex items-center gap-1 rounded-full bg-emerald-600 px-3 py-1.5 text-[11px] font-medium text-white transition-colors hover:bg-emerald-700"
                           >
                             <Check className="h-3 w-3" />
                             Approve
-                          </button>
+                          </SubmitButton>
                         </form>
                         <form action={rejectRequest}>
                           <input type="hidden" name="request_id" value={r.id} />
-                          <button
-                            type="submit"
+                          <SubmitButton
+                            pendingLabel="Rejecting…"
                             className="inline-flex items-center gap-1 rounded-full border border-stone-200 bg-white px-3 py-1.5 text-[11px] font-medium text-stone-600 transition-colors hover:border-red-200 hover:bg-red-50 hover:text-red-700"
                           >
                             <X className="h-3 w-3" />
                             Reject
-                          </button>
+                          </SubmitButton>
                         </form>
                       </div>
                     ) : (

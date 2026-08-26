@@ -2,6 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createServerClient } from "@fox/supabase/client/server";
 import { signOut } from "@fox/supabase/auth/actions";
+import { SubmitButton } from "@/components/ui/submit-button";
 
 export default async function TechnicianLayout({
   children,
@@ -38,12 +39,11 @@ export default async function TechnicianLayout({
               </span>
             </Link>
             <form action={signOut}>
-              <button
-                type="submit"
+              <SubmitButton
                 className="text-xs font-medium text-stone-400 transition-colors hover:text-stone-700"
               >
                 Sign out
-              </button>
+              </SubmitButton>
             </form>
           </div>
         </header>

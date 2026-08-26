@@ -11,6 +11,7 @@ import {
   signInWithOAuthCompany,
   completeCompanySetup,
 } from "@fox/supabase/auth/actions";
+import { SubmitButton } from "@/components/ui/submit-button";
 
 type Step = "select" | "company-1" | "company-2" | "partner" | "partner-success";
 
@@ -222,12 +223,11 @@ function CompanyStep1({
               placeholder="••••••••"
             />
           </div>
-          <button
-            type="submit"
+          <SubmitButton
             className="w-full cursor-pointer rounded-full bg-stone-900 px-5 py-3 text-sm font-medium text-white transition-colors hover:bg-stone-800"
           >
             Continue
-          </button>
+          </SubmitButton>
         </form>
 
         <div className="relative mt-6">
@@ -241,13 +241,12 @@ function CompanyStep1({
 
         <div className="mt-6">
           <form action={() => signInWithOAuthCompany("google")}>
-            <button
-              type="submit"
+            <SubmitButton
               className="flex w-full cursor-pointer items-center justify-center gap-3 rounded-full border border-stone-200/80 bg-white px-5 py-3 text-sm font-medium text-stone-700 shadow-sm shadow-stone-200/20 transition-all duration-200 hover:border-stone-300 hover:bg-stone-50"
             >
               <GoogleIcon className="h-5 w-5" />
               Continue with Google
-            </button>
+            </SubmitButton>
           </form>
         </div>
       </div>
@@ -518,12 +517,12 @@ function CompanyStep2({
               />
             </div>
 
-            <button
-              type="submit"
+            <SubmitButton
+  pendingLabel="Setting up…"
               className="w-full cursor-pointer rounded-full bg-stone-900 px-5 py-3 text-sm font-medium text-white transition-colors hover:bg-stone-800"
             >
               Complete setup
-            </button>
+            </SubmitButton>
           </form>
         )}
       </div>
@@ -618,12 +617,12 @@ function PartnerForm({
               placeholder="e.g. HVAC, Electrical, Plumbing"
             />
           </div>
-          <button
-            type="submit"
+          <SubmitButton
+  pendingLabel="Submitting…"
             className="w-full cursor-pointer rounded-full bg-stone-900 px-5 py-3 text-sm font-medium text-white transition-colors hover:bg-stone-800"
           >
             Submit application
-          </button>
+          </SubmitButton>
         </form>
       </div>
 
