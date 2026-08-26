@@ -17,6 +17,14 @@ import {
   ToggleRight,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import type { ConfigurableFieldOption, FieldAppConfig } from "@fox/supabase";
 import {
   createServiceType,
@@ -81,6 +89,11 @@ export function ServiceTypesManager({
   const [importTarget, setImportTarget] = useState<string | null>(null);
   const [newTypeName, setNewTypeName] = useState("");
   const fileInput = useRef<HTMLInputElement>(null);
+
+  // Naming a type by hand, and confirming a re-import that overwrites one.
+  const [namingOpen, setNamingOpen] = useState(false);
+  const [nameDraft, setNameDraft] = useState("");
+  const [reimportOpen, setReimportOpen] = useState(false);
 
   const active = types.find((t) => t.code === activeCode);
   const config = configs.find((c) => c.action_type_code === activeCode);
@@ -172,9 +185,10 @@ export function ServiceTypesManager({
   // ── Type actions ───────────────────────────────────────────────────
 
   function handleCreateEmpty() {
-    setMenuOpen(false);
-    const name = window.prompt("Name for the new service type");
-    if (!name?.trim()) return;
+    const name = nameDraft.trim();
+    if (!name) return;
+    setNamingOpen(false);
+    setNameDraft("");
     startTransition(async () => {
       const { data, error: err } = await createServiceType(name);
       if (err) return setError(err.message ?? "Could not create the type.");
@@ -298,21 +312,11 @@ export function ServiceTypesManager({
                   </span>
                 </button>
                 <button
-                  onClick={() => startImport(activeCode)}
-                  className="flex w-full items-start gap-2.5 border-t border-stone-100 px-3 py-2.5 text-left transition-colors hover:bg-stone-50"
-                >
-                  <FileUp className="mt-0.5 h-4 w-4 flex-shrink-0 text-stone-400" />
-                  <span>
-                    <span className="block text-sm font-medium text-stone-800">
-                      Import into {active?.label ?? "this type"}
-                    </span>
-                    <span className="block text-xs text-stone-400">
-                      Replaces its configuration and procedure
-                    </span>
-                  </span>
-                </button>
-                <button
-                  onClick={handleCreateEmpty}
+                  onClick={() => {
+                    setMenuOpen(false);
+                    setNameDraft("");
+                    setNamingOpen(true);
+                  }}
                   className="flex w-full items-start gap-2.5 border-t border-stone-100 px-3 py-2.5 text-left transition-colors hover:bg-stone-50"
                 >
                   <Plus className="mt-0.5 h-4 w-4 flex-shrink-0 text-stone-400" />
@@ -407,6 +411,15 @@ export function ServiceTypesManager({
                 </button>
               ))}
             </div>
+            <button
+              onClick={() => setReimportOpen(true)}
+              disabled={pending || busy}
+              className="flex items-center gap-1 text-xs text-stone-400 hover:text-stone-700 disabled:opacity-50"
+              title="Replace this type's configuration and procedure from a new SOP"
+            >
+              <FileUp className="h-3.5 w-3.5" />
+              Re-import from SOP
+            </button>
             {!active.is_built_in && (
               <button
                 onClick={() => toggleActive(active.code, false)}
@@ -439,6 +452,87 @@ export function ServiceTypesManager({
           </div>
         </>
       )}
+
+      {/* Name a new type */}
+      <Dialog open={namingOpen} onOpenChange={setNamingOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>New service type</DialogTitle>
+            <DialogDescription>
+              A kind of job your technicians do. You can configure its fields,
+              modules and procedure afterwards, or import an SOP to fill them.
+            </DialogDescription>
+          </DialogHeader>
+          <div>
+            <label htmlFor="new-type-name" className="text-xs text-stone-500">
+              Name
+            </label>
+            <input
+              id="new-type-name"
+              autoFocus
+              value={nameDraft}
+              onChange={(e) => setNameDraft(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && nameDraft.trim()) handleCreateEmpty();
+              }}
+              placeholder="Panel replacement"
+              className="mt-1 w-full rounded-lg border border-stone-200 px-3 py-2 text-sm focus:border-stone-400 focus:outline-none"
+            />
+          </div>
+          <DialogFooter>
+            <Button variant="ghost" onClick={() => setNamingOpen(false)}>
+              Cancel
+            </Button>
+            <Button onClick={handleCreateEmpty} disabled={!nameDraft.trim()}>
+              Create
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Confirm a re-import, which overwrites work that may have been
+          hand-tuned since the last import. */}
+      <Dialog open={reimportOpen} onOpenChange={setReimportOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Re-import {active?.label} from an SOP</DialogTitle>
+            <DialogDescription>
+              Reads a new SOP and replaces what {active?.label} currently holds.
+            </DialogDescription>
+          </DialogHeader>
+          <ul className="space-y-1.5 text-sm text-stone-600">
+            <li className="flex gap-2">
+              <span className="text-stone-300">•</span>
+              Its fields and modules are <strong>overwritten</strong>, including
+              any you have adjusted by hand.
+            </li>
+            <li className="flex gap-2">
+              <span className="text-stone-300">•</span>
+              A new procedure version is published. The current one is retired
+              but kept, so visits already recorded against it still read back
+              correctly.
+            </li>
+            <li className="flex gap-2">
+              <span className="text-stone-300">•</span>
+              You review everything before it is published.
+            </li>
+          </ul>
+          <DialogFooter>
+            <Button variant="ghost" onClick={() => setReimportOpen(false)}>
+              Cancel
+            </Button>
+            <Button
+              onClick={() => {
+                setReimportOpen(false);
+                startImport(activeCode);
+              }}
+            >
+              <FileUp className="mr-2 h-4 w-4" />
+              Choose SOP
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       {/* Retired */}
       {retired.length > 0 && !analysis && (
