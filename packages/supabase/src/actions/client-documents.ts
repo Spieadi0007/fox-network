@@ -75,7 +75,7 @@ export async function uploadClientDocument(formData: FormData) {
   const description = ((formData.get("description") as string) || "").trim();
 
   const fail = (message: string) =>
-    redirect(`/client/library?error=${encodeURIComponent(message)}`);
+    redirect(`/client/library/sops?error=${encodeURIComponent(message)}`);
 
   if (!file || file.size === 0) fail("Choose a file to upload.");
 
@@ -121,8 +121,8 @@ export async function uploadClientDocument(formData: FormData) {
     fail(`Could not save the document: ${insertError.message}`);
   }
 
-  revalidatePath("/client/library");
-  redirect("/client/library?success=Document+uploaded");
+  revalidatePath("/client/library/sops");
+  redirect("/client/library/sops?success=Document+uploaded");
 }
 
 export async function downloadClientDocument(formData: FormData) {
@@ -136,7 +136,7 @@ export async function downloadClientDocument(formData: FormData) {
     .eq("organization_id", orgId)
     .maybeSingle();
 
-  if (!doc) redirect("/client/library?error=That+document+no+longer+exists");
+  if (!doc) redirect("/client/library/sops?error=That+document+no+longer+exists");
 
   // The bucket is private, so the file is reached through a short-lived signed
   // URL rather than a public path.
@@ -146,7 +146,7 @@ export async function downloadClientDocument(formData: FormData) {
 
   if (error || !signed?.signedUrl) {
     redirect(
-      `/client/library?error=${encodeURIComponent(error?.message ?? "Could not open that document")}`
+      `/client/library/sops?error=${encodeURIComponent(error?.message ?? "Could not open that document")}`
     );
   }
 
@@ -164,7 +164,7 @@ export async function deleteClientDocument(formData: FormData) {
     .eq("organization_id", orgId)
     .maybeSingle();
 
-  if (!doc) redirect("/client/library?error=That+document+no+longer+exists");
+  if (!doc) redirect("/client/library/sops?error=That+document+no+longer+exists");
 
   const { error } = await db
     .from("client_documents")
@@ -173,15 +173,15 @@ export async function deleteClientDocument(formData: FormData) {
     .eq("organization_id", orgId);
 
   if (error) {
-    redirect(`/client/library?error=${encodeURIComponent(error.message)}`);
+    redirect(`/client/library/sops?error=${encodeURIComponent(error.message)}`);
   }
 
   // The row is the catalogue; a leftover object is invisible but still costs
   // storage, so it goes too. A failure here is not worth blocking on.
   await db.storage.from(BUCKET).remove([doc.storage_path]);
 
-  revalidatePath("/client/library");
-  redirect("/client/library?success=Document+deleted");
+  revalidatePath("/client/library/sops");
+  redirect("/client/library/sops?success=Document+deleted");
 }
 
 function formatSize(bytes: number): string {

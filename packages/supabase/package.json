@@ -26,7 +26,9 @@
     "./actions/procedure-entries": "./src/actions/procedure-entries.ts",
     "./actions/parts": "./src/actions/parts.ts",
     "./actions/service-types": "./src/actions/service-types.ts",
-    "./actions/client-documents": "./src/actions/client-documents.ts"
+    "./actions/client-documents": "./src/actions/client-documents.ts",
+    "./actions/client-spare-parts": "./src/actions/client-spare-parts.ts",
+    "./actions/client-invoices": "./src/actions/client-invoices.ts"
   },
   "dependencies": {
     "@supabase/ssr": "^0.6.1",

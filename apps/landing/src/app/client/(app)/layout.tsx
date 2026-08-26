@@ -1,9 +1,6 @@
-import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createServerClient } from "@fox/supabase/client/server";
-import { signOut } from "@fox/supabase/auth/actions";
-import { SubmitButton } from "@/components/ui/submit-button";
-import { ClientNav } from "./client-nav";
+import { ClientSidebar } from "./client-sidebar";
 
 export default async function ClientDashboardLayout({
   children,
@@ -30,38 +27,16 @@ export default async function ClientDashboardLayout({
     .select("name")
     .eq("id", profile.organization_id)
     .single();
-  const orgName = (org?.name as string) ?? "Your company";
 
   return (
-    <div className="min-h-screen bg-stone-50">
-      <header className="border-b border-stone-200 bg-white">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4 sm:px-8">
-          <Link href="/client/dashboard" className="flex items-center gap-2">
-            <img src="/fox-logo.png" alt="Fox" className="h-7 w-7" />
-            <span className="font-[family-name:var(--font-heading)] text-[15px] font-bold tracking-[-0.03em] text-stone-900">
-              Fox<span className="text-fox-orange">Network</span>
-            </span>
-          </Link>
-
-          <div className="flex items-center gap-4">
-            <div className="hidden text-right sm:block">
-              <p className="text-xs font-medium text-stone-500">{orgName}</p>
-              <p className="text-[11px] text-stone-400">{user.email}</p>
-            </div>
-            <form action={signOut}>
-              <SubmitButton
-                className="rounded-full border border-stone-200 bg-white px-4 py-1.5 text-xs font-medium text-stone-600 transition-all hover:border-stone-300 hover:bg-stone-50"
-              >
-                Sign out
-              </SubmitButton>
-            </form>
-          </div>
-        </div>
-
-        <ClientNav />
-      </header>
-
-      <main className="mx-auto max-w-6xl px-6 py-10 sm:px-8">{children}</main>
+    <div className="flex min-h-screen bg-stone-50">
+      <ClientSidebar
+        email={user.email ?? ""}
+        orgName={(org?.name as string) ?? "Your company"}
+      />
+      <main className="min-w-0 flex-1 px-6 py-10 sm:px-10">
+        <div className="mx-auto max-w-5xl">{children}</div>
+      </main>
     </div>
   );
 }
