@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { createServerClient } from "@fox/supabase/client/server";
 import { signOut } from "@fox/supabase/auth/actions";
 import { SubmitButton } from "@/components/ui/submit-button";
+import { ClientNav } from "./client-nav";
 
 export default async function ClientDashboardLayout({
   children,
@@ -56,6 +57,8 @@ export default async function ClientDashboardLayout({
             </form>
           </div>
         </div>
+
+        <ClientNav />
       </header>
 
       <main className="mx-auto max-w-6xl px-6 py-10 sm:px-8">{children}</main>

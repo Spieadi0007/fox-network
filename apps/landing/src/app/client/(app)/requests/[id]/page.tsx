@@ -113,7 +113,7 @@ export default async function ClientRequestDetail({
   return (
     <div className="mx-auto max-w-3xl">
       <Link
-        href="/client/dashboard"
+        href="/client/requests"
         className="inline-flex items-center gap-1.5 text-sm text-stone-500 transition-colors hover:text-stone-900"
       >
         <ArrowLeft className="h-4 w-4" />
@@ -341,7 +341,7 @@ export default async function ClientRequestDetail({
               Save changes
             </SubmitButton>
             <Link
-              href="/client/dashboard"
+              href="/client/requests"
               className="text-sm text-stone-500 hover:text-stone-900"
             >
               Cancel
