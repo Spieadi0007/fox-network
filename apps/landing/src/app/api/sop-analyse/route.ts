@@ -190,7 +190,7 @@ export async function POST(request: NextRequest) {
     .insert({
       organization_id: organizationId,
       // Blank until the manager decides which type this becomes.
-      action_type_code: targetCode || slugify(procedure.name),
+      action_type_code: targetCode || slugify(procedure.service_type_name),
       storage_path: storagePath,
       file_name: fileName,
       extracted: { config, procedure },
@@ -208,8 +208,8 @@ export async function POST(request: NextRequest) {
     import_id: row.id,
     file_name: fileName,
     // What this SOP suggests calling the service type, when creating a new one.
-    suggested_name: procedure.name,
-    suggested_code: slugify(procedure.name),
+    suggested_name: procedure.service_type_name,
+    suggested_code: slugify(procedure.service_type_name),
     target_code: targetCode || null,
     config,
     procedure,

@@ -1,4 +1,5 @@
 import Anthropic from "@anthropic-ai/sdk";
+import { describeApiError } from "./anthropic-errors";
 import {
   FIELD_GROUPS,
   FIELD_KEYS,
@@ -205,11 +206,23 @@ export class SopExtractionError extends Error {
   }
 }
 
+/** Re-raise API failures as something the manager can act on. */
+async function callWithClearErrors<T>(fn: () => Promise<T>): Promise<T> {
+  try {
+    return await fn();
+  } catch (e) {
+    const known = describeApiError(e);
+    if (known) throw new SopExtractionError(known.message, known.status);
+    throw e;
+  }
+}
+
 export async function extractSopConfig(
   pdfBase64: string,
   serviceTypeLabel: string,
 ): Promise<SopExtraction> {
-  const message = await anthropic.beta.messages.create({
+  const message = await callWithClearErrors(() =>
+    anthropic.beta.messages.create({
     model: "claude-opus-5",
     // Thinking is on by default on Opus 5 and counts against max_tokens, so
     // this needs headroom well past the ~4k the verdicts themselves take.
@@ -236,7 +249,8 @@ export async function extractSopConfig(
         ],
       },
     ],
-  });
+    }),
+  );
 
   if (message.stop_reason === "refusal") {
     throw new SopExtractionError(
