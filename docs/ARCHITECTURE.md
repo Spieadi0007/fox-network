@@ -1,71 +1,88 @@
 # FOX Network — Architecture Reference
 
-> Complete reference document for the FOX Network codebase. Covers project structure, database schema, auth flows, signup state machine, API integrations, and all key files.
+> Reference for the FOX Network codebase: project structure, database schema,
+> auth flows, the signup state machine, and the key files.
+>
+> **Accurate as of the three-app split (September 2026).** Sections 1, 2 and 4
+> were rewritten then. **Section 3 (Database Schema) is stale** — it documents
+> the first two migrations, and there are now 39. Treat `supabase/migrations/`
+> as the source of truth for schema until that section is rewritten.
 
 ---
 
 ## 1. Project Structure
 
-pnpm monorepo with Turbo build orchestration.
+pnpm monorepo with Turbo build orchestration. **Three apps**, one Supabase
+project, shared packages.
 
 ```
 FOX/
 ├── apps/
-│   ├── landing/              # Marketing + auth site (port 3000)
+│   ├── web/                  # Marketing site, French + English (port 3002)
+│   │   ├── messages/         #   fr.json / en.json — all visitor-facing copy
 │   │   ├── src/
-│   │   │   ├── app/
-│   │   │   │   ├── page.tsx              # Landing page
-│   │   │   │   ├── signin/page.tsx       # Sign in
-│   │   │   │   ├── signup/page.tsx       # Signup state machine (Company/Partner)
-│   │   │   │   ├── pitch/page.tsx        # Pitch deck
-│   │   │   │   ├── auth/callback/route.ts # OAuth callback handler
-│   │   │   │   └── api/
-│   │   │   │       └── company-lookup/route.ts  # AI company enrichment
-│   │   │   ├── components/ui/
-│   │   │   │   └── grid-background.tsx   # Animated canvas grid
-│   │   │   └── middleware.ts             # Auth redirect guard
-│   │   └── package.json
+│   │   │   ├── i18n/         #   routing (incl. translated URLs), request config
+│   │   │   ├── proxy.ts      #   locale negotiation — the app's only proxy
+│   │   │   ├── app/[locale]/ #   /, /quote, /privacy, /terms, /legal-notice
+│   │   │   ├── components/   #   navbar, footer, sections
+│   │   │   └── lib/          #   site config, metadata/hreflang helper
+│   │   └── package.json      #   @fox/web — no auth, no server actions
 │   │
-│   └── platform/             # Protected dashboard app (port 3001)
-│       ├── src/
-│       │   ├── app/
-│       │   │   ├── page.tsx              # Dashboard
-│       │   │   ├── unauthorized/page.tsx
-│       │   │   └── auth/callback/route.ts
-│       │   └── middleware.ts             # Auth + role injection
-│       └── package.json
+│   ├── platform/             # Staff dashboard AND client portal (port 3000)
+│   │   ├── src/              #   formerly apps/landing, marketing removed
+│   │   │   ├── app/
+│   │   │   │   ├── page.tsx          # redirects to /signin
+│   │   │   │   ├── signin/           # staff sign in
+│   │   │   │   ├── signup/           # signup state machine (Company/Partner)
+│   │   │   │   ├── invite/[token]/   # accept an invitation
+│   │   │   │   ├── auth/callback/    # OAuth callback
+│   │   │   │   ├── dashboard/        # staff ops — 28 pages
+│   │   │   │   ├── client/           # client portal + its own signin/signup
+│   │   │   │   ├── technician/       # web field app — retired once Expo ships
+│   │   │   │   └── api/              # company-lookup, sop-analyse, sop-procedure
+│   │   │   ├── components/
+│   │   │   ├── lib/
+│   │   │   └── middleware.ts         # all role routing, for every surface
+│   │   └── package.json      #   @fox/platform
+│   │
+│   └── field/                # Technician app, Expo — NOT BUILT YET
 │
 ├── packages/
-│   ├── supabase/             # Supabase client + auth utilities
+│   ├── supabase/             # Supabase clients + Next.js server actions
 │   │   ├── src/
-│   │   │   ├── client/
-│   │   │   │   ├── browser.ts            # createBrowserClient()
-│   │   │   │   ├── server.ts             # createServerClient()
-│   │   │   │   └── middleware.ts          # createMiddlewareClient()
-│   │   │   ├── auth/
-│   │   │   │   └── actions.ts            # Server actions (signup, signin, OAuth)
-│   │   │   ├── types.ts                  # Database type definitions
-│   │   │   └── index.ts                  # Package exports
-│   │   └── package.json
+│   │   │   ├── client/       #   browser.ts, server.ts, middleware.ts
+│   │   │   ├── auth/         #   actions.ts — signin, signup, invitations
+│   │   │   ├── actions/      #   24 files of "use server" domain actions
+│   │   │   ├── email/        #   Postmark invitation mail
+│   │   │   └── types.ts      #   hand-maintained Database types (982 lines)
+│   │   └── package.json      #   Next-only — Expo cannot import this
 │   │
-│   ├── shared/               # Shared types + permissions
-│   │   ├── src/
-│   │   │   ├── types/index.ts            # Enums, interfaces
-│   │   │   └── permissions/index.ts      # RBAC permission matrix
-│   │   └── package.json
+│   ├── shared/               # Portable: no React, no Next
+│   │   └── src/
+│   │       ├── types/        #   enums, interfaces
+│   │       ├── permissions/  #   RBAC matrix
+│   │       └── field-app/    #   field catalog — read by settings UI + field app
 │   │
-│   └── eslint-config/        # Shared ESLint config
+│   └── eslint-config/
 │
 ├── supabase/
-│   └── migrations/
-│       ├── 001_profiles.sql              # Profiles + auth trigger
-│       └── 002_organizations_and_partners.sql  # Orgs + partners + RPC
+│   └── migrations/           # 39 migrations
 │
-├── .env.example              # Environment template
-├── package.json              # Root (turbo scripts)
+├── package.json              # root (turbo scripts)
 ├── pnpm-workspace.yaml
 └── turbo.json
 ```
+
+### Why staff and clients share one app
+
+They share one login, one database, one component set and one `middleware.ts`
+that routes between `/dashboard` and `/client/dashboard` on `account_type`.
+Splitting them into separate deployments would mean scoping the Supabase
+session cookie across subdomains for no benefit. The routes stay namespaced,
+so separating them later remains possible and is cheaper then than now.
+
+`apps/web` is separate because it is genuinely different: no auth, no
+session, no server actions, statically rendered, and bilingual.
 
 ### Key Dependencies
 
@@ -83,8 +100,10 @@ FOX/
 ### Build
 
 ```bash
-npx -y pnpm build    # pnpm not directly on PATH
-npx -y pnpm dev      # starts both apps via turbo
+npx -y pnpm build                          # pnpm is not directly on PATH
+npx -y pnpm dev                            # every app, via turbo
+npx -y pnpm --filter @fox/web dev          # marketing only  (:3002)
+npx -y pnpm --filter @fox/platform dev     # platform only   (:3000)
 ```
 
 ---
@@ -245,7 +264,7 @@ File: `packages/supabase/src/auth/actions.ts`
 
 ### 4.3 Auth Callback
 
-File: `apps/landing/src/app/auth/callback/route.ts`
+File: `apps/platform/src/app/auth/callback/route.ts`
 
 ```
 GET /auth/callback?code=...&next=...
@@ -256,7 +275,7 @@ GET /auth/callback?code=...&next=...
 
 ### 4.4 Landing Middleware
 
-File: `apps/landing/src/middleware.ts`
+File: `apps/platform/src/middleware.ts`
 
 Matched paths: `/signin`, `/signup`
 
@@ -282,7 +301,7 @@ File: `apps/platform/src/middleware.ts`
 
 ## 5. Signup Flow — State Machine
 
-File: `apps/landing/src/app/signup/page.tsx`
+File: `apps/platform/src/app/signup/page.tsx`
 
 All views on the same `/signup` route. Client-side state machine with 5 states:
 
@@ -350,7 +369,7 @@ Success message with CheckCircle2 icon. "Back to home" link.
 
 ## 6. AI Company Lookup
 
-File: `apps/landing/src/app/api/company-lookup/route.ts`
+File: `apps/platform/src/app/api/company-lookup/route.ts`
 
 ### Request
 

@@ -78,6 +78,24 @@ export default async function LocaleLayout({
       lang={locale}
       className={`${heading.variable} ${body.variable} ${mono.variable}`}
     >
+      <head>
+        {/* Apollo's website visitor tracker, moved here from the app that
+            used to serve both the marketing pages and the signed-in
+            product. It is a lead-identification tool, so it belongs on the
+            public site and has no business running inside a workspace
+            someone has logged into.
+
+            NOTE: it currently fires on load, before any consent. That was
+            already true on the old site, but this site's market is France —
+            under the ePrivacy rules the CNIL enforces, a non-essential
+            tracker needs consent first. Gate it behind a consent banner
+            before the commercial launch. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `function initApollo(){var n=Math.random().toString(36).substring(7),o=document.createElement("script");o.src="https://assets.apollo.io/micro/website-tracker/tracker.iife.js?nocache="+n,o.async=!0,o.defer=!0,o.onload=function(){window.trackingFunctions.onLoad({appId:"698ec73ce16e4600199567ab"})},document.head.appendChild(o)}initApollo();`,
+          }}
+        />
+      </head>
       <body className="antialiased">
         <NextIntlClientProvider>{children}</NextIntlClientProvider>
       </body>

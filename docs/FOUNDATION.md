@@ -307,7 +307,7 @@ Improvements built for one client get generalised and shipped to all clients and
 
 ## 10. What exists today — the build reality
 
-A pnpm/Turbo monorepo. Next.js 16 + React 19 + Tailwind 4 + Supabase (Postgres, Auth, RLS). The originally separate `platform` app has been merged into `apps/landing` under `/dashboard`.
+A pnpm/Turbo monorepo. Next.js 16 + React 19 + Tailwind 4 + Supabase (Postgres, Auth, RLS). Three apps: `apps/web` (marketing, FR/EN), `apps/platform` (staff dashboard *and* client portal), and `apps/field` (technician, Expo — not built yet).
 
 ### 10.1 Shipped
 
@@ -460,6 +460,6 @@ Anyone joining the project should be able to answer these from this file alone.
 
 **Internal**
 - Founder voice memo, 31 July 2026 (`Voice 260731_171903`)
-- `/pitch` deck — `apps/landing/src/app/pitch/`
+- `/pitch` deck — the standalone `fox-pitch` repository
 - `docs/ARCHITECTURE.md`, `docs/PRD-field-app-configuration.md`
 - Supabase migrations `001`–`028`

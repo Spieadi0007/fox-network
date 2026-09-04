@@ -1,8 +1,8 @@
 # @fox/web — marketing site
 
 The public FoxNetwork site, in French and English. First app of the monorepo
-split: it shares the workspace with `apps/landing` but no code, no auth and no
-Supabase server actions, so it can be built and deployed on its own.
+split: it shares the workspace with `apps/platform` but no code, no auth and
+no Supabase server actions, so it can be built and deployed on its own.
 
 ```bash
 npx -y pnpm --filter @fox/web dev     # http://localhost:3002
