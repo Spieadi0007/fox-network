@@ -1,0 +1,220 @@
+{
+  "meta": {
+    "home": {
+      "title": "FoxNetwork — La maintenance de vos réseaux distribués",
+      "description": "Consignes colis, DAB, bornes de recharge : un seul partenaire de maintenance sur tous vos sites en Île-de-France. Prix fixe par intervention, SLA tenu, preuves photo à la clôture."
+    },
+    "quote": {
+      "title": "Demander un devis",
+      "description": "Décrivez votre parc — nous revenons vers vous sous 48 heures avec une proposition chiffrée."
+    },
+    "privacy": {
+      "title": "Politique de confidentialité",
+      "description": "Comment FoxNetwork collecte, utilise et protège vos données personnelles."
+    },
+    "terms": {
+      "title": "Conditions générales d'utilisation",
+      "description": "Les conditions qui régissent l'utilisation des services FoxNetwork."
+    },
+    "legalNotice": {
+      "title": "Mentions légales",
+      "description": "Informations légales relatives à l'éditeur et à l'hébergeur du site FoxNetwork."
+    }
+  },
+  "nav": {
+    "networks": "Réseaux",
+    "pricing": "Tarifs",
+    "booking": "Réserver",
+    "signIn": "Se connecter",
+    "cta": "Commencer",
+    "openMenu": "Ouvrir le menu",
+    "closeMenu": "Fermer le menu",
+    "switchLanguage": "Changer de langue"
+  },
+  "hero": {
+    "badge": "Maintenance externalisée · Europe",
+    "titleLine1": "Vous exploitez le réseau.",
+    "titleLine2": "Nous le gardons en service.",
+    "subtitle": "Signalez une panne en quelques secondes, suivez l'état de chaque demande au même endroit, et déclenchez une intervention quand vous en avez besoin.",
+    "ctaPrimary": "Réserver une première intervention",
+    "ctaSecondary": "Demander un devis",
+    "assurance1": "Tarifs SLA fixes",
+    "assurance2": "Tableau de bord en direct sur tous vos sites"
+  },
+  "networks": {
+    "eyebrow": "Conçu pour",
+    "titleLine1": "Les réseaux distribués",
+    "titleLine2": "qui doivent rester en service.",
+    "subtitle": "Un seul partenaire de maintenance pour tous vos sites. Nous dépêchons un technicien, réparons et clôturons le ticket — votre réseau reste disponible.",
+    "items": {
+      "lockers": {
+        "name": "Réseaux de consignes",
+        "description": "Consignes colis, points de retrait, bornes de retour. Portes, écrans, terminaux de paiement, alimentation."
+      },
+      "atms": {
+        "name": "Réseaux de DAB",
+        "description": "Distributeurs de billets, automates de dépôt, bornes. Disponibilité, bourrages, remplacement de matériel."
+      },
+      "ev": {
+        "name": "Bornes de recharge",
+        "description": "Bornes AC et DC, stations de recharge rapide, lecteurs de paiement. Pannes, câbles, connectivité."
+      }
+    }
+  },
+  "coverage": {
+    "badge": "En service",
+    "titleLine1": "Nous démarrons à Paris",
+    "titleLine2": "et en Île-de-France",
+    "body": "Choisissez n'importe quel équipement de la région, nous intervenons. Couverture complète des huit départements, avec les mêmes SLA partout.",
+    "waitlist": "Hors Île-de-France ? Inscrivez-vous à la liste d'attente",
+    "mapLabel": "Couverture FoxNetwork à Paris et en Île-de-France"
+  },
+  "pricing": {
+    "eyebrow": "SLA et tarifs",
+    "titleLine1": "Un prix par intervention.",
+    "titleLine2": "Vous choisissez le délai.",
+    "subtitle": "Un prix unique pour notre déplacement, première heure incluse*. Choisissez le SLA adapté à l'urgence : nous le tenons, ou nous en assumons le coût.",
+    "mostPicked": "Le plus choisi",
+    "perIntervention": "/ intervention",
+    "book": "Réserver {tier}",
+    "includedLabel": "Inclus dans tous les niveaux",
+    "included1": "Suivi sur tableau de bord en direct",
+    "included2": "Preuves photo à la clôture",
+    "footnote": "*Couvre la première heure sur site — temps supplémentaire facturé à l'heure. Déplacement non inclus, facturé environ 1 €/km. Prix HT. Contrats au volume disponibles : parlons de votre parc.",
+    "tiers": {
+      "relaxed": {
+        "name": "Souple",
+        "response": "Sous 5 jours ouvrés"
+      },
+      "standard": {
+        "name": "Standard",
+        "response": "Sous 72 heures"
+      },
+      "urgent": {
+        "name": "Urgent",
+        "response": "Sous 24 heures"
+      },
+      "critical": {
+        "name": "Critique",
+        "response": "Sous 4 heures, 24h/24 et 7j/7"
+      }
+    }
+  },
+  "booking": {
+    "eyebrow": "Comment réserver",
+    "titleLine1": "De la demande à la résolution",
+    "titleLine2": "en trois étapes.",
+    "subtitle": "Les réservations se font depuis votre espace client. Chaque intervention est tracée, tarifée et suivie de bout en bout.",
+    "steps": {
+      "report": {
+        "title": "Décrivez la panne",
+        "description": "Sélectionnez l'équipement, décrivez le problème, joignez une photo. Deux minutes depuis votre tableau de bord.",
+        "detail": "Depuis l'espace client"
+      },
+      "choose": {
+        "title": "Choisissez un niveau de SLA",
+        "description": "Souple, Standard, Urgent ou Critique. Le prix s'affiche avant confirmation.",
+        "detail": "Prix fixe, sans surprise"
+      },
+      "close": {
+        "title": "Nous intervenons et clôturons",
+        "description": "Un technicien est affecté, vous le suivez en direct, et le ticket se clôture avec preuves photo.",
+        "detail": "Mises à jour sur votre tableau de bord"
+      }
+    }
+  },
+  "value": {
+    "eyebrow": "Ce que vous obtenez",
+    "titleLine1": "Un outil, un interlocuteur,",
+    "titleLine2": "un numéro à appeler.",
+    "items": {
+      "dashboard": {
+        "title": "Tableau de bord réseau en direct",
+        "description": "Tous vos sites, toutes vos interventions, tous vos coûts dans une seule vue. Filtrez par réseau, type d'équipement ou SLA. Export en fin de mois."
+      },
+      "transparency": {
+        "title": "Transparent par défaut",
+        "description": "Preuves photo à chaque clôture. Statuts horodatés. Prix fixes avant confirmation. Facturation depuis le tableau de bord."
+      }
+    }
+  },
+  "cta": {
+    "title": "Votre réseau, maintenu.",
+    "body": "Créez votre espace client, ajoutez un premier équipement et réservez une intervention en moins de cinq minutes.",
+    "primary": "Réserver une première intervention",
+    "secondary": "Demander un devis"
+  },
+  "footer": {
+    "tagline": "La maintenance de vos réseaux distribués, orchestrée de bout en bout — du signalement à la facture.",
+    "productHeading": "Le service",
+    "companyHeading": "L'entreprise",
+    "legalHeading": "Légal",
+    "networks": "Réseaux couverts",
+    "pricing": "SLA et tarifs",
+    "booking": "Comment réserver",
+    "quote": "Demander un devis",
+    "signIn": "Espace client",
+    "signUp": "Créer un compte",
+    "contact": "Nous contacter",
+    "privacy": "Confidentialité",
+    "terms": "Conditions d'utilisation",
+    "legalNotice": "Mentions légales",
+    "rights": "Tous droits réservés.",
+    "region": "Paris et Île-de-France"
+  },
+  "quote": {
+    "eyebrow": "Devis",
+    "title": "Parlons de votre parc.",
+    "subtitle": "Décrivez ce que vous exploitez et où. Nous revenons vers vous sous 48 heures ouvrées avec une proposition chiffrée.",
+    "waitlistTitle": "Rejoindre la liste d'attente",
+    "waitlistSubtitle": "Nous ouvrons région par région. Dites-nous où vous exploitez : nous vous préviendrons dès que nous y sommes.",
+    "companyLabel": "Société",
+    "companyPlaceholder": "Nom de votre société",
+    "nameLabel": "Nom et prénom",
+    "namePlaceholder": "Camille Dupont",
+    "emailLabel": "E-mail professionnel",
+    "emailPlaceholder": "camille@societe.fr",
+    "phoneLabel": "Téléphone",
+    "phoneOptional": "facultatif",
+    "phonePlaceholder": "+33 6 12 34 56 78",
+    "networkLabel": "Type de réseau",
+    "networkPlaceholder": "Sélectionnez un type",
+    "networkOther": "Autre",
+    "sitesLabel": "Nombre de sites",
+    "sitesPlaceholder": "Par exemple : 120",
+    "regionLabel": "Zone d'exploitation",
+    "regionPlaceholder": "Île-de-France, Hauts-de-France…",
+    "messageLabel": "Votre besoin",
+    "messagePlaceholder": "Ce que vous exploitez, ce qui tombe en panne, ce que vous attendez d'un partenaire de maintenance.",
+    "submit": "Envoyer la demande",
+    "submitting": "Envoi en cours…",
+    "successTitle": "Demande envoyée.",
+    "successBody": "Merci. Nous revenons vers vous sous 48 heures ouvrées à l'adresse indiquée.",
+    "successBack": "Retour à l'accueil",
+    "errorGeneric": "Nous n'avons pas pu envoyer votre demande. Réessayez, ou écrivez-nous directement à {email}.",
+    "errorRequired": "Ce champ est obligatoire.",
+    "errorEmail": "Saisissez une adresse e-mail valide."
+  },
+  "legalPages": {
+    "draftLabel": "Document en préparation",
+    "draftBody": "Ce document est en cours de rédaction avec notre conseil juridique et sera publié avant l'ouverture commerciale. Pour toute question d'ici là, écrivez-nous à <email></email>.",
+    "lastUpdated": "Dernière mise à jour : {date}",
+    "legalNoticeIntro": "Informations publiées conformément à l'article 6 III de la loi n° 2004-575 du 21 juin 2004 pour la confiance dans l'économie numérique.",
+    "publisher": "Éditeur du site",
+    "publisherLegalForm": "Forme juridique",
+    "publisherCapital": "Capital social",
+    "publisherRegistration": "RCS",
+    "publisherVat": "N° de TVA intracommunautaire",
+    "publisherAddress": "Siège social",
+    "publisherEmail": "Contact",
+    "publisherDirector": "Directeur de la publication",
+    "host": "Hébergeur",
+    "hostAddress": "Adresse",
+    "pending": "À compléter"
+  },
+  "notFound": {
+    "title": "Page introuvable",
+    "body": "Cette page n'existe pas ou a été déplacée.",
+    "back": "Retour à l'accueil"
+  }
+}
