@@ -1,0 +1,66 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9.15.4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      # Both apps type-check as part of `next build`, so this is the real
+      # gate: packages/supabase leans on `(supabase as any)` in places, which
+      # means a query broken by a move surfaces here or not at all.
+      - run: pnpm turbo build
+
+      - name: Message catalogs in sync
+        run: pnpm --filter @fox/web check:messages
+
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9.15.4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      # Gated: apps/web is clean, and new code stays that way.
+      - name: apps/web
+        run: pnpm --filter @fox/web lint
+
+      # Advisory: apps/platform carries 13 pre-existing
+      # react-hooks/set-state-in-effect errors in the dashboard forms and the
+      # signup page. They predate the split, and fixing them means changing
+      # effect behaviour in forms with no test coverage — its own change.
+      # Report them, do not fail on them. Drop the `|| true` once they are
+      # gone; a permanently red check is one nobody reads.
+      - name: apps/platform (advisory)
+        run: pnpm --filter @fox/platform lint || true

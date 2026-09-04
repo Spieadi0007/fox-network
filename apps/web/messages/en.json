@@ -1,0 +1,220 @@
+{
+  "meta": {
+    "home": {
+      "title": "FoxNetwork — Maintenance for distributed networks",
+      "description": "Parcel lockers, ATMs, EV chargers: one maintenance partner across every site in Île-de-France. Fixed price per intervention, SLA held, photo proof on close."
+    },
+    "quote": {
+      "title": "Get a quote",
+      "description": "Tell us about your estate — we come back within 48 hours with a costed proposal."
+    },
+    "privacy": {
+      "title": "Privacy policy",
+      "description": "How FoxNetwork collects, uses and protects your personal data."
+    },
+    "terms": {
+      "title": "Terms of use",
+      "description": "The terms governing use of FoxNetwork services."
+    },
+    "legalNotice": {
+      "title": "Legal notice",
+      "description": "Publisher and hosting information for the FoxNetwork website."
+    }
+  },
+  "nav": {
+    "networks": "Networks",
+    "pricing": "Pricing",
+    "booking": "How to book",
+    "signIn": "Sign in",
+    "cta": "Get started",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "switchLanguage": "Change language"
+  },
+  "hero": {
+    "badge": "Maintenance as a Service · Europe",
+    "titleLine1": "You run the network.",
+    "titleLine2": "We keep it running.",
+    "subtitle": "Report what's broken in seconds, track every request in one place, and call in an intervention the moment you need one.",
+    "ctaPrimary": "Book a first intervention",
+    "ctaSecondary": "Get a quote",
+    "assurance1": "Fixed-price SLA tiers",
+    "assurance2": "Live dashboard across every site"
+  },
+  "networks": {
+    "eyebrow": "Built for",
+    "titleLine1": "Distributed networks",
+    "titleLine2": "that have to stay up.",
+    "subtitle": "One maintenance partner across every site. We dispatch, fix and close the ticket — your network stays available.",
+    "items": {
+      "lockers": {
+        "name": "Locker networks",
+        "description": "Parcel lockers, click-and-collect points, return hubs. Doors, screens, payment terminals, power."
+      },
+      "atms": {
+        "name": "ATM networks",
+        "description": "Cash dispensers, deposit machines, kiosks. Uptime, cash-jam clearing, hardware swaps."
+      },
+      "ev": {
+        "name": "EV charging stations",
+        "description": "AC and DC chargers, fast-charging stalls, payment readers. Faults, cables, connectivity."
+      }
+    }
+  },
+  "coverage": {
+    "badge": "Now live",
+    "titleLine1": "We're starting in Paris",
+    "titleLine2": "and Île-de-France",
+    "body": "Pick any asset in the region and we are on it. Full coverage across all eight départements, with the same SLAs everywhere.",
+    "waitlist": "Outside Île-de-France? Join the waitlist",
+    "mapLabel": "FoxNetwork coverage across Paris and Île-de-France"
+  },
+  "pricing": {
+    "eyebrow": "SLA and pricing",
+    "titleLine1": "One price per intervention.",
+    "titleLine2": "You pick the response time.",
+    "subtitle": "One price to get us on site, first hour included*. Pick the SLA that matches the urgency — we hit it, or we carry the cost.",
+    "mostPicked": "Most picked",
+    "perIntervention": "/ intervention",
+    "book": "Book {tier}",
+    "includedLabel": "Every tier includes",
+    "included1": "Live dashboard tracking",
+    "included2": "Photo evidence on close",
+    "footnote": "*Covers the first hour on site — additional time billed hourly. Travel not included, billed at roughly €1/km. Prices excl. VAT. Volume contracts available: talk to us about your fleet.",
+    "tiers": {
+      "relaxed": {
+        "name": "Relaxed",
+        "response": "Within 5 business days"
+      },
+      "standard": {
+        "name": "Standard",
+        "response": "Within 72 hours"
+      },
+      "urgent": {
+        "name": "Urgent",
+        "response": "Within 24 hours"
+      },
+      "critical": {
+        "name": "Critical",
+        "response": "Within 4 hours, 24/7"
+      }
+    }
+  },
+  "booking": {
+    "eyebrow": "How to book",
+    "titleLine1": "From request to resolved",
+    "titleLine2": "in three steps.",
+    "subtitle": "Bookings happen inside your client dashboard. Every intervention is logged, priced and tracked end to end.",
+    "steps": {
+      "report": {
+        "title": "Tell us what's broken",
+        "description": "Pick the asset, describe the issue, attach a photo. Two minutes from your dashboard.",
+        "detail": "From the client dashboard"
+      },
+      "choose": {
+        "title": "Pick an SLA tier",
+        "description": "Relaxed, Standard, Urgent or Critical. You see the price before you confirm.",
+        "detail": "Fixed price, no surprises"
+      },
+      "close": {
+        "title": "We dispatch and close",
+        "description": "A technician is assigned, you track them live, and the ticket closes with photo proof.",
+        "detail": "Updates straight to your dashboard"
+      }
+    }
+  },
+  "value": {
+    "eyebrow": "What you get",
+    "titleLine1": "A tool, a manager,",
+    "titleLine2": "a number you can call.",
+    "items": {
+      "dashboard": {
+        "title": "Live network dashboard",
+        "description": "Every site, every intervention, every cost in one view. Filter by network, asset type or SLA. Export at month-end."
+      },
+      "transparency": {
+        "title": "Transparent by default",
+        "description": "Photo proof on every close. Time-stamped status. Fixed prices before you confirm. Invoiced from the dashboard."
+      }
+    }
+  },
+  "cta": {
+    "title": "Your network, kept up.",
+    "body": "Spin up a client workspace, add your first asset, and book an intervention in under five minutes.",
+    "primary": "Book a first intervention",
+    "secondary": "Get a quote"
+  },
+  "footer": {
+    "tagline": "Maintenance for distributed networks, orchestrated end to end — from the report to the invoice.",
+    "productHeading": "The service",
+    "companyHeading": "Company",
+    "legalHeading": "Legal",
+    "networks": "Networks covered",
+    "pricing": "SLA and pricing",
+    "booking": "How to book",
+    "quote": "Get a quote",
+    "signIn": "Client sign-in",
+    "signUp": "Create an account",
+    "contact": "Contact us",
+    "privacy": "Privacy",
+    "terms": "Terms of use",
+    "legalNotice": "Legal notice",
+    "rights": "All rights reserved.",
+    "region": "Paris and Île-de-France"
+  },
+  "quote": {
+    "eyebrow": "Quote",
+    "title": "Let's talk about your estate.",
+    "subtitle": "Tell us what you run and where. We come back within 48 business hours with a costed proposal.",
+    "waitlistTitle": "Join the waitlist",
+    "waitlistSubtitle": "We open region by region. Tell us where you operate and we will let you know the moment we are there.",
+    "companyLabel": "Company",
+    "companyPlaceholder": "Your company name",
+    "nameLabel": "Full name",
+    "namePlaceholder": "Camille Dupont",
+    "emailLabel": "Work email",
+    "emailPlaceholder": "camille@company.com",
+    "phoneLabel": "Phone",
+    "phoneOptional": "optional",
+    "phonePlaceholder": "+33 6 12 34 56 78",
+    "networkLabel": "Network type",
+    "networkPlaceholder": "Select a type",
+    "networkOther": "Other",
+    "sitesLabel": "Number of sites",
+    "sitesPlaceholder": "For example: 120",
+    "regionLabel": "Where you operate",
+    "regionPlaceholder": "Île-de-France, Hauts-de-France…",
+    "messageLabel": "What you need",
+    "messagePlaceholder": "What you run, what breaks, and what you want from a maintenance partner.",
+    "submit": "Send request",
+    "submitting": "Sending…",
+    "successTitle": "Request sent.",
+    "successBody": "Thank you. We will come back to you within 48 business hours at the address you gave.",
+    "successBack": "Back to home",
+    "errorGeneric": "We could not send your request. Try again, or write to us directly at {email}.",
+    "errorRequired": "This field is required.",
+    "errorEmail": "Enter a valid email address."
+  },
+  "legalPages": {
+    "draftLabel": "Document in preparation",
+    "draftBody": "This document is being drafted with our legal counsel and will be published before commercial launch. In the meantime, write to us at <email></email> with any question.",
+    "lastUpdated": "Last updated: {date}",
+    "legalNoticeIntro": "Published in accordance with article 6 III of French law no. 2004-575 of 21 June 2004 on confidence in the digital economy.",
+    "publisher": "Site publisher",
+    "publisherLegalForm": "Legal form",
+    "publisherCapital": "Share capital",
+    "publisherRegistration": "Trade register (RCS)",
+    "publisherVat": "EU VAT number",
+    "publisherAddress": "Registered office",
+    "publisherEmail": "Contact",
+    "publisherDirector": "Publication director",
+    "host": "Hosting provider",
+    "hostAddress": "Address",
+    "pending": "To be completed"
+  },
+  "notFound": {
+    "title": "Page not found",
+    "body": "This page does not exist, or it has moved.",
+    "back": "Back to home"
+  }
+}
