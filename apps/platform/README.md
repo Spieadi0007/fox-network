@@ -25,6 +25,32 @@ Copy the root `.env.example` to `.env.local` first.
 | `/technician/*` | technicians | Web field app — **retired once `apps/field` ships** |
 | `/api/*` | — | Company lookup and SOP import, all Anthropic-backed |
 
+### Two subdomains, one deployment
+
+| Host | Front door | Owns |
+|---|---|---|
+| `admin.<domain>` | `/signin` | `/dashboard/*`, `/technician/*` |
+| `platform.<domain>` | `/client/signin` | `/client/*` |
+
+Both are the same Vercel project and the same build. `src/lib/hosts.ts` reads
+the subdomain off the request; `middleware.ts` uses it to decide where `/`
+lands and to bounce anyone who arrives on the wrong side — `/dashboard` on
+`platform.` redirects across to `admin.`, and vice versa, so no page ends up
+with two addresses.
+
+Any other host — `localhost`, a `*.vercel.app` preview — resolves to `"any"`,
+where no host rules apply and the app behaves exactly as it did before
+subdomains existed. That is what keeps local development and preview
+deployments usable, and it is why you cannot verify this behaviour on a
+preview URL: use a `Host` header.
+
+```bash
+curl -sI -H "Host: platform.foxnetwork.io" localhost:3000/ | grep -i location
+```
+
+Both hosts must be registered as Supabase Auth redirect URLs, or OAuth will
+fail on whichever one is missing.
+
 ### Why staff and clients are one app
 
 They share one login, one database, one component set, and one
