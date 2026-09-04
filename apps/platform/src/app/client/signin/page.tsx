@@ -4,7 +4,11 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
 import { GridBackground } from "@/components/grid-background";
-import { signInClient } from "@fox/supabase/auth/actions";
+import {
+  signInClient,
+  signInWithOAuthClient,
+} from "@fox/supabase/auth/actions";
+import { GoogleIcon } from "@/components/google-icon";
 import { SubmitButton } from "@/components/ui/submit-button";
 
 function SignInForm() {
@@ -79,6 +83,25 @@ function SignInForm() {
             className="w-full cursor-pointer rounded-full bg-stone-900 px-5 py-3 text-sm font-medium text-white transition-colors hover:bg-stone-800"
           >
             Sign in
+          </SubmitButton>
+        </form>
+
+        <div className="relative mt-6">
+          <div className="absolute inset-0 flex items-center">
+            <div className="w-full border-t border-stone-200" />
+          </div>
+          <div className="relative flex justify-center text-xs uppercase">
+            <span className="bg-white/80 px-2 text-stone-400">or</span>
+          </div>
+        </div>
+
+        <form
+          action={() => signInWithOAuthClient("google")}
+          className="mt-6"
+        >
+          <SubmitButton className="flex w-full cursor-pointer items-center justify-center gap-3 rounded-full border border-stone-200/80 bg-white px-5 py-3 text-sm font-medium text-stone-700 shadow-sm shadow-stone-200/20 transition-all duration-200 hover:border-stone-300 hover:bg-stone-50">
+            <GoogleIcon className="h-5 w-5" />
+            Continue with Google
           </SubmitButton>
         </form>
       </div>

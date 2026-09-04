@@ -1,9 +1,29 @@
 "use server";
 
 import { redirect } from "next/navigation";
+import { headers } from "next/headers";
 import { createServerClient } from "../client/server";
 
-function getAppUrl() {
+/**
+ * Where OAuth should come back to.
+ *
+ * This has to be the host the user actually started on. Staff and clients
+ * are one deployment reached on two subdomains, so a fixed environment
+ * variable sends anyone who began on the wrong one to a callback on the
+ * other — where their code will not exchange and the session is lost.
+ * Reading it off the request keeps the round trip on one host.
+ */
+async function getAppOrigin() {
+  const h = await headers();
+  const host = h.get("x-forwarded-host") ?? h.get("host");
+  if (host) {
+    const proto =
+      h.get("x-forwarded-proto") ??
+      (host.startsWith("localhost") || host.startsWith("127.0.0.1")
+        ? "http"
+        : "https");
+    return `${proto}://${host}`;
+  }
   return (
     process.env.NEXT_PUBLIC_LANDING_URL ??
     process.env.NEXT_PUBLIC_APP_URL ??
@@ -52,7 +72,7 @@ export async function signInWithOAuth(provider: "google") {
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider,
     options: {
-      redirectTo: `${getAppUrl()}/auth/callback`,
+      redirectTo: `${await getAppOrigin()}/auth/callback`,
     },
   });
 
@@ -136,7 +156,7 @@ export async function signInWithOAuthCompany(provider: "google") {
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider,
     options: {
-      redirectTo: `${getAppUrl()}/auth/callback?next=${encodeURIComponent("/signup?step=company-2")}`,
+      redirectTo: `${await getAppOrigin()}/auth/callback?next=${encodeURIComponent("/signup?step=company-2")}`,
     },
   });
 
@@ -336,4 +356,78 @@ export async function acceptInvitation(formData: FormData) {
 
   // Middleware routes by role from here.
   redirect("/dashboard");
+}
+
+export async function signInWithOAuthClient(provider: "google") {
+  const supabase = await createServerClient();
+
+  // Both outcomes land on the same place, and middleware sorts them out: an
+  // existing client with an organisation is bounced straight to their
+  // dashboard, while somebody arriving for the first time has no
+  // organisation yet and gets the one remaining question.
+  const { data, error } = await supabase.auth.signInWithOAuth({
+    provider,
+    options: {
+      redirectTo: `${await getAppOrigin()}/auth/callback?next=${encodeURIComponent(
+        "/client/signup?step=company",
+      )}`,
+    },
+  });
+
+  if (error) {
+    redirect(`/client/signin?error=${encodeURIComponent(error.message)}`);
+  }
+
+  if (data.url) {
+    redirect(data.url);
+  }
+}
+
+/**
+ * Finish a client account created through Google.
+ *
+ * The password flow collects the company name up front and hands it to the
+ * signup trigger as metadata. OAuth cannot: the user is already
+ * authenticated by the time we get to ask. So the organisation is created
+ * here instead, through a SECURITY DEFINER function, because a profile with
+ * no organisation cannot insert one under RLS.
+ *
+ * No new migration: setup_company already does exactly this.
+ */
+export async function completeClientSetup(formData: FormData) {
+  const companyName = (formData.get("companyName") as string)?.trim();
+  if (!companyName) {
+    redirect("/client/signup?step=company&error=Company+name+is+required");
+  }
+
+  const supabase = await createServerClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) redirect("/client/signin");
+
+  // setup_company is the right function despite the name: migration 025
+  // repurposed it so a public signup creates an organisation and marks the
+  // profile account_type='client', role='admin'. The size default matches
+  // what signUpClient sends on the password path.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { error } = await (supabase as any).rpc("setup_company", {
+    p_user_id: user.id,
+    p_user_email: user.email ?? "",
+    p_user_name:
+      (user.user_metadata?.name as string) ??
+      (user.user_metadata?.full_name as string) ??
+      "",
+    p_avatar_url: (user.user_metadata?.avatar_url as string) ?? null,
+    p_company_name: companyName,
+    p_company_size: "1-10",
+  });
+
+  if (error) {
+    redirect(
+      `/client/signup?step=company&error=${encodeURIComponent(error.message)}`,
+    );
+  }
+
+  redirect("/client/dashboard");
 }
