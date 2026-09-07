@@ -7,6 +7,7 @@ import { Coverage } from "@/components/sections/coverage";
 import { Pricing } from "@/components/sections/pricing";
 import { Booking } from "@/components/sections/booking";
 import { Value } from "@/components/sections/value";
+import { Founder } from "@/components/sections/founder";
 import { ClosingCta } from "@/components/sections/closing-cta";
 
 export default async function Home({
@@ -27,6 +28,7 @@ export default async function Home({
         <Pricing />
         <Booking />
         <Value />
+        <Founder />
         <ClosingCta />
       </main>
       <Footer />

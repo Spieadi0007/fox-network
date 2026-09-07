@@ -1,7 +1,7 @@
 {
   "meta": {
     "home": {
-      "title": "FoxNetwork — Maintenance for distributed networks",
+      "title": "FoxNetwork — Field operations, fully connected",
       "description": "Parcel lockers, ATMs, EV chargers: one maintenance partner across every site in Île-de-France. Fixed price per intervention, SLA held, photo proof on close."
     },
     "quote": {
@@ -32,10 +32,10 @@
     "switchLanguage": "Change language"
   },
   "hero": {
-    "badge": "Maintenance as a Service · Europe",
-    "titleLine1": "You run the network.",
-    "titleLine2": "We keep it running.",
-    "subtitle": "Report what's broken in seconds, track every request in one place, and call in an intervention the moment you need one.",
+    "badge": "Maintenance as a Service",
+    "titleLine1": "Field operations,",
+    "titleLine2": "fully connected.",
+    "subtitle": "Every locker, ATM and charger in Île-de-France, orchestrated end to end — from the fault report to the invoice.",
     "ctaPrimary": "Book a first intervention",
     "ctaSecondary": "Get a quote",
     "assurance1": "Fixed-price SLA tiers",
@@ -43,9 +43,9 @@
   },
   "networks": {
     "eyebrow": "Built for",
-    "titleLine1": "Distributed networks",
-    "titleLine2": "that have to stay up.",
-    "subtitle": "One maintenance partner across every site. We dispatch, fix and close the ticket — your network stays available.",
+    "titleLine1": "Where downtime costs revenue",
+    "titleLine2": "and uptime costs headcount.",
+    "subtitle": "Report a fault in two minutes, or via API. We dispatch, fix it, and close the ticket with photo proof.",
     "items": {
       "lockers": {
         "name": "Locker networks",
@@ -73,7 +73,7 @@
     "eyebrow": "SLA and pricing",
     "titleLine1": "One price per intervention.",
     "titleLine2": "You pick the response time.",
-    "subtitle": "One price to get us on site, first hour included*. Pick the SLA that matches the urgency — we hit it, or we carry the cost.",
+    "subtitle": "One price to get us on site, first hour included*. Pick the SLA that matches the urgency. Miss it and you pay for the speed we actually delivered, never more — plus a 10% credit.",
     "mostPicked": "Most picked",
     "perIntervention": "/ intervention",
     "book": "Book {tier}",
@@ -125,21 +125,25 @@
   },
   "value": {
     "eyebrow": "What you get",
-    "titleLine1": "A tool, a manager,",
-    "titleLine2": "a number you can call.",
+    "titleLine1": "One screen, one contact,",
+    "titleLine2": "zero chasing.",
     "items": {
       "dashboard": {
-        "title": "Live network dashboard",
-        "description": "Every site, every intervention, every cost in one view. Filter by network, asset type or SLA. Export at month-end."
+        "title": "Every site on one screen",
+        "description": "Live status, SLA clock and cost per asset across your whole network. Filter by network, asset type or tier. The month-end report you rebuild by hand today, generated as the work happens."
       },
-      "transparency": {
-        "title": "Transparent by default",
-        "description": "Photo proof on every close. Time-stamped status. Fixed prices before you confirm. Invoiced from the dashboard."
+      "evidence": {
+        "title": "You stop checking other people's work",
+        "description": "Photos, GPS and timestamps are verified before the job reaches you. Every invoice line opens onto the evidence behind it. No photo folders, no disputes."
+      },
+      "founder": {
+        "title": "You get the founder's number",
+        "description": "Not a ticket queue, not an account manager. One person who knows your estate and answers for it."
       }
     }
   },
   "cta": {
-    "title": "Your network, kept up.",
+    "title": "One signal in. One verified fix out.",
     "body": "Spin up a client workspace, add your first asset, and book an intervention in under five minutes.",
     "primary": "Book a first intervention",
     "secondary": "Get a quote"
@@ -216,5 +220,14 @@
     "title": "Page not found",
     "body": "This page does not exist, or it has moved.",
     "back": "Back to home"
+  },
+  "founder": {
+    "eyebrow": "Who turns up",
+    "title": "You should know who is coming to your site.",
+    "body": "Physical maintenance is not a software purchase. Someone opens your cabinet, handles your hardware, and leaves behind a record you are expected to trust. That person has a name.",
+    "name": "Karim Adaimi",
+    "role": "Founder — formerly Bloqit",
+    "credential": "10 years in field operations",
+    "contact": "Talk to me directly"
   }
 }

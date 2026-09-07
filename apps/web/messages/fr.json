@@ -1,7 +1,7 @@
 {
   "meta": {
     "home": {
-      "title": "FoxNetwork — La maintenance de vos réseaux distribués",
+      "title": "FoxNetwork — Opérations terrain, entièrement connectées",
       "description": "Consignes colis, DAB, bornes de recharge : un seul partenaire de maintenance sur tous vos sites en Île-de-France. Prix fixe par intervention, SLA tenu, preuves photo à la clôture."
     },
     "quote": {
@@ -32,10 +32,10 @@
     "switchLanguage": "Changer de langue"
   },
   "hero": {
-    "badge": "Maintenance externalisée · Europe",
-    "titleLine1": "Vous exploitez le réseau.",
-    "titleLine2": "Nous le gardons en service.",
-    "subtitle": "Signalez une panne en quelques secondes, suivez l'état de chaque demande au même endroit, et déclenchez une intervention quand vous en avez besoin.",
+    "badge": "Maintenance as a Service",
+    "titleLine1": "Opérations terrain,",
+    "titleLine2": "entièrement connectées.",
+    "subtitle": "Chaque consigne, chaque DAB, chaque borne de recharge d'Île-de-France — orchestrés de bout en bout, du signalement de panne à la facture.",
     "ctaPrimary": "Réserver une première intervention",
     "ctaSecondary": "Demander un devis",
     "assurance1": "Tarifs SLA fixes",
@@ -43,9 +43,9 @@
   },
   "networks": {
     "eyebrow": "Conçu pour",
-    "titleLine1": "Les réseaux distribués",
-    "titleLine2": "qui doivent rester en service.",
-    "subtitle": "Un seul partenaire de maintenance pour tous vos sites. Nous dépêchons un technicien, réparons et clôturons le ticket — votre réseau reste disponible.",
+    "titleLine1": "Quand l'indisponibilité coûte du chiffre",
+    "titleLine2": "et la disponibilité coûte des effectifs.",
+    "subtitle": "Signalez une panne en deux minutes, ou via API. Nous dépêchons un technicien, réparons, et clôturons le ticket avec preuves photo.",
     "items": {
       "lockers": {
         "name": "Réseaux de consignes",
@@ -73,7 +73,7 @@
     "eyebrow": "SLA et tarifs",
     "titleLine1": "Un prix par intervention.",
     "titleLine2": "Vous choisissez le délai.",
-    "subtitle": "Un prix unique pour notre déplacement, première heure incluse*. Choisissez le SLA adapté à l'urgence : nous le tenons, ou nous en assumons le coût.",
+    "subtitle": "Un prix unique pour notre déplacement, première heure incluse*. Choisissez le SLA adapté à l'urgence. Si nous le manquons, vous ne payez que la vitesse réellement délivrée, jamais plus — et recevez un avoir de 10 %.",
     "mostPicked": "Le plus choisi",
     "perIntervention": "/ intervention",
     "book": "Réserver {tier}",
@@ -125,21 +125,25 @@
   },
   "value": {
     "eyebrow": "Ce que vous obtenez",
-    "titleLine1": "Un outil, un interlocuteur,",
-    "titleLine2": "un numéro à appeler.",
+    "titleLine1": "Un écran, un interlocuteur,",
+    "titleLine2": "zéro relance.",
     "items": {
       "dashboard": {
-        "title": "Tableau de bord réseau en direct",
-        "description": "Tous vos sites, toutes vos interventions, tous vos coûts dans une seule vue. Filtrez par réseau, type d'équipement ou SLA. Export en fin de mois."
+        "title": "Tous vos sites sur un seul écran",
+        "description": "Statut en direct, compteur SLA et coût par équipement sur l'ensemble de votre réseau. Filtrez par réseau, type d'équipement ou niveau. Le rapport de fin de mois que vous reconstituez à la main aujourd'hui, généré au fil des interventions."
       },
-      "transparency": {
-        "title": "Transparent par défaut",
-        "description": "Preuves photo à chaque clôture. Statuts horodatés. Prix fixes avant confirmation. Facturation depuis le tableau de bord."
+      "evidence": {
+        "title": "Vous ne vérifiez plus le travail des autres",
+        "description": "Photos, GPS et horodatages sont vérifiés avant que le dossier ne vous parvienne. Chaque ligne de facture ouvre sur les preuves qui la justifient. Plus de dossiers photo, plus de litiges."
+      },
+      "founder": {
+        "title": "Vous avez le numéro du fondateur",
+        "description": "Ni file de tickets, ni chargé de compte. Une personne qui connaît votre parc et qui en répond."
       }
     }
   },
   "cta": {
-    "title": "Votre réseau, maintenu.",
+    "title": "Un signal en entrée. Une réparation vérifiée en sortie.",
     "body": "Créez votre espace client, ajoutez un premier équipement et réservez une intervention en moins de cinq minutes.",
     "primary": "Réserver une première intervention",
     "secondary": "Demander un devis"
@@ -216,5 +220,14 @@
     "title": "Page introuvable",
     "body": "Cette page n'existe pas ou a été déplacée.",
     "back": "Retour à l'accueil"
+  },
+  "founder": {
+    "eyebrow": "Qui intervient",
+    "title": "Vous devez savoir qui se présente sur votre site.",
+    "body": "La maintenance physique n'est pas un achat de logiciel. Quelqu'un ouvre votre armoire, manipule votre matériel, et laisse un compte rendu que vous êtes censé croire. Cette personne a un nom.",
+    "name": "Karim Adaimi",
+    "role": "Fondateur — ex-Bloqit",
+    "credential": "10 ans d'opérations terrain",
+    "contact": "Parlez-moi directement"
   }
 }

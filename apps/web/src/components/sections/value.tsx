@@ -2,13 +2,14 @@
 
 import { motion } from "framer-motion";
 import { useTranslations } from "next-intl";
-import { LayoutDashboard, Eye } from "lucide-react";
+import { LayoutDashboard, BadgeCheck, PhoneCall } from "lucide-react";
 import { Container } from "@/components/container";
 import { fadeInUp, staggerContainer, viewportConfig } from "@/lib/animations";
 
 const ITEMS = [
   { id: "dashboard", Icon: LayoutDashboard },
-  { id: "transparency", Icon: Eye },
+  { id: "evidence", Icon: BadgeCheck },
+  { id: "founder", Icon: PhoneCall },
 ] as const;
 
 export function Value() {
@@ -39,7 +40,7 @@ export function Value() {
           initial="hidden"
           whileInView="visible"
           viewport={viewportConfig}
-          className="mt-12 grid gap-4 sm:grid-cols-2"
+          className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
         >
           {ITEMS.map(({ id, Icon }) => (
             <motion.div
@@ -50,7 +51,10 @@ export function Value() {
               <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand/10">
                 <Icon className="h-5 w-5 text-brand" />
               </div>
-              <h3 className="mt-5 text-[17px] font-semibold tracking-[-0.01em] text-stone-900">
+              {/* Reserved height for two lines: the titles differ in length,
+                  and more so in French, so without it one card's description
+                  starts lower than its neighbours'. */}
+              <h3 className="mt-5 min-h-[2.6em] text-[17px] font-semibold leading-[1.3] tracking-[-0.01em] text-stone-900">
                 {t(`items.${id}.title`)}
               </h3>
               <p className="mt-2 text-[14px] leading-[1.65] text-stone-500">
