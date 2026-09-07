@@ -75,16 +75,24 @@ export function Pricing() {
                 <h3 className="text-[15px] font-semibold tracking-[-0.01em] text-stone-900">
                   {name}
                 </h3>
-                {/* Reserved height: the French response windows are longer
-                    than the English ones ("Sous 4 heures, 24h/24 et 7j/7"
-                    wraps where "Within 4 hours, 24/7" does not), and without
-                    it that one card pushes its price out of line with the
-                    other three. */}
-                <p className="mt-1 min-h-[2.6em] font-mono text-[11px] leading-[1.3] text-stone-400">
+                {/* One line reserved. Every window fits on one now that the
+                    round-the-clock wording has gone from the fastest tier —
+                    but the reservation stays, because a longer one in either
+                    language would otherwise push that card's price out of
+                    line with the other three. */}
+                <p className="mt-1 min-h-[1.4em] font-mono text-[11px] leading-[1.3] text-stone-400">
                   {t(`tiers.${tier.id}.response`)}
                 </p>
 
-                <div className="mt-3 flex items-baseline gap-1">
+                {/* The tier price is a floor, not a quote: travel and any
+                    time past the first hour are extra, and the footnote says
+                    so. Labelling it keeps the headline number honest without
+                    shrinking it. */}
+                <p className="mt-3 font-mono text-[10px] uppercase tracking-wider text-stone-400">
+                  {t("startingAt")}
+                </p>
+
+                <div className="mt-0.5 flex items-baseline gap-1">
                   {/* fr-FR renders "150 €", en-GB renders "€150" — separator
                       and symbol position both differ, so never hand-format. */}
                   <span className="font-[family-name:var(--font-heading)] text-4xl font-bold tracking-tight tabular-nums text-stone-900">
