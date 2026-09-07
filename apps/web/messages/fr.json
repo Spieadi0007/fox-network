@@ -75,6 +75,7 @@
     "titleLine2": "Vous choisissez le délai.",
     "subtitle": "Un prix unique pour notre déplacement, première heure incluse*. Choisissez le SLA adapté à l'urgence. Si nous le manquons, vous ne payez que la vitesse réellement délivrée, jamais plus — et recevez un avoir de 10 %.",
     "mostPicked": "Le plus choisi",
+    "startingAt": "À partir de",
     "perIntervention": "/ intervention",
     "book": "Réserver {tier}",
     "includedLabel": "Inclus dans tous les niveaux",
@@ -96,7 +97,7 @@
       },
       "critical": {
         "name": "Critique",
-        "response": "Sous 4 heures, 24h/24 et 7j/7"
+        "response": "Sous 4 heures"
       }
     }
   },

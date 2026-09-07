@@ -75,6 +75,7 @@
     "titleLine2": "You pick the response time.",
     "subtitle": "One price to get us on site, first hour included*. Pick the SLA that matches the urgency. Miss it and you pay for the speed we actually delivered, never more — plus a 10% credit.",
     "mostPicked": "Most picked",
+    "startingAt": "Starting at",
     "perIntervention": "/ intervention",
     "book": "Book {tier}",
     "includedLabel": "Every tier includes",
@@ -96,7 +97,7 @@
       },
       "critical": {
         "name": "Critical",
-        "response": "Within 4 hours, 24/7"
+        "response": "Within 4 hours"
       }
     }
   },
