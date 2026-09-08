@@ -8,12 +8,13 @@ export async function getAuthUser() {
   const email = headerStore.get("x-user-email");
   const role = headerStore.get("x-user-role") as Role | null;
   const organizationId = headerStore.get("x-organization-id") || null;
+  const name = headerStore.get("x-user-name") || null;
 
   if (!id || !email || !role) {
     return null;
   }
 
-  return { id, email, role, organizationId };
+  return { id, email, role, organizationId, name };
 }
 
 export async function requirePermission(action: Action) {

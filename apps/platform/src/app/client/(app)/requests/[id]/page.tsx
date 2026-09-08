@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { redirect, notFound } from "next/navigation";
 import { createServerClient } from "@fox/supabase/client/server";
+import { getAuthUser } from "@/lib/auth";
 import { updateClientRequest } from "@fox/supabase/actions/client-requests";
 import { ArrowLeft } from "lucide-react";
 import { SubmitButton } from "@/components/ui/submit-button";
@@ -63,20 +64,14 @@ export default async function ClientRequestDetail({
   const { id } = await params;
   const { error, success } = await searchParams;
 
-  const supabase = await createServerClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) redirect("/client/signin");
+  // Identity from the headers middleware set — no round trip.
+  const user = await getAuthUser();
+  if (!user?.organizationId) redirect("/client/signin");
 
+  const supabase = await createServerClient();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const db = supabase as any;
-  const { data: profile } = await db
-    .from("profiles")
-    .select("organization_id")
-    .eq("id", user.id)
-    .single();
-  const orgId = profile?.organization_id;
+  const orgId = user.organizationId;
   if (!orgId) redirect("/client/signin");
 
   const { data: action } = await db
