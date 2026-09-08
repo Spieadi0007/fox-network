@@ -73,7 +73,7 @@
     "eyebrow": "SLA and pricing",
     "titleLine1": "One price per intervention.",
     "titleLine2": "You pick the response time.",
-    "subtitle": "One price to get us on site, first hour included*. Pick the SLA that matches the urgency. Miss it and you pay for the speed we actually delivered, never more — plus a 10% credit.",
+    "subtitle": "One price to get us on site, first hour included*. Pick the SLA that matches the urgency. Miss it and you pay for the speed we actually delivered, never more — and the credit set out in your contract applies.",
     "mostPicked": "Most picked",
     "startingAt": "Starting at",
     "perIntervention": "/ intervention",
@@ -81,10 +81,10 @@
     "includedLabel": "Every tier includes",
     "included1": "Live dashboard tracking",
     "included2": "Photo evidence on close",
-    "footnote": "*Covers the first hour on site — additional time billed hourly. Travel not included, billed at roughly €1/km. Prices excl. VAT. Volume contracts available: talk to us about your fleet.",
+    "footnote": "*Covers the first hour on site — additional time billed hourly. Travel included up to 100 km. Prices excl. VAT. Volume contracts available: talk to us about your fleet.",
     "tiers": {
-      "relaxed": {
-        "name": "Relaxed",
+      "flexible": {
+        "name": "Flexible",
         "response": "Within 5 business days"
       },
       "standard": {

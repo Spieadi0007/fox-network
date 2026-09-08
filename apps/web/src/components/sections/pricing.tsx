@@ -12,7 +12,7 @@ import { cn } from "@/lib/cn";
 // name and its response window come from the catalog, because both are read
 // aloud to a French customer as often as an English one.
 const TIERS = [
-  { id: "relaxed", price: 150, accent: false },
+  { id: "flexible", price: 150, accent: false },
   { id: "standard", price: 200, accent: false },
   { id: "urgent", price: 300, accent: true },
   { id: "critical", price: 420, accent: false },

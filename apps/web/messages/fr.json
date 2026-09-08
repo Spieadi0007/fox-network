@@ -43,9 +43,9 @@
   },
   "networks": {
     "eyebrow": "Conçu pour",
-    "titleLine1": "Quand l'indisponibilité coûte du chiffre",
-    "titleLine2": "et la disponibilité coûte des effectifs.",
-    "subtitle": "Signalez une panne en deux minutes, ou via API. Nous dépêchons un technicien, réparons, et clôturons le ticket avec preuves photo.",
+    "titleLine1": "Quand l'indisponibilité fait perdre du chiffre d'affaires ;",
+    "titleLine2": "la disponibilité mobilise des effectifs.",
+    "subtitle": "Signalez une panne en deux minutes, ou via API. Nous mobilisons un technicien, réparons, et clôturons le ticket avec preuves photo.",
     "items": {
       "lockers": {
         "name": "Réseaux de consignes",
@@ -73,7 +73,7 @@
     "eyebrow": "SLA et tarifs",
     "titleLine1": "Un prix par intervention.",
     "titleLine2": "Vous choisissez le délai.",
-    "subtitle": "Un prix unique pour notre déplacement, première heure incluse*. Choisissez le SLA adapté à l'urgence. Si nous le manquons, vous ne payez que la vitesse réellement délivrée, jamais plus — et recevez un avoir de 10 %.",
+    "subtitle": "Un prix unique pour notre déplacement, première heure incluse*. Choisissez le SLA adapté à l'urgence. Si nous le manquons, vous ne payez que la vitesse réellement délivrée, jamais plus — et l'avoir prévu à votre contrat s'applique.",
     "mostPicked": "Le plus choisi",
     "startingAt": "À partir de",
     "perIntervention": "/ intervention",
@@ -81,10 +81,10 @@
     "includedLabel": "Inclus dans tous les niveaux",
     "included1": "Suivi sur tableau de bord en direct",
     "included2": "Preuves photo à la clôture",
-    "footnote": "*Couvre la première heure sur site — temps supplémentaire facturé à l'heure. Déplacement non inclus, facturé environ 1 €/km. Prix HT. Contrats au volume disponibles : parlons de votre parc.",
+    "footnote": "*Couvre la première heure sur site — temps supplémentaire facturé à l'heure. Déplacement jusqu'à 100 km inclus. Prix HT. Contrats au volume disponibles : parlons de votre parc.",
     "tiers": {
-      "relaxed": {
-        "name": "Souple",
+      "flexible": {
+        "name": "Flexible",
         "response": "Sous 5 jours ouvrés"
       },
       "standard": {

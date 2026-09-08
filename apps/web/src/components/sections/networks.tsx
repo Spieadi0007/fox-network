@@ -25,7 +25,7 @@ export function Networks() {
           initial="hidden"
           whileInView="visible"
           viewport={viewportConfig}
-          className="max-w-2xl"
+          className="max-w-4xl"
         >
           <span className="font-mono text-xs font-medium uppercase tracking-widest text-brand">
             {t("eyebrow")}
@@ -35,7 +35,7 @@ export function Networks() {
             <br />
             {t("titleLine2")}
           </h2>
-          <p className="mt-5 text-base leading-[1.7] text-stone-500">
+          <p className="mt-5 max-w-2xl text-base leading-[1.7] text-stone-500">
             {t("subtitle")}
           </p>
         </motion.div>
