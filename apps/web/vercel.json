@@ -4,6 +4,6 @@
   "installCommand": "cd ../.. && pnpm install",
   "framework": "nextjs",
   "regions": [
-    "dub1"
+    "cdg1"
   ]
 }
