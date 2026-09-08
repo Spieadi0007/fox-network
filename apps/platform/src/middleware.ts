@@ -87,13 +87,14 @@ export async function middleware(request: NextRequest) {
     role: string;
     organization_id: string | null;
     account_type: string | null;
+    name: string | null;
   };
 
   async function fetchProfile(): Promise<ProfileShape | null> {
     if (!user) return null;
     const { data } = await client.supabase
       .from("profiles")
-      .select("role, organization_id, account_type")
+      .select("role, organization_id, account_type, name")
       .eq("id", user.id)
       .single<ProfileShape>();
 
@@ -108,7 +109,7 @@ export async function middleware(request: NextRequest) {
       if (orgId) {
         const { data: linked } = await client.supabase
           .from("profiles")
-          .select("role, organization_id, account_type")
+          .select("role, organization_id, account_type, name")
           .eq("id", user.id)
           .single<ProfileShape>();
         return linked ?? data;
@@ -137,7 +138,25 @@ export async function middleware(request: NextRequest) {
           client,
         );
       }
-      return client.response;
+
+      // Pass the identity down rather than making every layout and page
+      // resolve it again. This branch used to return without the headers the
+      // staff and technician branches set, which is why the client area
+      // called getUser() and re-read the same profile row on each render —
+      // three or four extra round trips to Ireland per navigation, for facts
+      // middleware had already established.
+      const requestHeaders = new Headers(request.headers);
+      requestHeaders.set("x-user-id", user.id);
+      requestHeaders.set("x-user-email", user.email ?? "");
+      requestHeaders.set("x-user-role", profile.role ?? "viewer");
+      requestHeaders.set("x-organization-id", profile.organization_id ?? "");
+      requestHeaders.set("x-user-name", profile.name ?? "");
+
+      const next = NextResponse.next({ request: { headers: requestHeaders } });
+      client.response.cookies.getAll().forEach((cookie) => {
+        next.cookies.set(cookie.name, cookie.value);
+      });
+      return next;
     }
 
     // Public client pages: bounce authenticated users to the right home
@@ -181,6 +200,7 @@ export async function middleware(request: NextRequest) {
     requestHeaders.set("x-user-email", user.email ?? "");
     requestHeaders.set("x-user-role", profile.role ?? "technician");
     requestHeaders.set("x-organization-id", profile.organization_id ?? "");
+    requestHeaders.set("x-user-name", profile.name ?? "");
 
     const next = NextResponse.next({ request: { headers: requestHeaders } });
     client.response.cookies.getAll().forEach((cookie) => {
@@ -217,6 +237,7 @@ export async function middleware(request: NextRequest) {
     requestHeaders.set("x-user-email", user.email ?? "");
     requestHeaders.set("x-user-role", profile.role ?? "viewer");
     requestHeaders.set("x-organization-id", profile.organization_id ?? "");
+    requestHeaders.set("x-user-name", profile.name ?? "");
 
     const next = NextResponse.next({ request: { headers: requestHeaders } });
     client.response.cookies.getAll().forEach((cookie) => {

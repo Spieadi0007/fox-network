@@ -58,6 +58,12 @@ export default async function NewRequestPage({
         action={submitClientRequest}
         className="mt-8 grid gap-6 lg:grid-cols-3"
       >
+        {/* Generated per render. submitClientRequest claims it before
+            creating anything, so posting this form twice — the
+            double-click the submit button cannot catch until React has
+            hydrated — produces one request, not two. */}
+        <input type="hidden" name="submission_key" value={crypto.randomUUID()} />
+
         <div className="space-y-6 lg:col-span-2">
           {/* Section: Asset */}
           <section className="rounded-2xl border border-stone-200 bg-white p-6">

@@ -241,6 +241,40 @@ export async function submitClientRequest(formData: FormData) {
   const price = PRICE_BY_TIER[slaTier] ?? 150;
   const actionType: ActionType = ACTION_BY_SERVICE[serviceType] ?? "maintenance";
 
+  // Claim this submission before creating anything. The form carries a key
+  // generated when it was rendered; the primary key on request_submissions
+  // means only the first post of a given key gets past here. A second one —
+  // the double-click the submit button cannot catch before React hydrates —
+  // is sent to the request the first one made instead of creating a second
+  // location, project, asset and action.
+  //
+  // A failure that is *not* a duplicate key is swallowed on purpose: a
+  // missing table or a policy problem should not stop somebody reporting a
+  // fault. The worst case then is the behaviour we already had.
+  const submissionKey = pick(formData, "submission_key");
+  if (submissionKey) {
+    const { error: claimError } = await db
+      .from("request_submissions")
+      .insert({
+        key: submissionKey,
+        organization_id: orgId,
+        created_by: user.id,
+      });
+
+    if (claimError?.code === "23505") {
+      const { data: prior } = await db
+        .from("request_submissions")
+        .select("action_id")
+        .eq("key", submissionKey)
+        .maybeSingle();
+      redirect(
+        prior?.action_id
+          ? `/client/requests/${prior.action_id}`
+          : "/client/requests",
+      );
+    }
+  }
+
   const { data: location, error: locError } = await db
     .from("locations")
     .insert({
@@ -326,6 +360,15 @@ export async function submitClientRequest(formData: FormData) {
       .from("actions")
       .update({ asset_id: asset.id })
       .eq("id", createdAction.id);
+  }
+
+  // Point the claim at what it produced, so a duplicate arriving later lands
+  // on the request rather than the list.
+  if (submissionKey && createdAction?.id) {
+    await db
+      .from("request_submissions")
+      .update({ action_id: createdAction.id })
+      .eq("key", submissionKey);
   }
 
   redirect("/client/requests?success=Request+submitted");

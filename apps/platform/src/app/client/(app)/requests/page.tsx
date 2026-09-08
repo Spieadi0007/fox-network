@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createServerClient } from "@fox/supabase/client/server";
+import { getAuthUser } from "@/lib/auth";
 import { ArrowRight, Plus } from "lucide-react";
 import { ClickableRow } from "./clickable-row";
 
@@ -53,27 +54,21 @@ export default async function ClientDashboardPage({
   const params = await searchParams;
   const success = params.success;
 
-  const supabase = await createServerClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) redirect("/client/signin");
+  // Identity from the headers middleware set — no round trip.
+  const user = await getAuthUser();
+  if (!user?.organizationId) redirect("/client/signin");
 
+  const supabase = await createServerClient();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const db = supabase as any;
-  const { data: profile } = await db
-    .from("profiles")
-    .select("organization_id")
-    .eq("id", user.id)
-    .single();
-  if (!profile?.organization_id) redirect("/client/signin");
+  if (!user.organizationId) redirect("/client/signin");
 
   const { data: rows } = await db
     .from("actions")
     .select(
       "id, name, status, approval_status, priority, category, estimated_cost, description, created_at",
     )
-    .eq("organization_id", profile.organization_id)
+    .eq("organization_id", user.organizationId)
     .order("created_at", { ascending: false });
 
   const requests: RequestRow[] = rows ?? [];
