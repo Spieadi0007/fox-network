@@ -1,14 +1,19 @@
 import { createServerClient as createClient, type CookieMethodsServer } from "@supabase/ssr";
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
 import type { Database } from "../types";
+import { sharedCookieDomain } from "./cookie-domain";
 
 export async function createServerClient() {
   const cookieStore = await cookies();
+  const headerStore = await headers();
 
   return createClient<Database>(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
+      cookieOptions: {
+        domain: sharedCookieDomain(headerStore.get("host")),
+      },
       cookies: {
         getAll() {
           return cookieStore.getAll();
