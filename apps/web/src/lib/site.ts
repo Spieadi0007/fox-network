@@ -11,7 +11,20 @@
 // variable no longer silently ships localhost links to real visitors, which
 // is exactly what it did the first time this deployed.
 
-const SITE = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3002";
+// Vercel sets VERCEL_PROJECT_PRODUCTION_URL to the project's production
+// domain, which is by definition the host this site is served on. Preferring
+// it means the canonical URL cannot drift from reality — which it had: the
+// variable was set to the apex while the site serves on www, so every
+// canonical, og:url and hreflang on the site pointed at a URL that 307s
+// somewhere else.
+//
+// NEXT_PUBLIC_SITE_URL remains as a deliberate override for a deployment
+// that is genuinely served somewhere other than its production domain.
+const SITE =
+  process.env.NEXT_PUBLIC_SITE_URL ??
+  (process.env.VERCEL_PROJECT_PRODUCTION_URL
+    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+    : "http://localhost:3002");
 
 /** `admin` / `platform` as a sibling subdomain of wherever this site is served. */
 function sibling(subdomain: string): string {
