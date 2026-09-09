@@ -72,6 +72,12 @@ export async function signInWithOAuth(provider: "google") {
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider,
     options: {
+      // Google skips its account chooser when the browser already has a
+      // Google session and only one account on it, so signing out of
+      // FoxNetwork and pressing the button again drops you straight back into
+      // the account you just left, with no way to pick another. Asking for
+      // the chooser explicitly puts that choice back.
+      queryParams: { prompt: "select_account" },
       redirectTo: `${await getAppOrigin()}/auth/callback`,
     },
   });
@@ -156,6 +162,8 @@ export async function signInWithOAuthCompany(provider: "google") {
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider,
     options: {
+      // See signInWithOAuth: without this Google skips its account chooser.
+      queryParams: { prompt: "select_account" },
       redirectTo: `${await getAppOrigin()}/auth/callback?next=${encodeURIComponent("/signup?step=company-2")}`,
     },
   });
@@ -368,6 +376,8 @@ export async function signInWithOAuthClient(provider: "google") {
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider,
     options: {
+      // See signInWithOAuth: without this Google skips its account chooser.
+      queryParams: { prompt: "select_account" },
       redirectTo: `${await getAppOrigin()}/auth/callback?next=${encodeURIComponent(
         "/client/signup?step=company",
       )}`,
