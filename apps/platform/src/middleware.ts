@@ -2,15 +2,35 @@ import { type NextRequest, NextResponse } from "next/server";
 import { createMiddlewareClient } from "@fox/supabase/client/middleware";
 import { hostForPath, surfaceOf } from "@/lib/hosts";
 
+/**
+ * Move the Supabase cookies onto a response we are building ourselves.
+ *
+ * `cookies.set(name, value)` drops every option the cookie was written with.
+ * Losing Path is the one that bites: a Set-Cookie with no Path defaults to
+ * the directory of the current URL, so a token refreshed on
+ * /client/dashboard comes back scoped to /client. The browser then holds two
+ * auth cookies with different paths, sends whichever matches, and the session
+ * reads as valid on one route and missing on the next — which is a redirect
+ * loop, not a login.
+ *
+ * Passing the whole cookie object keeps Path, Max-Age, SameSite, Secure and
+ * HttpOnly intact.
+ */
+function copyAuthCookies(
+  from: ReturnType<typeof createMiddlewareClient>,
+  to: NextResponse,
+) {
+  from.response.cookies.getAll().forEach((cookie) => {
+    to.cookies.set(cookie);
+  });
+  return to;
+}
+
 function redirectWithCookies(
   url: URL,
   client: ReturnType<typeof createMiddlewareClient>,
 ) {
-  const response = NextResponse.redirect(url);
-  client.response.cookies.getAll().forEach((cookie) => {
-    response.cookies.set(cookie.name, cookie.value);
-  });
-  return response;
+  return copyAuthCookies(client, NextResponse.redirect(url));
 }
 
 export async function middleware(request: NextRequest) {
@@ -152,11 +172,10 @@ export async function middleware(request: NextRequest) {
       requestHeaders.set("x-organization-id", profile.organization_id ?? "");
       requestHeaders.set("x-user-name", profile.name ?? "");
 
-      const next = NextResponse.next({ request: { headers: requestHeaders } });
-      client.response.cookies.getAll().forEach((cookie) => {
-        next.cookies.set(cookie.name, cookie.value);
-      });
-      return next;
+      return copyAuthCookies(
+        client,
+        NextResponse.next({ request: { headers: requestHeaders } }),
+      );
     }
 
     // Public client pages: bounce authenticated users to the right home
@@ -202,11 +221,10 @@ export async function middleware(request: NextRequest) {
     requestHeaders.set("x-organization-id", profile.organization_id ?? "");
     requestHeaders.set("x-user-name", profile.name ?? "");
 
-    const next = NextResponse.next({ request: { headers: requestHeaders } });
-    client.response.cookies.getAll().forEach((cookie) => {
-      next.cookies.set(cookie.name, cookie.value);
-    });
-    return next;
+    return copyAuthCookies(
+      client,
+      NextResponse.next({ request: { headers: requestHeaders } }),
+    );
   }
 
   // ── Staff dashboard area ──
@@ -239,11 +257,10 @@ export async function middleware(request: NextRequest) {
     requestHeaders.set("x-organization-id", profile.organization_id ?? "");
     requestHeaders.set("x-user-name", profile.name ?? "");
 
-    const next = NextResponse.next({ request: { headers: requestHeaders } });
-    client.response.cookies.getAll().forEach((cookie) => {
-      next.cookies.set(cookie.name, cookie.value);
-    });
-    return next;
+    return copyAuthCookies(
+      client,
+      NextResponse.next({ request: { headers: requestHeaders } }),
+    );
   }
 
   // ── Public marketing routes ──
