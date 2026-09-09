@@ -201,8 +201,6 @@
     "errorEmail": "Saisissez une adresse e-mail valide."
   },
   "legalPages": {
-    "draftLabel": "Document en préparation",
-    "draftBody": "Ce document est en cours de rédaction avec notre conseil juridique et sera publié avant l'ouverture commerciale. Pour toute question d'ici là, écrivez-nous à <email></email>.",
     "lastUpdated": "Dernière mise à jour : {date}",
     "legalNoticeIntro": "Informations publiées conformément à l'article 6 III de la loi n° 2004-575 du 21 juin 2004 pour la confiance dans l'économie numérique.",
     "publisher": "Éditeur du site",
@@ -230,5 +228,214 @@
     "role": "Fondateur — ex-Bloqit",
     "credential": "10 ans d'opérations terrain",
     "contact": "Parlez-moi directement"
+  },
+  "privacy": {
+    "updated": "Dernière mise à jour : 9 septembre 2026",
+    "intro": "Cette politique explique quelles données personnelles FoxNetwork collecte lorsque vous utilisez ce site ou la plateforme FoxNetwork, pourquoi nous les conservons, avec qui nous les partageons et quels droits vous pouvez exercer. L'identification complète de l'éditeur figure sur la page Mentions légales.",
+    "sections": [
+      {
+        "heading": "Qui est responsable",
+        "paragraphs": [
+          "FoxNetwork est responsable du traitement des données personnelles décrites ici. Notre identification complète figure sur la page Mentions légales.",
+          "Pour toute question sur cette politique ou pour exercer les droits décrits ci-dessous, écrivez à contact@foxnetwork.io."
+        ],
+        "bullets": []
+      },
+      {
+        "heading": "Ce que nous collectons",
+        "paragraphs": [
+          "Nous ne collectons que ce dont le service a besoin pour fonctionner. En pratique, cela se répartit en six ensembles."
+        ],
+        "bullets": [
+          "Données de compte — votre nom, votre adresse e-mail, le rôle que vous occupez dans votre organisation et, si vous vous connectez avec Google, la photo de profil transmise par Google.",
+          "Données d'organisation — le nom de votre société, sa taille, son secteur et son site web.",
+          "Données de sites et d'équipements — les adresses des sites que nous maintenons, ainsi que le nom et le téléphone du contact que vous nous indiquez pour chacun.",
+          "Données d'intervention — ce qu'un technicien a consigné sur place : photographies, mesures, pièces utilisées, notes, signature, heures de début et de fin, et coordonnées GPS de l'appareil au moment de l'envoi du rapport.",
+          "Documents que vous déposez — modes opératoires, fiches de pièces détachées et tout fichier joint à une demande.",
+          "Demandes de contact — si vous demandez un devis, nous conservons votre nom, votre e-mail, votre téléphone, votre société, votre zone d'exploitation, votre message et la langue dans laquelle vous l'avez écrit, afin de vous répondre dans cette langue."
+        ]
+      },
+      {
+        "heading": "Pourquoi, et sur quelle base",
+        "paragraphs": [
+          "Chaque usage ci-dessous repose sur une base légale prévue à l'article 6 du RGPD."
+        ],
+        "bullets": [
+          "Fournir le service — gestion de votre compte, dépêche des interventions, production des rapports et facturation. Base : exécution du contrat qui nous lie.",
+          "Vérifier le travail — photographies, horodatages et coordonnées d'envoi permettent d'établir qu'une intervention a bien eu lieu à l'endroit et au moment déclarés. Base : notre intérêt légitime à l'intégrité du travail facturé, et le vôtre à ne pas payer un travail qui n'a pas eu lieu.",
+          "Répondre aux demandes — traitement d'une demande de devis. Base : mesures précontractuelles prises à votre demande.",
+          "Respecter nos obligations — conservation des factures et des pièces comptables. Base : obligation légale.",
+          "Mesure d'audience — identifier les entreprises qui consultent notre site vitrine. Base : votre consentement, révocable à tout moment."
+        ]
+      },
+      {
+        "heading": "Avec qui nous les partageons",
+        "paragraphs": [
+          "Nous ne vendons aucune donnée personnelle et n'en partageons aucune à des fins publicitaires. Nous recourons à un petit nombre de sous-traitants, qui agissent sur nos instructions."
+        ],
+        "bullets": [
+          "Supabase — base de données, authentification et stockage de fichiers, hébergés chez AWS en Irlande (eu-west-1).",
+          "Vercel — hébergement applicatif, servi depuis Dublin.",
+          "Anthropic — nous transmettons à Claude un nom de société et le texte public de son site lors de l'enrichissement d'une inscription, ainsi que le contenu d'un mode opératoire lors de sa conversion en étapes. Anthropic n'entraîne pas ses modèles sur ces données.",
+          "Postmark — envoi des e-mails transactionnels, par exemple une invitation à rejoindre une organisation.",
+          "Google — uniquement si vous choisissez de vous connecter avec Google, auquel cas Google confirme votre identité et nous transmet vos nom, e-mail et photo de profil.",
+          "Apollo — identifie les entreprises qui consultent notre site vitrine. Ce dispositif ne fonctionne que sur le site public, jamais dans votre espace de travail, et uniquement avec votre consentement."
+        ]
+      },
+      {
+        "heading": "Où vos données sont hébergées",
+        "paragraphs": [
+          "Vos données sont stockées dans l'Union européenne. La base de données et le stockage de fichiers se trouvent en Irlande, et l'application s'exécute en Irlande.",
+          "Deux de nos sous-traitants sont établis aux États-Unis : Anthropic et Postmark. Ces transferts sont encadrés par les clauses contractuelles types de la Commission européenne."
+        ],
+        "bullets": []
+      },
+      {
+        "heading": "Durées de conservation",
+        "paragraphs": [
+          "Les données de compte et d'organisation sont conservées tant que votre compte est ouvert, puis douze mois après sa fermeture afin de pouvoir le rétablir en cas d'erreur.",
+          "Les dossiers d'intervention, photographies et coordonnées d'envoi comprises, sont conservés cinq ans : ils constituent la preuve qui sous-tend une facture et peuvent être nécessaires en cas de contestation.",
+          "Les factures et pièces comptables sont conservées dix ans, conformément au code de commerce.",
+          "Les demandes de devis qui ne débouchent pas sur un compte sont supprimées au bout de trois ans."
+        ],
+        "bullets": []
+      },
+      {
+        "heading": "Vos droits",
+        "paragraphs": [
+          "Le RGPD vous permet de demander une copie de vos données, leur rectification, leur effacement, la limitation de leur traitement, ou leur transmission à un autre prestataire dans un format lisible par machine. Vous pouvez vous opposer aux traitements fondés sur l'intérêt légitime et retirer votre consentement à tout moment lorsque celui-ci constitue la base du traitement.",
+          "Écrivez à contact@foxnetwork.io. Nous répondons sous un mois.",
+          "Si notre réponse ne vous satisfait pas, vous pouvez saisir la CNIL, l'autorité française de protection des données, sur cnil.fr."
+        ],
+        "bullets": []
+      },
+      {
+        "heading": "Sécurité",
+        "paragraphs": [
+          "L'accès à vos données est contrôlé par la base de données elle-même, et pas seulement par l'application : chaque table applique des règles de sécurité au niveau de la ligne qui limitent chaque compte aux enregistrements de sa propre organisation. Les échanges sont chiffrés en transit et les fichiers sont conservés dans un stockage privé, illisible sans requête authentifiée.",
+          "Aucun système n'est parfait. En cas de violation susceptible d'affecter vos droits, nous notifierons la CNIL dans les 72 heures et vous informerons directement lorsque le risque est élevé."
+        ],
+        "bullets": []
+      },
+      {
+        "heading": "Cookies",
+        "paragraphs": [
+          "La plateforme dépose un cookie, qui vous maintient connecté. Il est strictement nécessaire au fonctionnement du service et ne peut être désactivé sans rendre la connexion impossible.",
+          "Le site vitrine utilise un cookie de mesure destiné à identifier les entreprises visiteuses. Il n'est pas nécessaire et n'est déposé qu'avec votre consentement."
+        ],
+        "bullets": []
+      },
+      {
+        "heading": "Modifications",
+        "paragraphs": [
+          "Si nous modifions cette politique, la date en tête de page sera mise à jour. Lorsqu'une modification affecte sensiblement l'usage de vos données, nous en informerons les titulaires de compte par e-mail avant son entrée en vigueur."
+        ],
+        "bullets": []
+      }
+    ]
+  },
+  "terms": {
+    "updated": "Dernière mise à jour : 9 septembre 2026",
+    "intro": "Les présentes conditions régissent votre utilisation du site et de la plateforme FoxNetwork, ainsi que les prestations de maintenance que nous réalisons. La création d'un compte ou la réservation d'une intervention vaut acceptation.",
+    "sections": [
+      {
+        "heading": "Avec qui vous contractez",
+        "paragraphs": [
+          "Le service est fourni par FoxNetwork, dont l'identification complète figure sur la page Mentions légales. Les présentes conditions existent en français et en anglais ; en cas de divergence, la version française prévaut."
+        ],
+        "bullets": []
+      },
+      {
+        "heading": "Objet du service",
+        "paragraphs": [
+          "FoxNetwork assure la maintenance de réseaux physiques distribués — consignes à colis, distributeurs automatiques de billets, bornes de recharge et équipements comparables — à Paris et dans les huit départements d'Île-de-France.",
+          "Vous signalez une panne depuis la plateforme ou son API. Nous affectons un technicien, réalisons l'intervention et clôturons le ticket avec preuves photographiques, horodatages et relevé des pièces utilisées."
+        ],
+        "bullets": []
+      },
+      {
+        "heading": "Votre compte",
+        "paragraphs": [
+          "Vous êtes responsable de ce qui se passe sous votre compte et de la confidentialité de vos identifiants. Prévenez-nous sans délai si vous pensez qu'un tiers y a accès.",
+          "Vous pouvez inviter des collaborateurs dans votre organisation. Toute personne invitée voit les sites, interventions et factures de votre organisation : invitez en connaissance de cause.",
+          "Vous devez fournir des adresses de site et des coordonnées exactes. Un technicien envoyé à une mauvaise adresse constitue un déplacement facturable."
+        ],
+        "bullets": []
+      },
+      {
+        "heading": "Réserver une intervention",
+        "paragraphs": [
+          "Chaque demande précise un niveau de service. Le prix affiché avant confirmation correspond à l'acheminement d'un technicien sur site, première heure de travail incluse ; il s'agit d'un prix de départ, non d'un plafond.",
+          "Le temps supplémentaire sur site est facturé à l'heure. Le déplacement est inclus jusqu'à 100 km. Tous les prix s'entendent hors taxes.",
+          "Vous pouvez annuler une demande sans frais tant qu'aucun technicien n'a été dépêché. Passé ce stade, le déplacement est facturable, que l'intervention aboutisse ou non."
+        ],
+        "bullets": []
+      },
+      {
+        "heading": "Accès à vos sites",
+        "paragraphs": [
+          "Vous devez donner à notre technicien l'accès nécessaire à l'intervention : clés, codes, autorisations ou accompagnement lorsque le site l'exige. Si le technicien ne peut pas accéder au site, le déplacement est facturable et le niveau de service ne s'applique pas à la seconde tentative.",
+          "Signalez-nous à l'avance tout danger ou toute règle du site ayant une incidence sur la réalisation des travaux."
+        ],
+        "bullets": []
+      },
+      {
+        "heading": "Niveaux de service",
+        "paragraphs": [
+          "Le délai attaché à un niveau correspond au temps au terme duquel un technicien se présente sur site, décompté à partir de la confirmation de la demande.",
+          "Si nous manquons ce délai, vous payez le prix du niveau de service réellement délivré plutôt que celui réservé, et un avoir s'applique. Le montant de cet avoir est fixé dans votre contrat.",
+          "Les délais sont suspendus tant que nous sommes en attente de votre part : accès, décision, ou pièce que vous avez choisi de fournir."
+        ],
+        "bullets": []
+      },
+      {
+        "heading": "Ce que nous produisons vous appartient",
+        "paragraphs": [
+          "Les dossiers d'intervention que nous constituons pour vous — photographies, mesures, rapports et données sous-jacentes — vous appartiennent. Vous pouvez les exporter à tout moment et nous vous les remettrons sur demande dans un format lisible par machine.",
+          "La plateforme elle-même, son logiciel et son design restent notre propriété. Rien ici ne transfère de licence au-delà de votre droit d'utiliser le service tant que votre compte est ouvert."
+        ],
+        "bullets": []
+      },
+      {
+        "heading": "Facturation et paiement",
+        "paragraphs": [
+          "Les interventions sont facturées à l'unité, sauf stipulation contraire de votre contrat. Les factures sont payables à 30 jours.",
+          "Tout retard de paiement donne lieu à des intérêts au taux de trois fois le taux d'intérêt légal, ainsi qu'à l'indemnité forfaitaire de recouvrement de 40 € prévue à l'article L441-10 du code de commerce."
+        ],
+        "bullets": []
+      },
+      {
+        "heading": "Responsabilité",
+        "paragraphs": [
+          "Nous répondons des dommages causés par notre faute dans l'exécution des prestations, dans la limite du montant total que vous nous avez versé au cours des douze mois précédents.",
+          "Nous ne répondons pas des préjudices indirects — perte de chiffre d'affaires, perte de données, perte d'exploitation — ni des défaillances d'équipement sans lien avec notre intervention.",
+          "Aucune stipulation des présentes ne limite une responsabilité qui ne peut l'être légalement, notamment en cas de dommage corporel, de faute lourde ou de faute dolosive."
+        ],
+        "bullets": []
+      },
+      {
+        "heading": "Données personnelles",
+        "paragraphs": [
+          "Le traitement des données personnelles est décrit dans la Politique de confidentialité. Lorsque nous traitons des données pour votre compte dans le cadre des interventions, nous agissons en qualité de sous-traitant et sur vos seules instructions."
+        ],
+        "bullets": []
+      },
+      {
+        "heading": "Suspension et fin du contrat",
+        "paragraphs": [
+          "Vous pouvez fermer votre compte à tout moment. Les interventions déjà réalisées restent dues.",
+          "Nous pouvons suspendre un compte en cas de défaut de paiement, ou d'usage mettant en danger nos techniciens ou les données d'un autre client, après vous en avoir indiqué le motif et vous avoir laissé un délai raisonnable pour y remédier."
+        ],
+        "bullets": []
+      },
+      {
+        "heading": "Droit applicable",
+        "paragraphs": [
+          "Les présentes conditions sont régies par le droit français.",
+          "À défaut de résolution amiable, tout litige sera porté devant les tribunaux compétents de Paris. Le consommateur conserve la faculté de saisir la juridiction de son lieu de résidence."
+        ],
+        "bullets": []
+      }
+    ]
   }
 }

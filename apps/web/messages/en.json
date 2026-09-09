@@ -201,8 +201,6 @@
     "errorEmail": "Enter a valid email address."
   },
   "legalPages": {
-    "draftLabel": "Document in preparation",
-    "draftBody": "This document is being drafted with our legal counsel and will be published before commercial launch. In the meantime, write to us at <email></email> with any question.",
     "lastUpdated": "Last updated: {date}",
     "legalNoticeIntro": "Published in accordance with article 6 III of French law no. 2004-575 of 21 June 2004 on confidence in the digital economy.",
     "publisher": "Site publisher",
@@ -230,5 +228,214 @@
     "role": "Founder — formerly Bloqit",
     "credential": "10 years in field operations",
     "contact": "Talk to me directly"
+  },
+  "privacy": {
+    "updated": "Last updated 9 September 2026",
+    "intro": "This policy explains what personal data FoxNetwork collects when you use this site or the FoxNetwork platform, why we hold it, who we share it with, and the rights you have over it. Full details of the company publishing this site are on the Legal notice page.",
+    "sections": [
+      {
+        "heading": "Who is responsible",
+        "paragraphs": [
+          "FoxNetwork is the data controller for the personal data described here. Our full company identification is set out on the Legal notice page.",
+          "For any question about this policy or to exercise the rights described below, write to contact@foxnetwork.io."
+        ],
+        "bullets": []
+      },
+      {
+        "heading": "What we collect",
+        "paragraphs": [
+          "We only collect what the service needs in order to work. In practice that falls into six groups."
+        ],
+        "bullets": [
+          "Account data — your name, email address, the role you hold in your organisation, and, if you sign in with Google, the profile picture Google provides.",
+          "Organisation data — your company name, its size, industry and website.",
+          "Site and asset data — the addresses of the sites we maintain, and the name and phone number of the contact person you give us for each one.",
+          "Intervention data — what a technician recorded on site: photographs, measurements, parts used, notes, a signature, the time the visit started and ended, and the GPS coordinates of the device at the moment the report was submitted.",
+          "Documents you upload — standard operating procedures, spare-part records and any files you attach to a request.",
+          "Enquiries — if you ask for a quote we keep your name, email, phone number, company, the region you operate in, your message and the language you wrote in, so we can reply in it."
+        ]
+      },
+      {
+        "heading": "Why we hold it, and on what basis",
+        "paragraphs": [
+          "Every use below has a legal basis under Article 6 of the GDPR."
+        ],
+        "bullets": [
+          "To provide the service — running your account, dispatching interventions, producing reports and invoicing. Basis: performance of our contract with you.",
+          "To verify work — photographs, timestamps and submission coordinates let us confirm that an intervention happened where and when it was reported. Basis: our legitimate interest in the integrity of the work we invoice for, and yours in not paying for work that did not happen.",
+          "To answer enquiries — replying to a quote request. Basis: steps taken at your request before entering a contract.",
+          "To meet legal obligations — keeping invoices and accounting records. Basis: legal obligation.",
+          "Website measurement — understanding which companies visit our marketing site. Basis: your consent, which you may withdraw at any time."
+        ]
+      },
+      {
+        "heading": "Who we share it with",
+        "paragraphs": [
+          "We do not sell personal data and we do not share it for advertising. We use a small number of processors, each acting on our instructions."
+        ],
+        "bullets": [
+          "Supabase — database, authentication and file storage, hosted on AWS in Ireland (eu-west-1).",
+          "Vercel — application hosting, served from Dublin.",
+          "Anthropic — we send a company name and the public text of a company website to Claude when enriching a signup, and the contents of a standard operating procedure when converting one into steps. Anthropic does not train its models on this data.",
+          "Postmark — sending transactional email, such as an invitation to join an organisation.",
+          "Google — only if you choose to sign in with Google, in which case Google confirms your identity and gives us your name, email address and profile picture.",
+          "Apollo — identifies the companies visiting our marketing site. This runs on the public site only, never inside your workspace, and only where you have consented."
+        ]
+      },
+      {
+        "heading": "Where your data is held",
+        "paragraphs": [
+          "Your data is stored in the European Union. The database and file storage sit in Ireland, and the application runs in Ireland.",
+          "Two of our processors are established in the United States: Anthropic and Postmark. Transfers to them are covered by the European Commission's Standard Contractual Clauses."
+        ],
+        "bullets": []
+      },
+      {
+        "heading": "How long we keep it",
+        "paragraphs": [
+          "Account and organisation data are kept for as long as your account is open, and for twelve months after it is closed so that the account can be restored if the closure was a mistake.",
+          "Intervention records, including photographs and submission coordinates, are kept for five years, because they are the evidence behind an invoice and may be needed if that invoice is disputed.",
+          "Invoices and accounting records are kept for ten years, as French commercial law requires.",
+          "Quote requests that do not become an account are deleted after three years."
+        ],
+        "bullets": []
+      },
+      {
+        "heading": "Your rights",
+        "paragraphs": [
+          "Under the GDPR you may ask us to give you a copy of your data, correct it, delete it, restrict what we do with it, or send it to another provider in a machine-readable form. You may object to processing we carry out on the basis of legitimate interest, and you may withdraw consent at any time where consent is the basis.",
+          "Write to contact@foxnetwork.io. We answer within one month.",
+          "If you are not satisfied with our answer you can complain to the CNIL, the French data protection authority, at cnil.fr."
+        ],
+        "bullets": []
+      },
+      {
+        "heading": "Security",
+        "paragraphs": [
+          "Access to your data is enforced by the database itself, not only by the application: every table carries row-level security rules that restrict each account to its own organisation's records. Traffic is encrypted in transit, and files are held in private storage that cannot be read without an authenticated request.",
+          "No system is perfect. If a breach occurs that is likely to affect your rights, we will notify the CNIL within 72 hours and tell you directly where the risk is high."
+        ],
+        "bullets": []
+      },
+      {
+        "heading": "Cookies",
+        "paragraphs": [
+          "The platform sets one cookie, which keeps you signed in. It is strictly necessary for the service to function and cannot be switched off without making sign-in impossible.",
+          "The marketing site uses a measurement cookie to identify visiting companies. It is not necessary, and it is only set with your consent."
+        ],
+        "bullets": []
+      },
+      {
+        "heading": "Changes",
+        "paragraphs": [
+          "If we change this policy we will update the date at the top. Where a change materially affects how we use your data, we will tell account holders by email before it takes effect."
+        ],
+        "bullets": []
+      }
+    ]
+  },
+  "terms": {
+    "updated": "Last updated 9 September 2026",
+    "intro": "These terms govern your use of the FoxNetwork website and platform, and the maintenance work we carry out. By creating an account or booking an intervention you accept them.",
+    "sections": [
+      {
+        "heading": "Who you are contracting with",
+        "paragraphs": [
+          "The service is provided by FoxNetwork, identified in full on the Legal notice page. These terms are written in French and English; in the event of a discrepancy the French version prevails."
+        ],
+        "bullets": []
+      },
+      {
+        "heading": "What the service is",
+        "paragraphs": [
+          "FoxNetwork maintains distributed physical networks — parcel lockers, ATMs, EV charging points and comparable equipment — across Paris and the eight départements of Île-de-France.",
+          "You report a fault through the platform or its API. We assign a technician, carry out the work, and close the ticket with photographic evidence, timestamps and a record of the parts used."
+        ],
+        "bullets": []
+      },
+      {
+        "heading": "Your account",
+        "paragraphs": [
+          "You are responsible for what happens under your account, and for keeping your credentials to yourself. Tell us promptly if you believe someone else has access.",
+          "You may invite colleagues into your organisation. Anyone you invite can see your organisation's sites, interventions and invoices, so invite deliberately.",
+          "You must give accurate site addresses and contact details. A technician sent to the wrong address is a billable visit."
+        ],
+        "bullets": []
+      },
+      {
+        "heading": "Booking an intervention",
+        "paragraphs": [
+          "Each request names a service level. The price shown before you confirm is the price of getting a technician to site with the first hour of work included; it is a starting price, not a cap.",
+          "Additional time on site is billed hourly. Travel is included up to 100 km. All prices are exclusive of VAT.",
+          "You may cancel a request at no charge until a technician has been dispatched. After that, the call-out is billable whether or not the work is completed."
+        ],
+        "bullets": []
+      },
+      {
+        "heading": "Access to your sites",
+        "paragraphs": [
+          "You must give our technician the access the work requires — keys, codes, permissions, or an escort where the site demands one. If a technician cannot get in, the visit is billable and the service level does not apply to the second attempt.",
+          "Tell us in advance about any hazard or site rule that affects how the work must be carried out."
+        ],
+        "bullets": []
+      },
+      {
+        "heading": "Service levels",
+        "paragraphs": [
+          "The response window attached to a tier is the time within which a technician will arrive on site, measured from when the request is confirmed.",
+          "If we miss the window, you pay the price of the service level we actually delivered rather than the one you booked, and a credit applies. The amount of that credit is set out in your contract.",
+          "Windows are suspended while we are waiting on you — for access, for a decision, or for a part you have chosen to supply."
+        ],
+        "bullets": []
+      },
+      {
+        "heading": "What we produce belongs to you",
+        "paragraphs": [
+          "The intervention records we create for you — photographs, measurements, reports and the data behind them — are yours. You can export them at any time, and we will provide them in a machine-readable form on request.",
+          "The platform itself, its software and its design remain ours. Nothing here transfers a licence to it beyond your right to use the service while your account is open."
+        ],
+        "bullets": []
+      },
+      {
+        "heading": "Invoicing and payment",
+        "paragraphs": [
+          "Interventions are invoiced per job unless your contract sets out different terms. Invoices are due within 30 days.",
+          "Late payment carries interest at three times the French legal rate, plus the fixed recovery indemnity of €40 required by article L441-10 of the Commercial Code."
+        ],
+        "bullets": []
+      },
+      {
+        "heading": "Liability",
+        "paragraphs": [
+          "We are liable for damage we cause through our own fault in carrying out the work, up to the total amount you have paid us over the preceding twelve months.",
+          "We are not liable for indirect loss — lost revenue, lost data, or loss of business — nor for equipment failing for reasons unconnected to our intervention.",
+          "Nothing in these terms limits liability that cannot be limited by law, including death, personal injury, or our own gross negligence or wilful misconduct."
+        ],
+        "bullets": []
+      },
+      {
+        "heading": "Personal data",
+        "paragraphs": [
+          "How we handle personal data is set out in the Privacy policy. Where we process data on your behalf as part of running interventions, we do so as your processor and only on your instructions."
+        ],
+        "bullets": []
+      },
+      {
+        "heading": "Suspension and ending the contract",
+        "paragraphs": [
+          "You may close your account at any time. Interventions already carried out remain payable.",
+          "We may suspend an account for non-payment, or for use that endangers our technicians or another client's data, after telling you why and giving you a reasonable chance to put it right."
+        ],
+        "bullets": []
+      },
+      {
+        "heading": "Governing law",
+        "paragraphs": [
+          "These terms are governed by French law.",
+          "If we cannot resolve a dispute between us, it will be brought before the competent courts of Paris. Consumers retain the right to bring proceedings in the courts of their place of residence."
+        ],
+        "bullets": []
+      }
+    ]
   }
 }
