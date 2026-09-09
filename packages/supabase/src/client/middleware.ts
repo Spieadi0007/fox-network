@@ -1,6 +1,7 @@
 import { createServerClient as createClient, type CookieMethodsServer } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 import type { Database } from "../types";
+import { sharedCookieDomain } from "./cookie-domain";
 
 export function createMiddlewareClient(request: NextRequest) {
   let response = NextResponse.next({ request });
@@ -9,6 +10,9 @@ export function createMiddlewareClient(request: NextRequest) {
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
+      cookieOptions: {
+        domain: sharedCookieDomain(request.headers.get("host")),
+      },
       cookies: {
         getAll() {
           return request.cookies.getAll();
