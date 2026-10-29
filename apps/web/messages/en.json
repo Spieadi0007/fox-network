@@ -19,6 +19,10 @@
     "legalNotice": {
       "title": "Legal notice",
       "description": "Publisher and hosting information for the FoxNetwork website."
+    },
+    "karim": {
+      "title": "Karim Adaimi — FoxNetwork",
+      "description": "Founder of FoxNetwork, field maintenance for locker, ATM and EV charging networks."
     }
   },
   "nav": {
@@ -437,5 +441,34 @@
         "bullets": []
       }
     ]
+  },
+  "karim": {
+    "bookCall": "Book a discovery call",
+    "bookCallHint": "Pick a time with Karim",
+    "linkedin": "Connect on LinkedIn",
+    "linkedinHint": "Karim Adaimi",
+    "tagline": "Field maintenance for locker, ATM and EV charging networks across Île-de-France.",
+    "website": "Website",
+    "websiteHint": "foxnetwork.io",
+    "leaveDetails": "Leave your details",
+    "leaveDetailsHint": "Karim will get back to you",
+    "nameLabel": "Name",
+    "emailLabel": "Email",
+    "phoneLabel": "Phone",
+    "websiteLabel": "Website",
+    "messageLabel": "Anything else?",
+    "messagePlaceholder": "What you run, or what you'd like to talk about.",
+    "optional": "optional",
+    "submit": "Send my details",
+    "submitting": "Sending…",
+    "successTitle": "Thanks, we've got your details.",
+    "successBody": "Karim will be in touch after Web Summit.",
+    "errorRequired": "Required",
+    "errorEmail": "Enter a valid email address",
+    "errorGeneric": "That didn't go through. Please write to us at {email}.",
+    "copy": "Copy",
+    "copied": "Copied",
+    "copyEmail": "Copy email address",
+    "copyPhone": "Copy phone number"
   }
 }

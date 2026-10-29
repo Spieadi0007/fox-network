@@ -19,6 +19,10 @@
     "legalNotice": {
       "title": "Mentions légales",
       "description": "Informations légales relatives à l'éditeur et à l'hébergeur du site FoxNetwork."
+    },
+    "karim": {
+      "title": "Karim Adaimi — FoxNetwork",
+      "description": "Fondateur de FoxNetwork, la maintenance terrain des réseaux de consignes, de distributeurs et de bornes de recharge."
     }
   },
   "nav": {
@@ -437,5 +441,34 @@
         "bullets": []
       }
     ]
+  },
+  "karim": {
+    "bookCall": "Réserver un appel découverte",
+    "bookCallHint": "Choisissez un créneau avec Karim",
+    "linkedin": "Se connecter sur LinkedIn",
+    "linkedinHint": "Karim Adaimi",
+    "tagline": "Maintenance terrain des réseaux de consignes, de distributeurs et de bornes de recharge en Île-de-France.",
+    "website": "Site web",
+    "websiteHint": "foxnetwork.io",
+    "leaveDetails": "Laissez vos coordonnées",
+    "leaveDetailsHint": "Karim reviendra vers vous",
+    "nameLabel": "Nom",
+    "emailLabel": "E-mail",
+    "phoneLabel": "Téléphone",
+    "websiteLabel": "Site web",
+    "messageLabel": "Autre chose ?",
+    "messagePlaceholder": "Ce que vous exploitez, ou ce dont vous aimeriez parler.",
+    "optional": "facultatif",
+    "submit": "Envoyer mes coordonnées",
+    "submitting": "Envoi…",
+    "successTitle": "Merci, nous avons bien reçu vos coordonnées.",
+    "successBody": "Karim vous recontactera après le Web Summit.",
+    "errorRequired": "Obligatoire",
+    "errorEmail": "Saisissez une adresse e-mail valide",
+    "errorGeneric": "L'envoi n'a pas abouti. Écrivez-nous à {email}.",
+    "copy": "Copier",
+    "copied": "Copié",
+    "copyEmail": "Copier l'adresse e-mail",
+    "copyPhone": "Copier le numéro de téléphone"
   }
 }
