@@ -29,8 +29,8 @@ import { ContactRow } from "./contact-row";
 const KARIM = {
   email: site.contactEmail,
   phone: "",
-  booking: "",
-  linkedin: "",
+  booking: "https://calendar.app.google/ZWtCpYimwdm2yCbN7",
+  linkedin: "https://www.linkedin.com/in/adaimi-karim/",
 };
 
 const dev = process.env.NODE_ENV === "development";
