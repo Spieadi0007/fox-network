@@ -23,6 +23,9 @@ export const routing = defineRouting({
     "/privacy": { fr: "/confidentialite", en: "/privacy" },
     "/terms": { fr: "/conditions-utilisation", en: "/terms" },
     "/legal-notice": { fr: "/mentions-legales", en: "/legal-notice" },
+    // Karim's link page, behind the QR code on his badge. One path in both
+    // languages so the printed code works whichever one the phone asks for.
+    "/karim": "/karim",
   },
 });
 

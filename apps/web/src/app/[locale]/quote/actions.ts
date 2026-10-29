@@ -1,7 +1,9 @@
 "use server";
 
+import { after } from "next/server";
 import { getTranslations } from "next-intl/server";
 import { createAnonClient } from "@/lib/supabase";
+import { sendQuoteToAirtable, type QuoteRecord } from "@/lib/airtable";
 import { routing, type Locale } from "@/i18n/routing";
 
 export type QuoteState = {
@@ -40,18 +42,30 @@ export async function submitQuote(
     return { status: "error", fieldErrors };
   }
 
+  const quote: QuoteRecord = {
+    company,
+    name,
+    email,
+    phone: raw("phone") || null,
+    networkType: raw("networkType") || null,
+    sites: raw("sites"),
+    region: raw("region") || null,
+    message: raw("message") || null,
+    locale,
+  };
+
   try {
     const supabase = createAnonClient();
     const { error } = await supabase.from("quote_requests").insert({
-      company_name: company,
-      name,
-      email,
-      phone: raw("phone") || null,
-      network_type: raw("networkType") || null,
-      network_size: raw("sites"),
-      region: raw("region") || null,
-      notes: raw("message") || null,
-      locale,
+      company_name: quote.company,
+      name: quote.name,
+      email: quote.email,
+      phone: quote.phone,
+      network_type: quote.networkType,
+      network_size: quote.sites,
+      region: quote.region,
+      notes: quote.message,
+      locale: quote.locale,
     });
     if (error) throw error;
   } catch {
@@ -64,6 +78,10 @@ export async function submitQuote(
       }),
     };
   }
+
+  // Only once the lead is safely in Supabase, and after the response, so the
+  // visitor never waits on Airtable.
+  after(() => sendQuoteToAirtable(quote));
 
   return { status: "success" };
 }
