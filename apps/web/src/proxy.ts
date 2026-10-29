@@ -10,7 +10,8 @@ import { routing } from "@/i18n/routing";
 export default createMiddleware(routing);
 
 export const config = {
-  // Everything except Next internals, the API surface, and files with an
-  // extension (the logo, og images, robots.txt).
-  matcher: "/((?!api|_next|_vercel|.*\\..*).*)",
+  // Everything except Next internals, the API surface, the analytics
+  // forwarder (/ingest, rewritten to PostHog), and files with an extension
+  // (the logo, og images, robots.txt).
+  matcher: "/((?!api|ingest|_next|_vercel|.*\\..*).*)",
 };
