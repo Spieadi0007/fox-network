@@ -30,7 +30,7 @@ const KARIM = {
   email: site.contactEmail,
   phone: "",
   booking: "",
-  linkedin: "",
+  linkedin: "https://www.linkedin.com/in/adaimi-karim/",
 };
 
 const dev = process.env.NODE_ENV === "development";
