@@ -22,7 +22,7 @@
     },
     "karim": {
       "title": "Karim Adaimi — FoxNetwork",
-      "description": "Fondateur de FoxNetwork, la maintenance terrain des réseaux de consignes, de distributeurs et de bornes de recharge."
+      "description": "Fondateur & CEO de FoxNetwork, la maintenance terrain des réseaux de consignes, de distributeurs et de bornes de recharge."
     }
   },
   "nav": {
@@ -229,8 +229,8 @@
     "title": "Vous devez savoir qui se présente sur votre site.",
     "body": "La maintenance physique n'est pas un achat de logiciel. Quelqu'un ouvre votre armoire, manipule votre matériel, et laisse un compte rendu que vous êtes censé croire. Cette personne a un nom.",
     "name": "Karim Adaimi",
-    "role": "Fondateur — ex-Bloqit",
-    "credential": "10 ans d'opérations terrain",
+    "role": "Fondateur & CEO — ex-Bloqit",
+    "credential": "10+ ans d'opérations terrain",
     "contact": "Parlez-moi directement"
   },
   "privacy": {
@@ -469,6 +469,8 @@
     "copy": "Copier",
     "copied": "Copié",
     "copyEmail": "Copier l'adresse e-mail",
-    "copyPhone": "Copier le numéro de téléphone"
+    "copyPhone": "Copier le numéro de téléphone",
+    "close": "Fermer",
+    "done": "Terminé"
   }
 }
