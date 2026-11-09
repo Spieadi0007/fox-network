@@ -14,6 +14,7 @@ import {
   Package,
   Ruler,
   GitBranch,
+  ChevronRight,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -68,7 +69,10 @@ const STEP_TYPE_STYLE: Record<ProcedureStepType, string> = {
 /** Server shape from getProcedureTemplates(). */
 type SavedTemplate = {
   id: string;
+  sop_id: string;
   action_type_code: string;
+  client_code: string;
+  asset_type_code: string;
   name: string;
   summary: string;
   version: number;
@@ -130,9 +134,15 @@ export function ProceduresManager({
   actionTypeOptions,
   controlledType,
   hideChrome,
+  clientOptions = [],
+  assetTypeOptions = [],
 }: {
   templates: SavedTemplate[];
   actionTypeOptions: ConfigurableFieldOption[];
+  /** Clients an SOP can be scoped to (the configurable client list). */
+  clientOptions?: ConfigurableFieldOption[];
+  /** Asset types an SOP can be scoped to. */
+  assetTypeOptions?: ConfigurableFieldOption[];
   /** When set, the parent owns type selection and the pill row is hidden. */
   controlledType?: string;
   /** Hide the pill row and the SOP button — the parent provides both. */
@@ -158,12 +168,29 @@ export function ProceduresManager({
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [saved, setSaved] = useState<string | null>(null);
-  /** Set while the draft is an edit of a published version rather than a new import. */
-  const [editingVersion, setEditingVersion] = useState<number | null>(null);
-  const [confirmDelete, setConfirmDelete] = useState(false);
+  /** The SOP the draft is a new version of; null while it's a new SOP. */
+  const [editingSop, setEditingSop] = useState<SavedTemplate | null>(null);
+  /** Who and what the draft applies to; "" is all. */
+  const [draftScope, setDraftScope] = useState({ clientCode: "", assetTypeCode: "" });
+  const [confirmDelete, setConfirmDelete] = useState<SavedTemplate | null>(null);
+  const [openSop, setOpenSop] = useState<string | null>(null);
   const fileInput = useRef<HTMLInputElement>(null);
 
-  const published = templates.find((t) => t.action_type_code === activeType);
+  // A service type holds several SOPs, each scoped to a client and an asset type.
+  const sops = templates.filter((t) => t.action_type_code === activeType);
+  const clientLabel = (code: string) =>
+    code ? (clientOptions.find((o) => o.code === code)?.label ?? code) : "All clients";
+  const assetTypeLabel = (code: string) =>
+    code ? (assetTypeOptions.find((o) => o.code === code)?.label ?? code) : "All asset types";
+  /** A scope already held by another live SOP of this type. */
+  const scopeTakenBy = draft
+    ? sops.find(
+        (t) =>
+          t.client_code === draftScope.clientCode &&
+          t.asset_type_code === draftScope.assetTypeCode &&
+          t.sop_id !== editingSop?.sop_id,
+      )
+    : undefined;
   const activeLabel =
     actionTypes.find((t) => t.code === activeType)?.label ?? activeType;
 
@@ -227,6 +254,8 @@ export function ProceduresManager({
       setDraft(json.procedure);
       setImportId(json.import_id ?? null);
       setSourceFile(json.file_name ?? file.name);
+      setEditingSop(null);
+      setDraftScope({ clientCode: "", assetTypeCode: "" });
     } catch {
       setError("Could not reach the server.");
     } finally {
@@ -292,11 +321,12 @@ export function ProceduresManager({
     if (!draft) return;
     setError(null);
     startTransition(async () => {
-      const { data, error: err } = await saveProcedureTemplate(
-        activeType,
-        draft,
-        importId,
-      );
+      const { data, error: err } = await saveProcedureTemplate(activeType, draft, {
+        sopId: editingSop?.sop_id ?? null,
+        clientCode: draftScope.clientCode,
+        assetTypeCode: draftScope.assetTypeCode,
+        sourceSopImportId: importId,
+      });
       if (err) {
         setError(err.message ?? "Could not save the procedure.");
         return;
@@ -305,11 +335,10 @@ export function ProceduresManager({
       setImportId(null);
       setSourceFile(null);
       setSaved(
-        editingVersion !== null
-          ? `Saved your changes as version ${data?.version} for ${activeLabel}.`
-          : `Published version ${data?.version} for ${activeLabel}.`,
+        `${editingSop ? "Saved your changes to" : "Published"} ${draft.name} (version ${data?.version}) for ${clientLabel(draftScope.clientCode)}, ${assetTypeLabel(draftScope.assetTypeCode)}.`,
       );
-      setEditingVersion(null);
+      setEditingSop(null);
+      setOpenSop(data?.sopId ?? null);
       router.refresh();
     });
   }
@@ -319,8 +348,7 @@ export function ProceduresManager({
    * as the next version — the same path as an import — so visits recorded
    * against the current version keep reading back as they were.
    */
-  function handleEdit() {
-    if (!published) return;
+  function handleEdit(published: SavedTemplate) {
     setDraft({
       name: published.name,
       summary: published.summary,
@@ -350,22 +378,25 @@ export function ProceduresManager({
     setSourceFile(null);
     setSaved(null);
     setError(null);
-    setEditingVersion(published.version);
+    setEditingSop(published);
+    setDraftScope({ clientCode: published.client_code, assetTypeCode: published.asset_type_code });
   }
 
   function cancelDraft() {
     setDraft(null);
     setImportId(null);
-    setEditingVersion(null);
+    setEditingSop(null);
   }
 
   // Takes the procedure off new visits. The row is kept (is_active = false),
   // so answers already recorded against it still read back.
   function handleDelete() {
-    setConfirmDelete(false);
+    const sop = confirmDelete;
+    setConfirmDelete(null);
+    if (!sop) return;
     startTransition(async () => {
-      await deactivateProcedureTemplate(activeType);
-      setSaved(`Deleted the procedure for ${activeLabel}.`);
+      await deactivateProcedureTemplate(sop.sop_id);
+      setSaved(`Deleted ${sop.name} from ${activeLabel}.`);
       router.refresh();
     });
   }
@@ -392,7 +423,7 @@ export function ProceduresManager({
               onClick={() => {
                 setActiveType(at.code);
                 setDraft(null);
-                setEditingVersion(null);
+                setEditingSop(null);
                 setSaved(null);
                 setError(null);
               }}
@@ -442,7 +473,7 @@ export function ProceduresManager({
           ) : (
             <>
               <FileUp className="h-3.5 w-3.5" />
-              {published ? "Replace from SOP" : "Generate from SOP"}
+              Add SOP from PDF
             </>
           )}
         </button>
@@ -479,23 +510,51 @@ export function ProceduresManager({
               </h3>
               <p className="mt-0.5 text-xs text-stone-400">
                 {stepCount} steps in {draft.sections.length} sections
-                {editingVersion !== null
-                  ? ` · editing version ${editingVersion}, saves as version ${editingVersion + 1}`
+                {editingSop
+                  ? ` · editing version ${editingSop.version}, saves as version ${editingSop.version + 1}`
                   : `${sourceFile ? ` · from ${sourceFile}` : ""} · not published yet`}
               </p>
             </div>
             <div className="flex items-center gap-2">
               <Button variant="ghost" onClick={cancelDraft} disabled={pending}>
-                {editingVersion !== null ? "Cancel" : "Discard"}
+                {editingSop ? "Cancel" : "Discard"}
               </Button>
               <Button
                 onClick={handlePublish}
-                disabled={pending || stepCount === 0}
+                disabled={pending || stepCount === 0 || !!scopeTakenBy}
               >
                 {pending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                {editingVersion !== null ? "Save changes" : `Publish ${stepCount} steps`}
+                {editingSop ? "Save changes" : `Publish ${stepCount} steps`}
               </Button>
             </div>
+          </div>
+
+          {/* Who and what this SOP applies to */}
+          <div className="flex flex-wrap items-end gap-4 border-b border-stone-100 bg-stone-50/60 px-5 py-3">
+            <ScopeSelect
+              label="Client"
+              allLabel="All clients"
+              value={draftScope.clientCode}
+              options={clientOptions}
+              onChange={(clientCode) => setDraftScope((s) => ({ ...s, clientCode }))}
+            />
+            <ScopeSelect
+              label="Asset type"
+              allLabel="All asset types"
+              value={draftScope.assetTypeCode}
+              options={assetTypeOptions}
+              onChange={(assetTypeCode) => setDraftScope((s) => ({ ...s, assetTypeCode }))}
+            />
+            <p className="flex-1 text-xs text-stone-500">
+              {scopeTakenBy ? (
+                <span className="text-red-600">
+                  {scopeTakenBy.name} already covers {clientLabel(draftScope.clientCode)},{" "}
+                  {assetTypeLabel(draftScope.assetTypeCode)}. Edit that SOP, or pick a different client or asset type.
+                </span>
+              ) : (
+                "Visits use the most specific SOP that matches their client and asset type."
+              )}
+            </p>
           </div>
 
           {draft.summary && (
@@ -682,96 +741,106 @@ export function ProceduresManager({
         </div>
       )}
 
-      {/* Published template */}
-      {!draft && published && (
-        <div className="rounded-xl border border-stone-200 bg-white">
-          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-stone-100 px-5 py-4">
-            <div className="min-w-0">
-              <h3 className="font-[family-name:var(--font-heading)] text-sm font-semibold text-stone-900">
-                {published.name}
-              </h3>
-              <p className="mt-0.5 text-xs text-stone-400">
-                Version {published.version} ·{" "}
-                {published.procedure_sections.reduce(
-                  (n, s) => n + s.procedure_steps.length,
-                  0,
-                )}{" "}
-                steps · live for {activeLabel}
-              </p>
-            </div>
-            <div className="flex items-center gap-1">
-              <Button variant="ghost" onClick={handleEdit} disabled={pending}>
-                <Pencil className="mr-2 h-4 w-4" />
-                Edit
-              </Button>
-              <Button
-                variant="ghost"
-                onClick={() => setConfirmDelete(true)}
-                disabled={pending}
-                className="text-red-600 hover:bg-red-50 hover:text-red-700"
-              >
-                <Trash2 className="mr-2 h-4 w-4" />
-                Delete
-              </Button>
-            </div>
+      {/* SOPs for this service type */}
+      {!draft && sops.length > 0 && (
+        <div className="space-y-3">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <p className="text-xs font-semibold uppercase tracking-wider text-stone-400">
+              {sops.length} SOP{sops.length === 1 ? "" : "s"} for {activeLabel}
+            </p>
+            <AddSopButton onClick={() => fileInput.current?.click()} busy={busy || pending} />
           </div>
 
-          <div className="divide-y divide-stone-100">
-            {[...published.procedure_sections]
-              .sort((a, b) => a.position - b.position)
-              .map((section) => (
-                <div key={section.id} className="px-5 py-4">
-                  <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-stone-400">
-                    {section.title}
-                  </p>
-                  <ul className="space-y-1.5">
-                    {[...section.procedure_steps]
-                      .sort((a, b) => a.position - b.position)
-                      .map((step) => (
-                        <li
-                          key={step.id}
-                          className="flex items-start gap-2 text-sm"
-                        >
-                          <span
-                            className={`mt-0.5 flex-shrink-0 rounded px-1.5 py-0.5 text-[10px] font-medium ring-1 ring-inset ${STEP_TYPE_STYLE[step.step_type]}`}
-                          >
-                            {STEP_TYPE_LABEL[step.step_type]}
-                          </span>
-                          <span className="text-stone-700">
-                            {step.label}
-                            {step.units && (
-                              <span className="text-stone-400">
-                                {" "}
-                                ({step.units})
-                              </span>
-                            )}
-                            {!step.required && (
-                              <span className="ml-1.5 text-xs text-stone-400">
-                                optional
-                              </span>
-                            )}
-                            <StepBadges step={step} />
-                          </span>
-                        </li>
-                      ))}
-                  </ul>
+          {sops.map((sop) => {
+            const steps = sop.procedure_sections.reduce((n, s) => n + s.procedure_steps.length, 0);
+            const open = openSop === sop.sop_id || sops.length === 1;
+            return (
+              <div key={sop.sop_id} className="rounded-xl border border-stone-200 bg-white">
+                <div className="flex flex-wrap items-center justify-between gap-3 px-5 py-4">
+                  <button
+                    type="button"
+                    onClick={() => setOpenSop(open ? null : sop.sop_id)}
+                    className="min-w-0 flex-1 text-left"
+                    aria-expanded={open}
+                  >
+                    <h3 className="flex items-center gap-2 font-[family-name:var(--font-heading)] text-sm font-semibold text-stone-900">
+                      <ChevronRight className={`h-4 w-4 text-stone-400 transition-transform ${open ? "rotate-90" : ""}`} />
+                      {sop.name}
+                    </h3>
+                    <div className="mt-1.5 flex flex-wrap items-center gap-1.5 pl-6 text-xs">
+                      <ScopeChip on={!!sop.client_code}>{clientLabel(sop.client_code)}</ScopeChip>
+                      <ScopeChip on={!!sop.asset_type_code}>{assetTypeLabel(sop.asset_type_code)}</ScopeChip>
+                      <span className="text-stone-400">
+                        Version {sop.version} · {steps} steps
+                      </span>
+                    </div>
+                  </button>
+                  <div className="flex items-center gap-1">
+                    <Button variant="ghost" onClick={() => handleEdit(sop)} disabled={pending}>
+                      <Pencil className="mr-2 h-4 w-4" />
+                      Edit
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      onClick={() => setConfirmDelete(sop)}
+                      disabled={pending}
+                      className="text-red-600 hover:bg-red-50 hover:text-red-700"
+                    >
+                      <Trash2 className="mr-2 h-4 w-4" />
+                      Delete
+                    </Button>
+                  </div>
                 </div>
-              ))}
-          </div>
+
+                {open && (
+                  <div className="divide-y divide-stone-100 border-t border-stone-100">
+                    {[...sop.procedure_sections]
+                      .sort((a, b) => a.position - b.position)
+                      .map((section) => (
+                        <div key={section.id} className="px-5 py-4">
+                          <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-stone-400">
+                            {section.title}
+                          </p>
+                          <ul className="space-y-1.5">
+                            {[...section.procedure_steps]
+                              .sort((a, b) => a.position - b.position)
+                              .map((step) => (
+                                <li key={step.id} className="flex items-start gap-2 text-sm">
+                                  <span
+                                    className={`mt-0.5 flex-shrink-0 rounded px-1.5 py-0.5 text-[10px] font-medium ring-1 ring-inset ${STEP_TYPE_STYLE[step.step_type]}`}
+                                  >
+                                    {STEP_TYPE_LABEL[step.step_type]}
+                                  </span>
+                                  <span className="text-stone-700">
+                                    {step.label}
+                                    {step.units && <span className="text-stone-400"> ({step.units})</span>}
+                                    {!step.required && <span className="ml-1.5 text-xs text-stone-400">optional</span>}
+                                    <StepBadges step={step} />
+                                  </span>
+                                </li>
+                              ))}
+                          </ul>
+                        </div>
+                      ))}
+                  </div>
+                )}
+              </div>
+            );
+          })}
         </div>
       )}
 
-      <Dialog open={confirmDelete} onOpenChange={setConfirmDelete}>
+      <Dialog open={!!confirmDelete} onOpenChange={(o) => !o && setConfirmDelete(null)}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>Delete the procedure for {activeLabel}?</DialogTitle>
+            <DialogTitle>Delete {confirmDelete?.name}?</DialogTitle>
             <DialogDescription>
               Technicians stop seeing these steps on new visits. Visits already
               recorded keep their answers.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <Button variant="ghost" onClick={() => setConfirmDelete(false)}>
+            <Button variant="ghost" onClick={() => setConfirmDelete(null)}>
               Cancel
             </Button>
             <Button
@@ -779,22 +848,26 @@ export function ProceduresManager({
               className="bg-red-600 text-white hover:bg-red-700"
             >
               <Trash2 className="mr-2 h-4 w-4" />
-              Delete procedure
+              Delete SOP
             </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
 
       {/* Nothing yet */}
-      {!draft && !published && !busy && (
+      {!draft && sops.length === 0 && !busy && (
         <div className="rounded-xl border border-dashed border-stone-300 px-5 py-12 text-center">
           <p className="text-sm font-medium text-stone-600">
-            No procedure for {activeLabel} yet
+            No SOPs for {activeLabel} yet
           </p>
           <p className="mx-auto mt-1 max-w-md text-xs text-stone-400">
-            Upload the client&rsquo;s SOP and we&rsquo;ll turn its steps into
-            the form technicians fill in on site.
+            Upload a client&rsquo;s SOP and we&rsquo;ll turn its steps into
+            the form technicians fill in on site. Add one per client or asset
+            type that works differently.
           </p>
+          <div className="mt-4 flex justify-center">
+            <AddSopButton onClick={() => fileInput.current?.click()} busy={busy || pending} />
+          </div>
         </div>
       )}
     </div>
@@ -885,5 +958,64 @@ function StepBadges({
         </span>
       )}
     </div>
+  );
+}
+
+function AddSopButton({ onClick, busy }: { onClick: () => void; busy: boolean }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      disabled={busy}
+      className="flex items-center gap-2 rounded-full border border-stone-300 bg-white px-4 py-2 text-sm font-medium text-stone-700 transition-colors hover:border-stone-400 hover:bg-stone-50 disabled:opacity-50"
+    >
+      {busy ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <FileUp className="h-3.5 w-3.5" />}
+      Add SOP from PDF
+    </button>
+  );
+}
+
+/** A client or asset-type tag on an SOP; muted when it applies to all. */
+function ScopeChip({ on, children }: { on: boolean; children: React.ReactNode }) {
+  return (
+    <span
+      className={`rounded-full px-2 py-0.5 font-medium ${
+        on ? "bg-blue-50 text-blue-700 ring-1 ring-inset ring-blue-200" : "bg-stone-100 text-stone-500"
+      }`}
+    >
+      {children}
+    </span>
+  );
+}
+
+function ScopeSelect({
+  label,
+  allLabel,
+  value,
+  options,
+  onChange,
+}: {
+  label: string;
+  allLabel: string;
+  value: string;
+  options: ConfigurableFieldOption[];
+  onChange: (code: string) => void;
+}) {
+  return (
+    <label className="flex flex-col gap-1 text-xs font-medium text-stone-500">
+      {label}
+      <select
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        className="min-w-[180px] rounded-lg border border-stone-200 bg-white px-3 py-1.5 text-sm text-stone-900 focus:border-stone-400 focus:outline-none"
+      >
+        <option value="">{allLabel}</option>
+        {options.map((o) => (
+          <option key={o.code} value={o.code}>
+            {o.label}
+          </option>
+        ))}
+      </select>
+    </label>
   );
 }

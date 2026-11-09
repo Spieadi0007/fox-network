@@ -64,11 +64,15 @@ export function ServiceTypesManager({
   configs,
   templates,
   actionTypeOptions,
+  clientOptions,
+  assetTypeOptions,
 }: {
   types: ServiceType[];
   configs: FieldAppConfig[];
   templates: SavedTemplate[];
   actionTypeOptions: ConfigurableFieldOption[];
+  clientOptions: ConfigurableFieldOption[];
+  assetTypeOptions: ConfigurableFieldOption[];
 }) {
   const router = useRouter();
   const [pending, startTransition] = useTransition();
@@ -98,20 +102,15 @@ export function ServiceTypesManager({
 
   const active = types.find((t) => t.code === activeCode);
   const config = configs.find((c) => c.action_type_code === activeCode);
-  const template = templates.find(
+  // A service type holds several SOPs; the tab counts them.
+  const sopCount = templates.filter(
     (t: SavedTemplate) => t.action_type_code === activeCode,
-  );
+  ).length;
 
   const moduleCount = config
     ? Object.values(config.enabled_modules ?? {}).filter(Boolean).length
     : 0;
   const fieldCount = config?.detail_fields?.length ?? 0;
-  const stepCount =
-    template?.procedure_sections?.reduce(
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (n: number, s: any) => n + (s.procedure_steps?.length ?? 0),
-      0,
-    ) ?? 0;
 
   // ── SOP import ─────────────────────────────────────────────────────
 
@@ -606,7 +605,7 @@ export function ServiceTypesManager({
                 [
                   ["fields", LayoutList, `Fields${fieldCount ? ` ${fieldCount}` : ""}`],
                   ["modules", ToggleRight, `Modules${moduleCount ? ` ${moduleCount}` : ""}`],
-                  ["procedure", ClipboardCheck, `Procedure${stepCount ? ` ${stepCount}` : ""}`],
+                  ["procedure", ClipboardCheck, `SOPs${sopCount ? ` ${sopCount}` : ""}`],
                 ] as const
               ).map(([key, Icon, label]) => (
                 <button
@@ -659,6 +658,8 @@ export function ServiceTypesManager({
             <ProceduresManager
               templates={templates}
               actionTypeOptions={actionTypeOptions}
+              clientOptions={clientOptions}
+              assetTypeOptions={assetTypeOptions}
               controlledType={activeCode}
               hideChrome
             />
