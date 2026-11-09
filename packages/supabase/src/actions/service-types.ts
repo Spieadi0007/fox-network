@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { createServerClient } from "../client/server";
 import type { ProcedureStepType } from "../types";
+import { saveProcedureTemplate } from "./procedures";
 
 // A service type is the unit a manager actually thinks in: one kind of job,
 // with the fields and modules a technician sees and the procedure they work
@@ -222,6 +223,11 @@ export type PublishInput = {
   code: string | null;
   newTypeLabel?: string;
   importId: string | null;
+  /**
+   * Which SOP the procedure lands in. Defaults to the service type's general
+   * SOP (all clients, all asset types), creating it if there is none.
+   */
+  sopScope?: { clientCode: string; assetTypeCode: string };
   config: {
     detail_fields: { key: string; group: string }[];
     enabled_modules: Record<string, boolean>;
@@ -281,6 +287,7 @@ export async function publishServiceType(input: PublishInput) {
     }
     code = data.code;
   }
+  if (!code) return { data: null, error: { message: "Could not resolve the service type." } };
 
   // 2. Field App configuration.
   if (input.config) {
@@ -307,91 +314,16 @@ export async function publishServiceType(input: PublishInput) {
     if (error) return { data: null, error };
   }
 
-  // 3. Procedure, as a new version.
+  // 3. Procedure, as a new version of the SOP holding this scope.
   let version: number | null = null;
   if (input.procedure && input.procedure.sections.length > 0) {
-    const { data: previous } = await db
-      .from("procedure_templates")
-      .select("version")
-      .eq("organization_id", orgId)
-      .eq("action_type_code", code)
-      .order("version", { ascending: false })
-      .limit(1)
-      .maybeSingle();
-
-    version = (previous?.version ?? 0) + 1;
-
-    // Only one template per type may be active; retire before inserting.
-    const { error: retireError } = await db
-      .from("procedure_templates")
-      .update({ is_active: false })
-      .eq("organization_id", orgId)
-      .eq("action_type_code", code)
-      .eq("is_active", true);
-    if (retireError) return { data: null, error: retireError };
-
-    const { data: template, error: templateError } = await db
-      .from("procedure_templates")
-      .insert({
-        organization_id: orgId,
-        action_type_code: code,
-        name: input.procedure.name,
-        summary: input.procedure.summary,
-        source_sop_import_id: input.importId,
-        version,
-        is_active: true,
-        created_by: auth.userId,
-      })
-      .select("id")
-      .single();
-    if (templateError) return { data: null, error: templateError };
-
-    const sections = input.procedure.sections.filter(
-      (s) => s.steps.length > 0,
-    );
-
-    const { data: insertedSections, error: sectionError } = await db
-      .from("procedure_sections")
-      .insert(
-        sections.map((s, i) => ({
-          template_id: template.id,
-          organization_id: orgId,
-          title: s.title,
-          position: i,
-        })),
-      )
-      .select("id, position");
-    if (sectionError) return { data: null, error: sectionError };
-
-    // Map back by position — insert order is not guaranteed on return.
-    const sectionIdByPosition = new Map<number, string>(
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (insertedSections ?? []).map((s: any) => [s.position, s.id]),
-    );
-
-    const { error: stepError } = await db.from("procedure_steps").insert(
-      sections.flatMap((s, si) =>
-        s.steps.map((step, ti) => ({
-          section_id: sectionIdByPosition.get(si),
-          organization_id: orgId,
-          position: ti,
-          label: step.label,
-          step_type: step.type,
-          required: step.required,
-          // The database rejects units and specs on anything but a number.
-          units: step.type === "number" ? step.units : "",
-          help: step.help,
-          evidence: step.evidence,
-          captures_parts: step.captures_parts,
-          suggested_parts: step.captures_parts ? step.suggested_parts : [],
-          spec_target: step.type === "number" ? step.spec_target : null,
-          spec_min: step.type === "number" ? step.spec_min : null,
-          spec_max: step.type === "number" ? step.spec_max : null,
-          applies_when: step.applies_when,
-        })),
-      ),
-    );
-    if (stepError) return { data: null, error: stepError };
+    const { data, error } = await saveProcedureTemplate(code, input.procedure, {
+      clientCode: input.sopScope?.clientCode ?? "",
+      assetTypeCode: input.sopScope?.assetTypeCode ?? "",
+      sourceSopImportId: input.importId,
+    });
+    if (error || !data) return { data: null, error: error ?? { message: "Could not save the procedure." } };
+    version = data.version;
   }
 
   // 4. Close the audit loop on the import.

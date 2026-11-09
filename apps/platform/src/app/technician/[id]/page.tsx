@@ -102,11 +102,15 @@ export default async function WorkOrderDetail({
     cfg?.detail_fields?.length ? cfg.detail_fields : DEFAULT_DETAIL_FIELDS;
   const enabledModules: Record<string, boolean> = cfg?.enabled_modules ?? {};
 
-  // The live procedure for this service type, if one has been published.
-  const { data: procedure } = await db
+  // A service type can hold several SOPs, each scoped to a client and an
+  // asset type ("" = all). This visit gets the most specific live one: client
+  // and asset type both matching, then client only, then asset type only,
+  // then the general one. The scope index allows one live SOP per scope, so
+  // there is never a tie.
+  const { data: candidates } = await db
     .from("procedure_templates")
     .select(
-      `name,
+      `name, client_code, asset_type_code,
        procedure_sections ( id, title, position,
          procedure_steps ( id, position, label, step_type, required, units, help,
                            captures_parts, suggested_parts, spec_target, spec_min,
@@ -115,8 +119,24 @@ export default async function WorkOrderDetail({
     )
     .eq("organization_id", orgId)
     .eq("action_type_code", action.action_type)
-    .eq("is_active", true)
-    .maybeSingle();
+    .eq("is_active", true);
+
+  const siteClient = (location?.client as string | undefined) ?? "";
+  const assetType = (asset?.asset_type as string | undefined) ?? "";
+  type Candidate = {
+    name: string;
+    client_code: string;
+    asset_type_code: string;
+    procedure_sections: unknown;
+  };
+  const specificity = (c: Candidate) => {
+    if (c.client_code && c.client_code !== siteClient) return -1;
+    if (c.asset_type_code && c.asset_type_code !== assetType) return -1;
+    return (c.client_code ? 2 : 0) + (c.asset_type_code ? 1 : 0);
+  };
+  const procedure = ((candidates ?? []) as Candidate[])
+    .filter((c) => specificity(c) >= 0)
+    .sort((a, b) => specificity(b) - specificity(a))[0] as Candidate | undefined;
 
   // The nested select nests steps under `procedure_steps`; the runner wants
   // them as `steps`. Postgres also gives no ordering guarantee through a

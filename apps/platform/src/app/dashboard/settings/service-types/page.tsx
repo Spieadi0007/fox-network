@@ -11,13 +11,22 @@ export default async function ServiceTypesPage() {
   if (!user || !user.organizationId) redirect("/signin");
   if (user.role !== "admin" && user.role !== "manager") redirect("/dashboard");
 
-  const [{ data: types }, { data: configs }, { data: templates }, { data: options }] =
-    await Promise.all([
-      getServiceTypes(user.organizationId),
-      getFieldAppConfigs(user.organizationId),
-      getProcedureTemplates(user.organizationId),
-      getFieldOptions(user.organizationId, "action_type"),
-    ]);
+  const [
+    { data: types },
+    { data: configs },
+    { data: templates },
+    { data: options },
+    { data: clients },
+    { data: assetTypes },
+  ] = await Promise.all([
+    getServiceTypes(user.organizationId),
+    getFieldAppConfigs(user.organizationId),
+    getProcedureTemplates(user.organizationId),
+    getFieldOptions(user.organizationId, "action_type"),
+    // What an SOP can be scoped to.
+    getFieldOptions(user.organizationId, "client"),
+    getFieldOptions(user.organizationId, "asset_type"),
+  ]);
 
   return (
     <div className="space-y-6 p-8">
@@ -31,6 +40,8 @@ export default async function ServiceTypesPage() {
         configs={configs ?? []}
         templates={templates ?? []}
         actionTypeOptions={options ?? []}
+        clientOptions={clients ?? []}
+        assetTypeOptions={assetTypes ?? []}
       />
     </div>
   );
