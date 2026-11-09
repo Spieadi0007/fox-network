@@ -9,7 +9,6 @@ import {
   Loader2,
   Check,
   AlertTriangle,
-  Archive,
   RotateCcw,
   Pencil,
   ClipboardCheck,
@@ -637,10 +636,11 @@ export function ServiceTypesManager({
               <button
                 onClick={() => toggleActive(active.code, false)}
                 disabled={pending}
-                className="flex items-center gap-1 text-xs text-stone-400 hover:text-stone-700"
+                className="flex items-center gap-1 text-xs text-stone-400 hover:text-red-600"
+                title="Remove this service type. You can restore it from Deleted below."
               >
-                <Archive className="h-3.5 w-3.5" />
-                Retire
+                <Trash2 className="h-3.5 w-3.5" />
+                Delete
               </button>
             )}
           </div>
@@ -721,7 +721,7 @@ export function ServiceTypesManager({
             </li>
             <li className="flex gap-2">
               <span className="text-stone-300">•</span>
-              A new procedure version is published. The current one is retired
+              A new procedure version is published. The current one is replaced
               but kept, so visits already recorded against it still read back
               correctly.
             </li>
@@ -747,11 +747,14 @@ export function ServiceTypesManager({
         </DialogContent>
       </Dialog>
 
-      {/* Retired */}
+      {/* Deleted — kept, so each can be restored */}
       {retired.length > 0 && !analysis && (
         <div>
           <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-stone-400">
-            Retired ({retired.length})
+            Deleted ({retired.length})
+            <span className="ml-2 font-normal normal-case tracking-normal">
+              Click one to restore it
+            </span>
           </p>
           <div className="flex flex-wrap gap-2">
             {retired.map((t) => (
@@ -759,6 +762,7 @@ export function ServiceTypesManager({
                 key={t.code}
                 onClick={() => toggleActive(t.code, true)}
                 disabled={pending}
+                title={`Restore ${t.label}`}
                 className="flex items-center gap-1.5 rounded-full bg-stone-100 px-3 py-1.5 text-sm text-stone-400 transition-colors hover:text-stone-700"
               >
                 <RotateCcw className="h-3 w-3" />

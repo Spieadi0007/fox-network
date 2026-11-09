@@ -6,16 +6,24 @@ import {
   Wrench,
   FileUp,
   Loader2,
+  Pencil,
   Trash2,
   AlertTriangle,
   CheckCircle2,
   Quote,
-  RotateCcw,
   Package,
   Ruler,
   GitBranch,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import type { ConfigurableFieldOption, ProcedureStepType } from "@fox/supabase";
 import {
   saveProcedureTemplate,
@@ -150,6 +158,9 @@ export function ProceduresManager({
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [saved, setSaved] = useState<string | null>(null);
+  /** Set while the draft is an edit of a published version rather than a new import. */
+  const [editingVersion, setEditingVersion] = useState<number | null>(null);
+  const [confirmDelete, setConfirmDelete] = useState(false);
   const fileInput = useRef<HTMLInputElement>(null);
 
   const published = templates.find((t) => t.action_type_code === activeType);
@@ -293,15 +304,68 @@ export function ProceduresManager({
       setDraft(null);
       setImportId(null);
       setSourceFile(null);
-      setSaved(`Published version ${data?.version} for ${activeLabel}.`);
+      setSaved(
+        editingVersion !== null
+          ? `Saved your changes as version ${data?.version} for ${activeLabel}.`
+          : `Published version ${data?.version} for ${activeLabel}.`,
+      );
+      setEditingVersion(null);
       router.refresh();
     });
   }
 
-  function handleRetire() {
+  /**
+   * Reopen the published procedure in the draft editor. Saving publishes it
+   * as the next version — the same path as an import — so visits recorded
+   * against the current version keep reading back as they were.
+   */
+  function handleEdit() {
+    if (!published) return;
+    setDraft({
+      name: published.name,
+      summary: published.summary,
+      sections: [...published.procedure_sections]
+        .sort((a, b) => a.position - b.position)
+        .map((section) => ({
+          title: section.title,
+          steps: [...section.procedure_steps]
+            .sort((a, b) => a.position - b.position)
+            .map((step) => ({
+              label: step.label,
+              type: step.step_type,
+              required: step.required,
+              units: step.units,
+              help: step.help,
+              evidence: step.evidence,
+              captures_parts: step.captures_parts,
+              suggested_parts: step.suggested_parts ?? [],
+              spec_target: step.spec_target,
+              spec_min: step.spec_min,
+              spec_max: step.spec_max,
+              applies_when: step.applies_when,
+            })),
+        })),
+    });
+    setImportId(null);
+    setSourceFile(null);
+    setSaved(null);
+    setError(null);
+    setEditingVersion(published.version);
+  }
+
+  function cancelDraft() {
+    setDraft(null);
+    setImportId(null);
+    setEditingVersion(null);
+  }
+
+  // Takes the procedure off new visits. The row is kept (is_active = false),
+  // so answers already recorded against it still read back.
+  function handleDelete() {
+    setConfirmDelete(false);
     startTransition(async () => {
       await deactivateProcedureTemplate(activeType);
-      setSaved(`Retired the procedure for ${activeLabel}.`);
+      setSaved(`Deleted the procedure for ${activeLabel}.`);
       router.refresh();
     });
   }
@@ -328,6 +392,7 @@ export function ProceduresManager({
               onClick={() => {
                 setActiveType(at.code);
                 setDraft(null);
+                setEditingVersion(null);
                 setSaved(null);
                 setError(null);
               }}
@@ -414,26 +479,21 @@ export function ProceduresManager({
               </h3>
               <p className="mt-0.5 text-xs text-stone-400">
                 {stepCount} steps in {draft.sections.length} sections
-                {sourceFile ? ` · from ${sourceFile}` : ""} · not published yet
+                {editingVersion !== null
+                  ? ` · editing version ${editingVersion}, saves as version ${editingVersion + 1}`
+                  : `${sourceFile ? ` · from ${sourceFile}` : ""} · not published yet`}
               </p>
             </div>
             <div className="flex items-center gap-2">
-              <Button
-                variant="ghost"
-                onClick={() => {
-                  setDraft(null);
-                  setImportId(null);
-                }}
-                disabled={pending}
-              >
-                Discard
+              <Button variant="ghost" onClick={cancelDraft} disabled={pending}>
+                {editingVersion !== null ? "Cancel" : "Discard"}
               </Button>
               <Button
                 onClick={handlePublish}
                 disabled={pending || stepCount === 0}
               >
                 {pending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                Publish {stepCount} steps
+                {editingVersion !== null ? "Save changes" : `Publish ${stepCount} steps`}
               </Button>
             </div>
           </div>
@@ -639,10 +699,21 @@ export function ProceduresManager({
                 steps · live for {activeLabel}
               </p>
             </div>
-            <Button variant="ghost" onClick={handleRetire} disabled={pending}>
-              <RotateCcw className="mr-2 h-4 w-4" />
-              Retire
-            </Button>
+            <div className="flex items-center gap-1">
+              <Button variant="ghost" onClick={handleEdit} disabled={pending}>
+                <Pencil className="mr-2 h-4 w-4" />
+                Edit
+              </Button>
+              <Button
+                variant="ghost"
+                onClick={() => setConfirmDelete(true)}
+                disabled={pending}
+                className="text-red-600 hover:bg-red-50 hover:text-red-700"
+              >
+                <Trash2 className="mr-2 h-4 w-4" />
+                Delete
+              </Button>
+            </div>
           </div>
 
           <div className="divide-y divide-stone-100">
@@ -689,6 +760,30 @@ export function ProceduresManager({
           </div>
         </div>
       )}
+
+      <Dialog open={confirmDelete} onOpenChange={setConfirmDelete}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Delete the procedure for {activeLabel}?</DialogTitle>
+            <DialogDescription>
+              Technicians stop seeing these steps on new visits. Visits already
+              recorded keep their answers.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="ghost" onClick={() => setConfirmDelete(false)}>
+              Cancel
+            </Button>
+            <Button
+              onClick={handleDelete}
+              className="bg-red-600 text-white hover:bg-red-700"
+            >
+              <Trash2 className="mr-2 h-4 w-4" />
+              Delete procedure
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       {/* Nothing yet */}
       {!draft && !published && !busy && (
