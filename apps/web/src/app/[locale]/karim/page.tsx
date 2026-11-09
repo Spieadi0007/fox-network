@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import {
   ArrowUpRight,
@@ -105,9 +106,15 @@ export default async function KarimPage({
 
       <div className="relative mx-auto max-w-sm">
         <section className="rounded-[1.75rem] border border-stone-200/70 bg-white p-7 text-center shadow-sm">
-          <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-stone-900 font-[family-name:var(--font-heading)] text-2xl font-bold tracking-[-0.02em] text-white">
-            KA
-          </div>
+          <Image
+            src="/karim.jpg"
+            alt={f("name")}
+            width={112}
+            height={112}
+            priority
+            // The photo's background is white, like the card: the ring keeps the circle's edge visible.
+            className="mx-auto h-28 w-28 rounded-full bg-stone-100 object-cover object-top ring-4 ring-stone-100 shadow-md"
+          />
           <h1 className="mt-5 font-[family-name:var(--font-heading)] text-[24px] font-bold tracking-[-0.03em] text-stone-900">
             {f("name")}
           </h1>
