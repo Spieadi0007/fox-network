@@ -469,6 +469,8 @@
     "copy": "Copy",
     "copied": "Copied",
     "copyEmail": "Copy email address",
-    "copyPhone": "Copy phone number"
+    "copyPhone": "Copy phone number",
+    "close": "Close",
+    "done": "Done"
   }
 }
