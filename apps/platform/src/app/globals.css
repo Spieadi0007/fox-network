@@ -9,6 +9,27 @@
   --color-destructive: #dc2626;
   --color-fox-orange: #3B82F6;
   --color-fox-dark: #1c1917;
+
+  /* Client portal (issue #31): a warm, paper-like palette so the client's
+     side reads calmer than the ops dashboard. */
+  --color-portal-bg: #f5f4f0;
+  --color-portal-surface: #ffffff;
+  --color-portal-sunken: #fbfaf7;
+  --color-portal-border: #e9e6dd;
+  --color-portal-border-soft: #f1efe8;
+  --color-portal-text: #201f1c;
+  --color-portal-dim: #8f8a7c;
+  --color-portal-muted: #b8b3a4;
+  --color-portal-good: #17703c;
+  --color-portal-good-bg: #dff3e6;
+  --color-portal-good-border: #bfe4cc;
+  --color-portal-accent: #7a5514;
+  --color-portal-accent-bg: #faf0da;
+  --color-portal-accent-border: #eeddb2;
+  --color-portal-bad: #a1291f;
+  --color-portal-bad-bg: #fbe6e3;
+  --color-portal-bad-border: #f2c7c1;
+
   --font-sans: var(--font-body);
   --font-heading: var(--font-heading);
   --font-mono: var(--font-mono);

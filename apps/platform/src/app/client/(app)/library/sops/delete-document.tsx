@@ -17,7 +17,7 @@ export function DeleteDocument({ id, name }: { id: string; name: string }) {
       <button
         type="button"
         onClick={() => setConfirming(true)}
-        className="cursor-pointer rounded-full border border-stone-200 bg-white px-3.5 py-1.5 text-xs font-medium text-stone-500 transition-colors hover:border-red-200 hover:bg-red-50 hover:text-red-700"
+        className="cursor-pointer rounded-full border border-portal-border bg-portal-surface px-3.5 py-1.5 text-xs font-medium text-portal-dim transition-colors hover:border-portal-bad-border hover:bg-portal-bad-bg hover:text-portal-bad"
       >
         Delete
       </button>
@@ -27,17 +27,17 @@ export function DeleteDocument({ id, name }: { id: string; name: string }) {
   return (
     <form action={deleteClientDocument} className="flex items-center gap-2">
       <input type="hidden" name="id" value={id} />
-      <span className="text-xs text-stone-500">Delete {name}?</span>
+      <span className="text-xs text-portal-dim">Delete {name}?</span>
       <SubmitButton
         pendingLabel="Deleting…"
-        className="rounded-full bg-red-600 px-3.5 py-1.5 text-xs font-medium text-white transition-colors hover:bg-red-700"
+        className="rounded-full bg-portal-bad px-3.5 py-1.5 text-xs font-medium text-white transition-colors hover:bg-[#8a2219]"
       >
         Delete
       </SubmitButton>
       <button
         type="button"
         onClick={() => setConfirming(false)}
-        className="cursor-pointer rounded-full border border-stone-200 bg-white px-3.5 py-1.5 text-xs font-medium text-stone-600 transition-colors hover:bg-stone-50"
+        className="cursor-pointer rounded-full border border-portal-border bg-portal-surface px-3.5 py-1.5 text-xs font-medium text-portal-dim transition-colors hover:bg-portal-sunken"
       >
         Cancel
       </button>

@@ -49,12 +49,12 @@ export function ClientSidebar({
   const initial = (orgName || "O")[0].toUpperCase();
 
   return (
-    <aside className="flex w-64 shrink-0 flex-col border-r border-stone-200 bg-stone-50">
-      <div className="flex items-center gap-3 border-b border-stone-200 px-5 py-4">
-        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-stone-900 font-[family-name:var(--font-heading)] text-sm font-bold text-white">
+    <aside className="sticky top-0 flex h-screen w-64 shrink-0 flex-col border-r border-portal-border bg-portal-sunken">
+      <div className="flex items-center gap-3 border-b border-portal-border px-5 py-4">
+        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-portal-text text-sm font-extrabold text-white">
           {initial}
         </div>
-        <p className="min-w-0 flex-1 truncate font-[family-name:var(--font-heading)] text-sm font-bold tracking-[-0.02em] text-stone-900">
+        <p className="min-w-0 flex-1 truncate text-sm font-extrabold text-portal-text">
           {orgName}
         </p>
       </div>
@@ -73,10 +73,10 @@ export function ClientSidebar({
               <Link
                 href={item.href}
                 className={cn(
-                  "flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
+                  "flex items-center gap-2.5 rounded-xl border px-3 py-2 text-sm font-semibold transition-colors",
                   active
-                    ? "bg-stone-200/70 text-stone-900"
-                    : "text-stone-600 hover:bg-stone-100 hover:text-stone-900",
+                    ? "border-portal-border bg-portal-surface text-portal-text shadow-[0_1px_4px_rgba(32,31,28,0.05)]"
+                    : "border-transparent text-portal-dim hover:bg-portal-surface/60 hover:text-portal-text",
                 )}
               >
                 <Icon className="h-4 w-4" />
@@ -86,7 +86,7 @@ export function ClientSidebar({
               {/* Sub-items only while you are in that section — an always-open
                   tree makes a three-item sidebar feel like a filing cabinet. */}
               {children && active && (
-                <div className="mt-1 space-y-0.5 border-l border-stone-200 pl-3 ml-5">
+                <div className="mt-1 ml-5 space-y-0.5 border-l border-portal-border pl-3">
                   {children.map((child) => {
                     const ChildIcon = child.icon;
                     const childActive = isActive(child.href);
@@ -98,8 +98,8 @@ export function ClientSidebar({
                         className={cn(
                           "flex items-center gap-2 rounded-lg px-3 py-1.5 text-[13px] transition-colors",
                           childActive
-                            ? "font-medium text-stone-900"
-                            : "text-stone-500 hover:text-stone-900",
+                            ? "font-bold text-portal-text"
+                            : "text-portal-dim hover:text-portal-text",
                         )}
                       >
                         <ChildIcon className="h-3.5 w-3.5" />
@@ -114,23 +114,23 @@ export function ClientSidebar({
         })}
       </nav>
 
-      <div className="border-t border-stone-200 px-4 py-3">
-        <p className="truncate text-sm font-medium text-stone-900">{email}</p>
+      <div className="border-t border-portal-border px-4 py-3">
+        <p className="truncate text-sm font-semibold text-portal-text">{email}</p>
         <div className="mt-1 flex items-center justify-between">
-          <span className="inline-flex items-center rounded-full bg-stone-200 px-2 py-0.5 text-xs font-medium text-stone-700">
+          <span className="inline-flex items-center rounded-full border border-portal-accent-border bg-portal-accent-bg px-2 py-0.5 text-[11px] font-bold text-portal-accent">
             Client
           </span>
           <form action={signOut}>
-            <SubmitButton className="cursor-pointer text-xs text-stone-500 hover:text-stone-700">
+            <SubmitButton className="cursor-pointer text-xs font-medium text-portal-dim hover:text-portal-text">
               Sign out
             </SubmitButton>
           </form>
         </div>
       </div>
 
-      <div className="flex items-center justify-center gap-1.5 border-t border-stone-100 px-4 py-2.5">
+      <div className="flex items-center justify-center gap-1.5 border-t border-portal-border-soft px-4 py-2.5">
         <img src="/fox-logo.png" alt="Fox" className="h-4 w-4" />
-        <span className="font-[family-name:var(--font-heading)] text-[11px] font-semibold tracking-[-0.02em] text-stone-400">
+        <span className="font-[family-name:var(--font-heading)] text-[11px] font-semibold tracking-[-0.02em] text-portal-muted">
           Fox<span className="text-fox-orange/60">Network</span>
         </span>
       </div>

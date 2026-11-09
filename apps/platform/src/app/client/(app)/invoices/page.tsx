@@ -1,12 +1,22 @@
 import { getClientInvoices } from "@fox/supabase/actions/client-invoices";
 import { downloadInvoice } from "@fox/supabase/actions/client-invoices";
 import { SubmitButton } from "@/components/ui/submit-button";
+import {
+  EmptyState,
+  Notice,
+  PageHeader,
+  StatusPill,
+  buttonSecondary,
+  theadCls,
+  thCls,
+  type Tone,
+} from "../portal-ui";
 
-const STATUS_STYLE: Record<string, string> = {
-  paid: "border-emerald-200 bg-emerald-50 text-emerald-700",
-  sent: "border-amber-200 bg-amber-50 text-amber-700",
-  overdue: "border-red-200 bg-red-50 text-red-700",
-  void: "border-stone-200 bg-stone-50 text-stone-500",
+const STATUS_TONE: Record<string, Tone> = {
+  paid: "good",
+  sent: "accent",
+  overdue: "bad",
+  void: "neutral",
 };
 
 const STATUS_LABEL: Record<string, string> = {
@@ -44,23 +54,15 @@ export default async function InvoicesPage({
   const { invoices, totals } = await getClientInvoices();
 
   return (
-    <div>
-      <div>
-        <h1 className="font-[family-name:var(--font-heading)] text-2xl font-bold tracking-tight text-stone-900">
-          Invoices
-        </h1>
-        <p className="mt-1 text-sm text-stone-500">
-          What you owe, and what has been settled.
-        </p>
-      </div>
+    <div className="flex flex-col gap-8">
+      <PageHeader
+        title="Invoices"
+        sub="What you owe, and what has been settled."
+      />
 
-      {error && (
-        <div className="mt-6 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
-          {error}
-        </div>
-      )}
+      {error && <Notice tone="error">{error}</Notice>}
 
-      <div className="mt-8 grid gap-4 sm:grid-cols-3">
+      <div className="grid gap-4 sm:grid-cols-3">
         <Total
           label="Outstanding"
           value={money(totals.outstandingCents, totals.currency)}
@@ -79,56 +81,50 @@ export default async function InvoicesPage({
       </div>
 
       {invoices.length === 0 ? (
-        <div className="mt-8 rounded-2xl border border-dashed border-stone-300 bg-white px-6 py-16 text-center">
-          <p className="font-[family-name:var(--font-heading)] text-lg font-bold tracking-tight text-stone-900">
-            No invoices yet
-          </p>
-          <p className="mt-2 text-sm text-stone-500">
-            Invoices appear here once we raise them. Nothing is owed right now.
-          </p>
-        </div>
+        <EmptyState
+          title="No invoices yet"
+          body="Invoices appear here once we raise them. Nothing is owed right now."
+        />
       ) : (
-        <div className="mt-8 overflow-x-auto rounded-2xl border border-stone-200 bg-white">
+        <div className="overflow-x-auto rounded-2xl border border-portal-border bg-portal-surface">
           <table className="w-full min-w-[640px]">
-            <thead className="bg-stone-50">
-              <tr className="text-left text-[11px] font-semibold uppercase tracking-wider text-stone-500">
-                <th className="px-5 py-3">Invoice</th>
-                <th className="px-5 py-3">Issued</th>
-                <th className="px-5 py-3">Due</th>
-                <th className="px-5 py-3">Status</th>
-                <th className="px-5 py-3 text-right">Amount</th>
-                <th className="px-5 py-3" />
+            <thead className={theadCls}>
+              <tr>
+                <th className={thCls}>Invoice</th>
+                <th className={thCls}>Issued</th>
+                <th className={thCls}>Due</th>
+                <th className={thCls}>Status</th>
+                <th className={`${thCls} text-right`}>Amount</th>
+                <th className={thCls} />
               </tr>
             </thead>
-            <tbody className="divide-y divide-stone-100 text-sm">
+            <tbody className="divide-y divide-portal-border-soft text-sm">
               {invoices.map((invoice) => {
                 const state = invoice.is_overdue ? "overdue" : invoice.status;
                 return (
                   <tr key={invoice.id}>
                     <td className="px-5 py-4">
-                      <p className="font-medium text-stone-900">
+                      <p className="font-medium text-portal-text">
                         {invoice.reference}
                       </p>
                       {invoice.notes && (
-                        <p className="mt-0.5 truncate text-xs text-stone-500">
+                        <p className="mt-0.5 truncate text-xs text-portal-dim">
                           {invoice.notes}
                         </p>
                       )}
                     </td>
-                    <td className="px-5 py-4 text-xs text-stone-600">
+                    <td className="px-5 py-4 text-xs text-portal-dim">
                       {formatDate(invoice.issued_on)}
                     </td>
-                    <td className="px-5 py-4 text-xs text-stone-600">
+                    <td className="px-5 py-4 text-xs text-portal-dim">
                       {formatDate(invoice.due_on) ?? "—"}
                     </td>
                     <td className="px-5 py-4">
-                      <span
-                        className={`inline-flex rounded-full border px-2.5 py-0.5 text-[11px] font-medium ${STATUS_STYLE[state]}`}
-                      >
+                      <StatusPill tone={STATUS_TONE[state]} size="sm">
                         {STATUS_LABEL[state]}
-                      </span>
+                      </StatusPill>
                       {invoice.paid_on && (
-                        <p className="mt-1 text-[11px] text-stone-400">
+                        <p className="mt-1 text-[11px] text-portal-muted">
                           {formatDate(invoice.paid_on)}
                         </p>
                       )}
@@ -136,8 +132,8 @@ export default async function InvoicesPage({
                     <td
                       className={`px-5 py-4 text-right font-mono ${
                         invoice.status === "void"
-                          ? "text-stone-400 line-through"
-                          : "text-stone-900"
+                          ? "text-portal-muted line-through"
+                          : "text-portal-text"
                       }`}
                     >
                       {money(invoice.amount_cents, invoice.currency)}
@@ -148,7 +144,7 @@ export default async function InvoicesPage({
                           <input type="hidden" name="id" value={invoice.id} />
                           <SubmitButton
                             pendingLabel="Opening…"
-                            className="rounded-full border border-stone-200 bg-white px-3.5 py-1.5 text-xs font-medium text-stone-600 transition-colors hover:border-stone-300 hover:bg-stone-50"
+                            className={buttonSecondary}
                           >
                             PDF
                           </SubmitButton>
@@ -167,9 +163,9 @@ export default async function InvoicesPage({
 }
 
 const TONES: Record<string, string> = {
-  amber: "text-amber-700",
-  red: "text-red-700",
-  stone: "text-stone-900",
+  amber: "text-portal-accent",
+  red: "text-portal-bad",
+  stone: "text-portal-text",
 };
 
 function Total({
@@ -182,10 +178,10 @@ function Total({
   tone: string;
 }) {
   return (
-    <div className="rounded-2xl border border-stone-200 bg-white p-5">
-      <p className="text-xs text-stone-500">{label}</p>
+    <div className="rounded-2xl border border-portal-border bg-portal-surface px-6 py-5">
+      <p className="text-[12px] font-bold uppercase tracking-[0.06em] text-portal-dim">{label}</p>
       <p
-        className={`mt-1 font-[family-name:var(--font-heading)] text-2xl font-bold tracking-tight ${TONES[tone]}`}
+        className={`mt-1.5 text-[28px] font-extrabold tracking-[-0.01em] ${TONES[tone]}`}
       >
         {value}
       </p>
