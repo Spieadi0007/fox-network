@@ -4,6 +4,19 @@ import { createServerClient } from "@fox/supabase/client/server";
 import { getAuthUser } from "@/lib/auth";
 import { ArrowRight, Plus } from "lucide-react";
 import { ClickableRow } from "./clickable-row";
+import {
+  ApprovalPill,
+  EmptyState,
+  Notice,
+  PageHeader,
+  SLA_LABEL,
+  buttonPrimary,
+  tableCls,
+  tableWrapCls,
+  tbodyCls,
+  thCls,
+  theadCls,
+} from "../portal-ui";
 
 type RequestRow = {
   id: string;
@@ -15,25 +28,6 @@ type RequestRow = {
   estimated_cost: number | null;
   description: string | null;
   created_at: string;
-};
-
-const APPROVAL_STYLE: Record<string, string> = {
-  pending: "bg-amber-50 text-amber-700 border-amber-200",
-  approved: "bg-emerald-50 text-emerald-700 border-emerald-200",
-  rejected: "bg-red-50 text-red-700 border-red-200",
-};
-
-const APPROVAL_LABEL: Record<string, string> = {
-  pending: "Pending approval",
-  approved: "Approved",
-  rejected: "Rejected",
-};
-
-const PRIORITY_LABEL: Record<string, string> = {
-  low: "Relaxed",
-  medium: "Standard",
-  high: "Urgent",
-  critical: "Emergency",
 };
 
 function formatDate(iso: string) {
@@ -74,100 +68,64 @@ export default async function ClientDashboardPage({
   const requests: RequestRow[] = rows ?? [];
 
   return (
-    <div>
-      <div className="flex flex-wrap items-center justify-between gap-4">
-        <div>
-          <h1 className="font-[family-name:var(--font-heading)] text-2xl font-bold tracking-tight text-stone-900">
-            Your requests
-          </h1>
-          <p className="mt-1 text-sm text-stone-500">
-            Every intervention you&apos;ve booked with us.
-          </p>
-        </div>
-        <Link
-          href="/client/requests/new"
-          className="inline-flex items-center gap-2 rounded-full bg-stone-900 px-5 py-2.5 text-sm font-medium text-white shadow-sm transition-all hover:bg-stone-800"
-        >
-          <Plus className="h-4 w-4" />
-          New request
-        </Link>
-      </div>
+    <div className="flex flex-col gap-8">
+      <PageHeader
+        title="Your requests"
+        sub="Every intervention you've booked with us."
+        actions={
+          <Link href="/client/requests/new" className={buttonPrimary}>
+            <Plus className="h-4 w-4" />
+            New request
+          </Link>
+        }
+      />
 
-      {success && (
-        <div className="mt-6 rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-700">
-          {success}
-        </div>
-      )}
+      {success && <Notice tone="success">{success}</Notice>}
 
       {requests.length === 0 ? (
-        <div className="mt-10 rounded-2xl border border-dashed border-stone-300 bg-white px-6 py-16 text-center">
-          <p className="font-[family-name:var(--font-heading)] text-lg font-bold tracking-tight text-stone-900">
-            No requests yet
-          </p>
-          <p className="mt-2 text-sm text-stone-500">
-            Book your first intervention — it takes about two minutes.
-          </p>
-          <Link
-            href="/client/requests/new"
-            className="mt-6 inline-flex items-center gap-2 rounded-full bg-stone-900 px-5 py-2.5 text-sm font-medium text-white transition-all hover:bg-stone-800"
-          >
-            Book first intervention
-            <ArrowRight className="h-4 w-4" />
-          </Link>
-        </div>
+        <EmptyState
+          title="No requests yet"
+          body="Book your first intervention — it takes about two minutes."
+          action={
+            <Link href="/client/requests/new" className={buttonPrimary}>
+              Book first intervention
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+          }
+        />
       ) : (
-        <div className="mt-8 overflow-x-auto rounded-2xl border border-stone-200 bg-white">
-          <table className="w-full min-w-[760px]">
-            <thead className="bg-stone-50">
-              <tr className="text-left text-[11px] font-semibold uppercase tracking-wider text-stone-500">
-                <th className="px-5 py-3">Request</th>
-                <th className="px-5 py-3">Network</th>
-                <th className="px-5 py-3">SLA</th>
-                <th className="px-5 py-3">Status</th>
-                {/* shows approval state */}
-                <th className="px-5 py-3 text-right">Price</th>
-                <th className="px-5 py-3 text-right">Submitted</th>
+        <div className={tableWrapCls}>
+          <table className={`${tableCls} min-w-[760px]`}>
+            <thead className={theadCls}>
+              <tr>
+                <th className={thCls}>Request</th>
+                <th className={thCls}>Network</th>
+                <th className={thCls}>SLA</th>
+                <th className={thCls}>Status</th>
+                <th className={`${thCls} text-right`}>Price</th>
+                <th className={`${thCls} text-right`}>Submitted</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-stone-100">
+            <tbody className={tbodyCls}>
               {requests.map((r) => (
-                <ClickableRow
-                  key={r.id}
-                  href={`/client/requests/${r.id}`}
-                  className="text-sm"
-                >
+                <ClickableRow key={r.id} href={`/client/requests/${r.id}`} className="text-sm">
                   <td className="px-5 py-4">
-                    <p className="font-medium text-stone-900">{r.name}</p>
+                    <p className="font-semibold text-portal-text">{r.name}</p>
                     {r.description && (
-                      <p className="mt-0.5 truncate text-xs text-stone-500">
-                        {r.description}
-                      </p>
+                      <p className="mt-0.5 max-w-[320px] truncate text-[13px] text-portal-dim">{r.description}</p>
                     )}
                   </td>
-                  <td className="px-5 py-4 text-stone-600">
-                    {r.category ?? "—"}
+                  <td className="px-5 py-4 text-portal-dim">
+                    {r.category ?? <span className="italic text-portal-muted">—</span>}
                   </td>
-                  <td className="px-5 py-4 text-stone-600">
-                    {PRIORITY_LABEL[r.priority] ?? r.priority}
-                  </td>
+                  <td className="px-5 py-4 text-portal-text">{SLA_LABEL[r.priority] ?? r.priority}</td>
                   <td className="px-5 py-4">
-                    <span
-                      className={`inline-flex rounded-full border px-2.5 py-0.5 text-[11px] font-medium ${
-                        APPROVAL_STYLE[r.approval_status] ??
-                        "border-stone-200 bg-stone-50 text-stone-600"
-                      }`}
-                    >
-                      {APPROVAL_LABEL[r.approval_status] ?? r.approval_status}
-                    </span>
+                    <ApprovalPill status={r.approval_status} size="sm" />
                   </td>
-                  <td className="px-5 py-4 text-right font-mono text-stone-700">
-                    {r.estimated_cost != null
-                      ? `€${Number(r.estimated_cost).toFixed(0)}`
-                      : "—"}
+                  <td className="px-5 py-4 text-right font-mono text-portal-text">
+                    {r.estimated_cost != null ? `€${Number(r.estimated_cost).toFixed(0)}` : "—"}
                   </td>
-                  <td className="px-5 py-4 text-right text-xs text-stone-500">
-                    {formatDate(r.created_at)}
-                  </td>
+                  <td className="px-5 py-4 text-right text-[13px] text-portal-dim">{formatDate(r.created_at)}</td>
                 </ClickableRow>
               ))}
             </tbody>

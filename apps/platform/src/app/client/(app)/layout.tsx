@@ -23,13 +23,13 @@ export default async function ClientDashboardLayout({
     .single();
 
   return (
-    <div className="flex min-h-screen bg-stone-50">
+    <div className="flex min-h-screen bg-portal-bg text-portal-text">
       <ClientSidebar
         email={user.email}
         orgName={(org?.name as string) ?? "Your company"}
       />
-      <main className="min-w-0 flex-1 px-6 py-10 sm:px-10">
-        <div className="mx-auto max-w-5xl">{children}</div>
+      <main className="min-w-0 flex-1 px-6 py-10 sm:px-10 lg:py-14">
+        <div className="mx-auto max-w-[1180px]">{children}</div>
       </main>
     </div>
   );

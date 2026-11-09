@@ -44,7 +44,7 @@ export function UploadPanel() {
   return (
     <form
       action={uploadClientDocument}
-      className="mt-8 rounded-2xl border border-stone-200 bg-white p-5"
+      className="mt-8 rounded-2xl border border-portal-border bg-portal-surface p-5"
     >
       <div
         onDragOver={(e) => {
@@ -55,8 +55,8 @@ export function UploadPanel() {
         onDrop={onDrop}
         className={`rounded-xl border-2 border-dashed px-6 py-8 text-center transition-colors ${
           dragging
-            ? "border-fox-orange bg-orange-50/50"
-            : "border-stone-200 bg-stone-50/50"
+            ? "border-portal-accent bg-orange-50/50"
+            : "border-portal-border bg-portal-sunken"
         }`}
       >
         <input
@@ -73,32 +73,32 @@ export function UploadPanel() {
         {file ? (
           <div className="flex items-center justify-center gap-3">
             <div className="text-left">
-              <p className="text-sm font-medium text-stone-900">{file.name}</p>
-              <p className="text-xs text-stone-500">{formatSize(file.size)}</p>
+              <p className="text-sm font-medium text-portal-text">{file.name}</p>
+              <p className="text-xs text-portal-dim">{formatSize(file.size)}</p>
             </div>
             <button
               type="button"
               onClick={clear}
               aria-label="Remove selected file"
-              className="cursor-pointer rounded-full p-1 text-stone-400 transition-colors hover:bg-stone-200 hover:text-stone-700"
+              className="cursor-pointer rounded-full p-1 text-portal-muted transition-colors hover:bg-portal-border hover:text-portal-text"
             >
               <X className="h-4 w-4" />
             </button>
           </div>
         ) : (
           <>
-            <Upload className="mx-auto h-6 w-6 text-stone-400" />
-            <p className="mt-3 text-sm text-stone-600">
+            <Upload className="mx-auto h-6 w-6 text-portal-muted" />
+            <p className="mt-3 text-sm text-portal-dim">
               Drag a document here, or{" "}
               <button
                 type="button"
                 onClick={() => inputRef.current?.click()}
-                className="cursor-pointer font-medium text-fox-orange hover:underline"
+                className="cursor-pointer font-medium text-portal-accent hover:underline"
               >
                 browse
               </button>
             </p>
-            <p className="mt-1 text-xs text-stone-400">
+            <p className="mt-1 text-xs text-portal-muted">
               PDF, Word or image · up to 32 MB
             </p>
           </>
@@ -106,7 +106,7 @@ export function UploadPanel() {
       </div>
 
       {tooBig && (
-        <p className="mt-3 text-sm text-red-600">
+        <p className="mt-3 text-sm text-portal-bad">
           That file is {formatSize(file!.size)}. The limit is 32 MB — split it
           or compress it before uploading.
         </p>
@@ -116,9 +116,9 @@ export function UploadPanel() {
         <div className="min-w-[200px] flex-1">
           <label
             htmlFor="description"
-            className="block text-xs font-medium text-stone-600"
+            className="block text-xs font-medium text-portal-dim"
           >
-            Note <span className="text-stone-400">(optional)</span>
+            Note <span className="text-portal-muted">(optional)</span>
           </label>
           <input
             id="description"
@@ -126,13 +126,13 @@ export function UploadPanel() {
             type="text"
             maxLength={200}
             placeholder="Supersedes v2 · applies to Zone 4"
-            className="mt-1 block w-full rounded-lg border border-stone-200 bg-white px-3 py-2 text-sm text-stone-900 placeholder-stone-400 focus:border-fox-orange focus:outline-none focus:ring-1 focus:ring-fox-orange"
+            className="mt-1 block w-full rounded-xl border border-portal-border bg-portal-surface px-3 py-2 text-sm text-portal-text placeholder:text-portal-muted focus:border-portal-accent focus:outline-none focus:ring-2 focus:ring-portal-accent-bg"
           />
         </div>
         <SubmitButton
           pendingLabel="Uploading…"
           disabled={!file || tooBig}
-          className="rounded-full bg-stone-900 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-stone-800 disabled:cursor-not-allowed disabled:opacity-40"
+          className="rounded-full bg-portal-text px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-black disabled:cursor-not-allowed disabled:opacity-40"
         >
           Upload
         </SubmitButton>

@@ -6,8 +6,8 @@ import { addClientSparePart } from "@fox/supabase/actions/client-spare-parts";
 import { SubmitButton } from "@/components/ui/submit-button";
 
 const FIELD =
-  "mt-1 block w-full rounded-lg border border-stone-200 bg-white px-3 py-2 text-sm text-stone-900 placeholder-stone-400 focus:border-fox-orange focus:outline-none focus:ring-1 focus:ring-fox-orange";
-const LABEL = "block text-xs font-medium text-stone-600";
+  "mt-1 block w-full rounded-xl border border-portal-border bg-portal-surface px-3 py-2 text-sm text-portal-text placeholder:text-portal-muted focus:border-portal-accent focus:outline-none focus:ring-2 focus:ring-portal-accent-bg";
+const LABEL = "block text-xs font-medium text-portal-dim";
 
 export function AddPartPanel() {
   const [open, setOpen] = useState(false);
@@ -33,7 +33,7 @@ export function AddPartPanel() {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="mt-8 inline-flex cursor-pointer items-center gap-2 rounded-full bg-stone-900 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-stone-800"
+        className="mt-8 inline-flex cursor-pointer items-center gap-2 rounded-full bg-portal-text px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-black"
       >
         <Plus className="h-4 w-4" />
         Add a part
@@ -44,7 +44,7 @@ export function AddPartPanel() {
   return (
     <form
       action={addClientSparePart}
-      className="mt-8 rounded-2xl border border-stone-200 bg-white p-5"
+      className="mt-8 rounded-2xl border border-portal-border bg-portal-surface p-5"
     >
       <div className="flex flex-col gap-5 sm:flex-row">
         <div className="shrink-0">
@@ -52,7 +52,7 @@ export function AddPartPanel() {
           <button
             type="button"
             onClick={() => inputRef.current?.click()}
-            className="relative mt-1 flex h-28 w-28 cursor-pointer items-center justify-center overflow-hidden rounded-xl border-2 border-dashed border-stone-200 bg-stone-50 transition-colors hover:border-stone-300"
+            className="relative mt-1 flex h-28 w-28 cursor-pointer items-center justify-center overflow-hidden rounded-xl border-2 border-dashed border-portal-border bg-portal-sunken transition-colors hover:border-portal-muted"
           >
             {preview ? (
               // eslint-disable-next-line @next/next/no-img-element
@@ -62,14 +62,14 @@ export function AddPartPanel() {
                 className="h-full w-full object-cover"
               />
             ) : (
-              <ImagePlus className="h-5 w-5 text-stone-400" />
+              <ImagePlus className="h-5 w-5 text-portal-muted" />
             )}
           </button>
           {preview && (
             <button
               type="button"
               onClick={clearImage}
-              className="mt-1 inline-flex cursor-pointer items-center gap-1 text-[11px] text-stone-500 hover:text-stone-800"
+              className="mt-1 inline-flex cursor-pointer items-center gap-1 text-[11px] text-portal-dim hover:text-portal-text"
             >
               <X className="h-3 w-3" />
               Remove
@@ -104,7 +104,7 @@ export function AddPartPanel() {
 
           <div>
             <label htmlFor="part_number" className={LABEL}>
-              Part number <span className="text-stone-400">(optional)</span>
+              Part number <span className="text-portal-muted">(optional)</span>
             </label>
             <input
               id="part_number"
@@ -118,7 +118,7 @@ export function AddPartPanel() {
 
           <div>
             <label htmlFor="quantity" className={LABEL}>
-              In stock <span className="text-stone-400">(optional)</span>
+              In stock <span className="text-portal-muted">(optional)</span>
             </label>
             <input
               id="quantity"
@@ -133,7 +133,7 @@ export function AddPartPanel() {
 
           <div className="sm:col-span-2">
             <label htmlFor="notes" className={LABEL}>
-              Notes <span className="text-stone-400">(optional)</span>
+              Notes <span className="text-portal-muted">(optional)</span>
             </label>
             <input
               id="notes"
@@ -150,7 +150,7 @@ export function AddPartPanel() {
       <div className="mt-5 flex items-center gap-3">
         <SubmitButton
           pendingLabel="Adding…"
-          className="rounded-full bg-stone-900 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-stone-800"
+          className="rounded-full bg-portal-text px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-black"
         >
           Add part
         </SubmitButton>
@@ -160,7 +160,7 @@ export function AddPartPanel() {
             clearImage();
             setOpen(false);
           }}
-          className="cursor-pointer text-sm font-medium text-stone-500 transition-colors hover:text-stone-800"
+          className="cursor-pointer text-sm font-medium text-portal-dim transition-colors hover:text-portal-text"
         >
           Cancel
         </button>
